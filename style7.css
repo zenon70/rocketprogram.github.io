@@ -103,14 +103,26 @@ p {
 #toggleAllOrbits {
 	bottom: 301px;
 	left: 451px;
+	
+	height: 60px;
+	width: 60px;
 }
+	
 #toggleLocalOrbits {
 	bottom: 151px;
 	left: 451px;
+	
+	
+	height: 60px;
+	width: 60px;
 }
 #toggleSprites {
 	bottom: 1px;
 	left: 451px;
+
+
+	height: 60px;
+	width: 60px;
 }
 
 
