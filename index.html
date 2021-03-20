@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Rocket v3</title>
+		<title>Rocket v4</title>
 		<meta charset="UTF-8"/>
 		<link rel="icon" href="favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" type="text/css" href="style7.css" media="screen"/>
@@ -620,7 +620,7 @@ let mostMassiveBody = 0;
 THREE.Object3D.DefaultUp.set(0, 0, 1);
 
 const renderer = new THREE.WebGLRenderer({logarithmicDepthBuffer: true});
-//renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
+renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
 //renderer.setClearColor("#111111");
 renderer.autoClear = false;
 //renderer.shadowMap.enabled = true;
