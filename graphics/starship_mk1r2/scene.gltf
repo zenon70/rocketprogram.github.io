@@ -1,0 +1,158 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v1.5.17",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                5
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "Cube.009_Material_0"
+        },
+        {
+            "children" : [
+                0
+            ],
+            "name" : "Cube.009",
+            "rotation" : [
+                -0.7071068286895752,
+                0,
+                0,
+                0.7071067094802856
+            ],
+            "scale" : [
+                15.462017059326172,
+                15.462017059326172,
+                15.462017059326172
+            ],
+            "translation" : [
+                0,
+                101.37034606933594,
+                0
+            ]
+        },
+        {
+            "children" : [
+                1
+            ],
+            "name" : "RootNode"
+        },
+        {
+            "children" : [
+                2
+            ],
+            "name" : "a4bf19583e98487fbe0d09658b012259.fbx",
+            "rotation" : [
+                0.7071068286895752,
+                0,
+                0,
+                0.7071068286895752
+            ]
+        },
+        {
+            "children" : [
+                3
+            ],
+            "name" : "RootNode (model correction matrix)"
+        },
+        {
+            "children" : [
+                4
+            ],
+            "name" : "RootNode (gltf orientation matrix)",
+            "rotation" : [
+                -0.4999999701976776,
+                -0.5,
+                -0.5,
+                0.5
+            ]
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Cube.009_Material_0",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "indices" : 3
+                }
+            ]
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 3852,
+            "max" : [
+                1.3004088401794434,
+                2.6243696212768555,
+                2.235179901123047
+            ],
+            "min" : [
+                -1.300408959388733,
+                -2.6243696212768555,
+                -11.698995590209961
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 3852,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 3852,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 8490,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 46224,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 46224,
+            "byteOffset" : 46224
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 30816,
+            "byteOffset" : 92448
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 16980,
+            "byteOffset" : 123264
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 140244,
+            "uri" : "scene.bin"
+        }
+    ]
+}
