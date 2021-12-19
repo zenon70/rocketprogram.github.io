@@ -18,7 +18,7 @@
 		
 		<script src="threejs/three125.min.js"></script>
 		<script src="threejs/TrackballControls125.js"></script>
-		<script src="threejs/GLTFLoader125.js"></script>
+		<!--<script src="threejs/GLTFLoader125.js"></script>-->
 		<script src="orbMech59.js"></script>
 		<script src="tilter11.js"></script>
 		
@@ -922,7 +922,7 @@ body[sun].mesh.add(body[sun].sunlight);
 
 
 
-
+let view;
 
 // rocket
 {
@@ -940,20 +940,20 @@ body[sun].mesh.add(body[sun].sunlight);
 	
 	
 	// load rocket model
-	const gLoader = new THREE.GLTFLoader();
+	//const gLoader = new THREE.GLTFLoader();
 	//gLoader.load("graphics/falcon_9_-_spacex/scene.gltf", function(gltf) {
 	//gLoader.load("graphics/spacex_starship/scene.gltf", function(gltf) {
 	//gLoader.load("graphics/starship_mk1/scene.gltf", function(gltf) {
-	gLoader.load("graphics/starship_mk1r2/scene.gltf", function(gltf) {
+	//gLoader.load("graphics/starship_mk1r2/scene.gltf", function(gltf) {
 		
 		
-		body[i].mesh = gltf.scene;
+		//body[i].mesh = gltf.scene;
 		
 		// set scale for "spacex_starship" model
 		//body[i].mesh.scale.set(0.01 * scale, 0.01 * scale, 0.01 * scale);
 		
 		// set scale for "starship_mk1" model and starship_mk1r2
-		body[i].mesh.scale.set(0.1 * scale, 0.1 * scale, 0.1 * scale);
+		//body[i].mesh.scale.set(0.1 * scale, 0.1 * scale, 0.1 * scale);
 		
 		//body[i].mesh.receiveShadow = true;
 		body[i].mesh.up.set(0, 1, 0);
@@ -1003,7 +1003,9 @@ body[sun].mesh.add(body[sun].sunlight);
 			color: body[i].color,
 			sizeAttenuation: false}));
 		// model is scaled, and this is being ADDed, so don't scale it down again
-		body[i].sprite.scale.set(1000, 1000, 1)
+		//body[i].sprite.scale.set(1000, 1000, 1)
+		// sprite size for test model
+		body[i].sprite.scale.set(0.1, 0.1, 1)
 		body[i].mesh.add(body[i].sprite);
 		
 		// post-setup global adjustments
@@ -1012,8 +1014,12 @@ body[sun].mesh.add(body[sun].sunlight);
 		controls.minDistance = 30 * scale;
 		
 		// set to hide most orbits
-		toggleAllOrbits();
-	});
+		// this should NOT be run here because it includes undefined variables
+		//   at this point. it only worked because loading gltf was slow
+		//toggleAllOrbits();
+	
+	// brackets for gltf
+	//});
 }
 
 
@@ -1116,7 +1122,7 @@ systemPosition();
 
 ////////////////////////////////////////////////////////////////////////////////
 // view control
-let view = rocket - 1;
+view = rocket - 1;
 function cycleView() {
 	
 	if (view < body.length - 1) {
