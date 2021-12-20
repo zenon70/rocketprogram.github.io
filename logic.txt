@@ -1,28 +1,23 @@
 
 
-// scale...
 
-// firefox
+BROWSER RENDERING
+
+firefox mobile 68.11 setting that changes resolution:
 layout.css.devPixelsPerPx
+preferred resolution: 1.6
 
-// Javascript
+JavaScript
 window.devicePixelRatio
 
 
-buttons... on a screen...
 
-1
-1.4
-2.6
-3
-etc...
-
-
+ALTITUDE
 
 gps tells you MSL: Mean Sea Level.
   it's accurate, even with oblate spheroids.
 
-but it does NOT tell you the height of actual physical surface features, like mountains and valleys... still.. it should be pretty indicative of Sea Level...
+but it does NOT tell you the height of actual physical surface features, like mountains and valleys (which are not implemented)...
 
 things need to appear to interact with the visible surface... not hover meters or kilometers above the apparent surface.
 
@@ -33,11 +28,10 @@ things need to appear to interact with the visible surface... not hover meters o
 
 
 
-ABSOLUTE NECESSITY:
+PLANNED FEATURES (ABSOLUTE NECESSITY):
 
-rotate with surface while landed
 air, drag, thrust, deltaV, etc.
-rocket model
+rotate with surface while landed
 major moons, asteroids, comets for sure
 low-res startup
 nice user interface
@@ -52,6 +46,10 @@ all ~200 moons hopefully
 track any asteroid or object
 
 
+
+POSSIBLE EXTRA FEATURES
+
+adjustable scale
 
 
 
@@ -158,17 +156,29 @@ if (focus === 0) {
 
 why the slowness:
 
-  processing data (instead of it being pre-processed)
+  polygons, especially a 3d rocket model
 
-  high quality images
-
-* orbit lines
+  high res textures (and probably ~90% jpg quality) 
+  
+  loading all planets & moons with textures at the same time
+  
+  two scenes.. one just for the navball, with nice lighting
+  
+  orbit lines
     recalculating kepler and redrawing on every frame
     ellipse with 500 points
+    
+
+  loading the whole threejs instead of just modules?
+    i thought i looked into that and it didn't make a difference
+
+  processing data (instead of it being pre-processed)
 
   rockets are part of n-body physics
 
   gps velocity unnecessary
+
+  i think general efficiency can be drastically improved
 
 
 
@@ -178,7 +188,7 @@ ISSUES
 * couldn't launch from 401, went down instead
     need research
 
-  earth's inclination.. to sun axes or ecliptic?
+  earth's inclination.. to sun axes (equator) or ecliptic?
 
 
 PHYSICS
@@ -288,7 +298,7 @@ server side
 
 
 
-TRACKING
+TRACKING IDEAS
 
 spacecraft identifying info:
   country (based on ip address) & number
