@@ -779,7 +779,7 @@ const axesHelper = new THREE.AxesHelper(25e9 * scale);
 scene.add(axesHelper);
 */
 
-/* FAILURE!! BAD ROTATIONS FROM SMARTPHONE?
+/* LOADS EASILY, BUT OBVIOUSLY WRONG ROTATION(S)/ORIENTATION(S)
 // 1k Low Resolution (from bright 8k TIFF)
 // skybox: icrf breakout with rotations
 scene.background = new THREE.CubeTextureLoader().load([
@@ -793,6 +793,7 @@ scene.background = new THREE.CubeTextureLoader().load([
 */
 
 /*
+// WORKS CORRECTLY
 // 2k Medium Resolution (from dark 16k TIFF)
 // skybox: icrf breakout with rotations
 scene.background = new THREE.CubeTextureLoader().load([
@@ -806,7 +807,7 @@ scene.background = new THREE.CubeTextureLoader().load([
 */
 
 
-
+// TOO LARGE. CRASHES BROWSER ON SMARTPHONE WITH 2GB MEMORY
 // 4k High Resolution (from dark 16k TIFF)
 // skybox: icrf breakout with rotations
 scene.background = new THREE.CubeTextureLoader().load([
