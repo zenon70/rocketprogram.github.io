@@ -1,44 +1,24 @@
 
 
-
-BROWSER RENDERING
-
-firefox mobile 68.11 setting that changes resolution:
-layout.css.devPixelsPerPx
-preferred resolution: 1.6
-
-JavaScript
-window.devicePixelRatio
-
-
-
-ALTITUDE
-
-gps tells you MSL: Mean Sea Level.
-  it's accurate, even with oblate spheroids.
-
-but it does NOT tell you the height of actual physical surface features, like mountains and valleys (which are not implemented)...
-
-things need to appear to interact with the visible surface... not hover meters or kilometers above the apparent surface.
-
-
-
-
-
-
-
-
 PLANNED FEATURES (ABSOLUTE NECESSITY):
 
+low-res startup
 air, drag, thrust, deltaV, etc.
 rotate with surface while landed
 major moons, asteroids, comets for sure
-low-res startup
-nice user interface
+nicer user interface (menus, info, more options)
 
 
+RE-IMPLEMENTING DROPPED FEATURES:
+constellation map
+  this was dropped because it was based on a weird (bad) spherical projection,
+  whereas now the best-practices skybox background is being used.
+dynamic trajectory projection (not just an ellipse)
+  (especially needed for hyperbolic trajectories)
+  this was dropped because it was sloppy (weird catmull rom curve implementation)
 
-PLANNED FEATURES
+
+MORE PLANNED FEATURES
 
 assorted rocket models, using stats
 multiple satellites
@@ -50,11 +30,6 @@ track any asteroid or object
 POSSIBLE EXTRA FEATURES
 
 adjustable scale
-
-
-
-
-
 
 
 
@@ -125,6 +100,29 @@ animate()
 
 
 
+BROWSER RENDERING
+
+firefox mobile 68.11 setting that changes resolution:
+layout.css.devPixelsPerPx
+preferred resolution: 1.6
+
+JavaScript
+window.devicePixelRatio
+
+
+
+ALTITUDE
+
+gps tells you MSL: Mean Sea Level.
+  it's accurate, even with oblate spheroids.
+
+but it does NOT tell you the height of actual physical surface features, like mountains and valleys (which are not implemented)...
+
+
+
+
+
+
 
 
 
@@ -170,7 +168,7 @@ why the slowness:
     
 
   loading the whole threejs instead of just modules?
-    i thought i looked into that and it didn't make a difference
+    it may not make a difference
 
   processing data (instead of it being pre-processed)
 
@@ -178,7 +176,7 @@ why the slowness:
 
   gps velocity unnecessary
 
-  i think general efficiency can be drastically improved
+  general efficiency can probably be drastically improved
 
 
 
