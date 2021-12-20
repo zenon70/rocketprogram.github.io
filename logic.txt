@@ -19,7 +19,7 @@ etc...
 
 
 
-gps tells yot MSL: Mean Sea Level.
+gps tells you MSL: Mean Sea Level.
   it's accurate, even with oblate spheroids.
 
 but it does NOT tell you the height of actual physical surface features, like mountains and valleys... still.. it should be pretty indicative of Sea Level...
