@@ -1,6 +1,7 @@
 # this is a rocket program.
+*it is also the source of orbMech.js, which is the best JavaScript code library on the internet (as far as i know) for converting between keplerian orbital elements and cartesian state vectors*
 
-it's a rocket flying space simulator with n-body physics and J2 zonal harmonics and keplerian precision
+this is a rocket and space simulator with a unique hybrid n-body/keplerian-elements physics engine that also simulates J2 zonal harmonics with space data from based on NASA and the IAU (International Astronomical Union).
 
 - development version: https://cubetronic.github.io or https://github.com/cubetronic/cubetronic.github.io
 
@@ -44,7 +45,7 @@ kms | kilometers per second*
 
 \* the kms listed with gps info is surface speed. this is the ECEF (earth-centered earth-fixed) frame, and it does consider the spin of the planet/moon/etc.
 
-- it should be self explanatory, with buttons clearly named.
+- use of this program should be self explanatory, with buttons clearly named.
 
 - if you feel *upside down*, you can spin the view. tap (or click) and hold and make a circular motion. go clockwise or counter-clockwise to rotate the view in different directions.
 
@@ -52,7 +53,7 @@ kms | kilometers per second*
 
 - the faster time is simulated, the more unstable and unreaslistic the simulation is. it's pretty stable up to about 8 million times speed, which is the limit because this is about as fast as it can reliably go for a while without ejecting the fourth planet's moons... but that *will* happen if you leave it running at that speed.
 
-- to test the **nodal precession** effect, get an orbit that has a low periapsis (i.e. 200km-2000km), then switch to earth view, and crank up the time multiplier.
+- to test the **nodal precession** effect, get an orbit that has a low periapsis (i.e. 200km-2000km), then switch to earth view, and crank up the time multiplier. you should notice that the orbit does not stay fixed with respect to the stars. this effect is weaker when orbiting the moon because the moon is more spherical than earth.
 
 - hyperbolic trajectories are currently NOT rendered. they *exist*, but they are not rendered. i wrote code for this (well, for ANY projected trajectory, even lissajous orbits) in previous versions, which are not available online, but the code that was very processor-intensive to implement so i have left it out of this version until i get around to it. therefore, transitioning between orbiting one thing and another thing can be very disorienting. use the nav-ball and orbital element info to guide you. good luck!
 
