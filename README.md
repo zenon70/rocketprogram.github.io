@@ -13,13 +13,46 @@ _it's not a game. it's a simulator._
 - this program was developed from scratch, starting with the simple concept of a rocket going up. then it was a 2D simulation. now it's 3D. the three.js library is used to render 3D graphics, but other than that, this is all pure JavaScript. some formulas were derived from a reputable 2020 textbook on orbital mechanics, but the textbook formulas were incomplete for this application, so some additional development on the formulas was required.
 
 ## user guide
+
+### key
+
+**orbital info**
+
+symbol|meaning
+------|-------
+a     | semi-major axis
+e     | eccentricity
+i     | inclination
+Ω     | longitude of the ascending node
+ω     | argument of periapsis
+M     | mean anomaly
+Ap    | apoapsis altitude from MSL (mean sea level)
+Pe    | periapsis altitude from MSL (mean sea level)
+kms   | kilometers per second*
+
+\* the kms listed with orbital info is orbital speed. this is the ECI (earth centered inertial) frame, which means it does not consider the spin of the planet/moon/etc.  
+
+
+**surface info**
+
+abbv|meaning
+----|-------
+Lat | latitude
+Lon | longitude
+Alt | altitude from MSL (mean sea level)
+kms | kilometers per second*
+
+\* the kms listed with gps info is surface speed. this is the ECEF (earth-centered earth-fixed) frame, and it does consider the spin of the planet/moon/etc.
+
 - it should be self explanatory, with buttons clearly named.
 
-- to spin the view, click and hold and draw a circle, or tap in a circle. clockwise or counter-clockwise to rotate the view.
+- if you feel *upside down*, you can spin the view. tap (or click) and hold and make a circular motion. go clockwise or counter-clockwise to rotate the view in different directions.
 
 - due to current graphics limitations, the visible surface and the *actual* surface are different. so if it seems like you're a few miles above the surface, but not moving, that's just because the spherical body is made up of many flat surfaces, and it doesn't align with the exact surface.
 
 - the faster time is simulated, the more unstable and unreaslistic the simulation is. it's pretty stable up to about 8 million times speed, which is the limit because this is about as fast as it can reliably go for a while without ejecting the fourth planet's moons... but that *will* happen if you leave it running at that speed.
+
+- to test the **nodal precession** effect, get an orbit that has a low periapsis (i.e. 200km-2000km), then switch to earth view, and crank up the time multiplier.
 
 - hyperbolic trajectories are currently NOT rendered. they *exist*, but they are not rendered. i wrote code for this (well, for ANY projected trajectory, even lissajous orbits) in previous versions, which are not available online, but the code that was very processor-intensive to implement so i have left it out of this version until i get around to it. therefore, transitioning between orbiting one thing and another thing can be very disorienting. use the nav-ball and orbital element info to guide you. good luck!
 
