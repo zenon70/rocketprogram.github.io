@@ -779,7 +779,21 @@ const axesHelper = new THREE.AxesHelper(25e9 * scale);
 scene.add(axesHelper);
 */
 
-/* load faster without hi-res stars (for testing)
+/* FAILURE!! BAD ROTATIONS FROM SMARTPHONE?
+// 1k Low Resolution (from bright 8k TIFF)
+// skybox: icrf breakout with rotations
+scene.background = new THREE.CubeTextureLoader().load([
+	"graphics/1kJPG-icrf-attempt/1k-was-negX--now-nzLeft.jpg",
+	"graphics/1kJPG-icrf-attempt/1k-was-posX--now-pzRight.jpg",
+	"graphics/1kJPG-icrf-attempt/1k-was-negZ--now-nx180.jpg",
+	"graphics/1kJPG-icrf-attempt/1k-was-posZ--now-px.jpg",
+	"graphics/1kJPG-icrf-attempt/1k-was-posY--now-pyRight.jpg",
+	"graphics/1kJPG-icrf-attempt/1k-was-negY--now-nyRight.jpg"
+	]);
+*/
+
+/*
+// 2k Medium Resolution (from dark 16k TIFF)
 // skybox: icrf breakout with rotations
 scene.background = new THREE.CubeTextureLoader().load([
 	"graphics/4k-break-mod-jpg-2k/nzLeft.jpg",
@@ -790,6 +804,25 @@ scene.background = new THREE.CubeTextureLoader().load([
 	"graphics/4k-break-mod-jpg-2k/nyRight.jpg"
 	]);
 */
+
+
+
+// 4k High Resolution (from dark 16k TIFF)
+// skybox: icrf breakout with rotations
+scene.background = new THREE.CubeTextureLoader().load([
+	"graphics/4k-break-mod-jpg-4k/nzLeft.jpg",
+	"graphics/4k-break-mod-jpg-4k/pzRight.jpg",
+	"graphics/4k-break-mod-jpg-4k/nx180.jpg",
+	"graphics/4k-break-mod-jpg-4k/px.jpg",
+	"graphics/4k-break-mod-jpg-4k/pyRight.jpg",
+	"graphics/4k-break-mod-jpg-4k/nyRight.jpg"
+	]);
+
+
+
+
+
+
 
 // ambient light (stars, etc)
 const starlight = new THREE.AmbientLight (0xffffff);
