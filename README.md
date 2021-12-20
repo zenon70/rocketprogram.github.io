@@ -60,9 +60,9 @@ kms | kilometers per second*
 
 ## what is simulated
 
-- it uses n-body physics. even the mass of the spacecraft is affecting the movements of the planets and moons, if the numerical precision will permit, which i suppose it won't, unless a very small object, like an asteroid, is loaded.
+- it uses n-body physics. this means that every celestial object is having a gravitational effect on every other celestial object. this means that strange orbit types such as lagrangian and horseshoe orbits are possible. even the mass of the spacecraft is affecting the movements of the planets and moons, if the numerical precision will permit, which i suppose it won't, unless a very small object, like an asteroid, is loaded.
 
-- it *also* solves the keplerian 2-body problem. it does this between each object and its orbital parent. this increases accuracy dramatically, and also allows for nodal precession. this is probably the trickiest and most unique and innovative aspect of this program.
+- it *also* solves the keplerian 2-body problem. it does this between each object and its orbital parent. this increases accuracy dramatically, and also allows for nodal precession. this is probably the trickiest and most unique and innovative aspect of this program. the reasons to implement this are two-fold. firstly, simple n-body physics formulas get very inaccurate the closer objects get to each other. this inaccuracy is avoided by making things that are closest use, instead, the keplerian 2-body formula. simple n-body physics is retained for all other bodies further away. secondly, nodal precession needs to be calculated. this depends on the axial tilt of a body. this is important at close distances, and there are known formulas for calculating nodal precession in conjunction with kepler's equations.
 
 - nodal precession is factored in based on J2 zonal harmonics. this means that the equatorial buldge of each oblate sphereoid (planet, moon, etc.) affects the movement of the orbiting body. nodal precession can be used to acheive the type of sun-sychronous orbit where a satellite is always in direct sunlight, never going into the shade behind the object it is orbiting.
 
@@ -97,6 +97,12 @@ kms | kilometers per second*
 - surface features such as mountains and valleys are not simulated.
 
 ## design choices
+
+- functional programming. wherever possible and practical, *pure* (independent)  functions are written and utilized. this keeps the working pieces of the program separate, and therefore makes the program more reliable and more extensible. it is my goal to make it so that advanced users and programmers can easily understand and use the code.
+
+- the internal structure of the code uses the x, y, and z of space conventions, not cgi graphics animation conventions which is the de facto standard in the threejs 3D library and many other programs. the benefit of using space conventions is that all formulas, source code, data input/output, etc., will not need to be converted. this helps avoid confusion for the advanced users and programmers.
+
+- icrf orientation. the x, y, and z used in the program refer to icrf (international celestial reference frame) orientation. this makes it so the threejs built-in skybox can be used for the stars, as it doesn't have to be rotated. this is the most efficient way to go, and, imho, makes the most sense.
 
 - the surfaces of planets are used as textures instead of with clouds, if i could find surface textures for the object. for example, the 2nd planet surface texture is used. this will aid in attempting to land in the correct location.
 
