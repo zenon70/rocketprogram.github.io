@@ -16,9 +16,9 @@
 		<p id="hudPitch"></p>
 		<p id="hudRoll"></p>
 		
-		<script src="threejs/three125.min.js"></script>
-		<script src="threejs/TrackballControls125.js"></script>
-		<!--<script src="threejs/GLTFLoader125.js"></script>-->
+		<script src="threejs/three.min.js"></script>
+		<script src="threejs/TrackballControls.js"></script>
+		<!--<script src="threejs/GLTFLoader.js"></script>-->
 		<script src="orbMech59.js"></script>
 		<script src="tilter11.js"></script>
 		
@@ -164,9 +164,9 @@ let earth = body.push({
 	declination: 90,
 	primeMeridian: 190.147,
 
-	map: "graphics/planet3_4k.jpg",
+	map: "graphics/earth1k-FROM-10kPIXEL-POT.jpg",
 	color: 0x419dd9,
-	segments: 64
+	segments: 32
 }) - 1;
 
 
@@ -194,7 +194,7 @@ let planet4 = body.push({
   
 	map: "graphics/planet4_2k.jpg",
 	color: 0xb76247,
-	segments: 48,
+	//segments: 48,
 }) - 1;
 
 /*
@@ -394,9 +394,10 @@ let moon = body.push({
 	declination: 66.5392,
 	primeMeridian: 38.3213,
 	
-	map: "graphics/moon301_2k.jpg",
+	//map: "graphics/moon301_2k.jpg",
+	map: "graphics/1k_moon-FROM-2k.jpg",
 	color: 0x969392,
-	segments: 64,
+	segments: 32,
 }) - 1;
 
 // 401
@@ -480,7 +481,7 @@ for (let i = body.length - 1; i > -1; i--) {
   
   
   if (body[i].segments === undefined) {
-  	body[i].segments = 32;
+  	body[i].segments = 16;
   }
   
   /*
@@ -690,7 +691,10 @@ let navBall;
 	// sphere geometry north pole is always +y
 	const geometry = new THREE.SphereGeometry(50, 32, 32);
 	// the center of image is mapped to +x, with the north pole as +y
-	const texture = new THREE.TextureLoader().load("graphics/navball.png");
+	//const texture = new THREE.TextureLoader().load("graphics/navball.png");
+	const texture = new THREE.TextureLoader().load("graphics/navball_blackgrey.png");
+	//const texture = new THREE.TextureLoader().load("graphics/wb2mpmt.png");
+	//const texture = new THREE.TextureLoader().load("graphics/kbrZiQ2.png");
 	const material = new THREE.MeshPhongMaterial({ map: texture });
 	navBall = new THREE.Mesh(geometry, material);
 	scene2.add(navBall);
@@ -965,7 +969,8 @@ let view;
 	
 	// temporary mesh
 	const geometry = new THREE.CylinderGeometry(
-		3.66 * scale, 3.66 * scale, 70 * scale, 32);
+		//3.66 * scale, 3.66 * scale, 70 * scale, 8);  // falcon 9
+		9 * scale, 9 * scale, 50 * scale, 8);  // starship
 	const texture = new THREE.TextureLoader().load("graphics/test.jpg");
 	const material = new THREE.MeshLambertMaterial({
 		map: texture
