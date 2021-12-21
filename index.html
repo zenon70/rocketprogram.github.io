@@ -966,7 +966,8 @@ let view;
 	
 	// temporary mesh
 	const geometry = new THREE.CylinderGeometry(
-		3.66 * scale, 3.66 * scale, 70 * scale, 8);
+		//3.66 * scale, 3.66 * scale, 70 * scale, 8);  // falcon 9
+		9 * scale, 9 * scale, 50 * scale, 8);  // starship
 	const texture = new THREE.TextureLoader().load("graphics/test.jpg");
 	const material = new THREE.MeshLambertMaterial({
 		map: texture
