@@ -691,7 +691,10 @@ let navBall;
 	// sphere geometry north pole is always +y
 	const geometry = new THREE.SphereGeometry(50, 32, 32);
 	// the center of image is mapped to +x, with the north pole as +y
-	const texture = new THREE.TextureLoader().load("graphics/navball.png");
+	//const texture = new THREE.TextureLoader().load("graphics/navball.png");
+	const texture = new THREE.TextureLoader().load("graphics/navball_blackgrey.png");
+	//const texture = new THREE.TextureLoader().load("graphics/wb2mpmt.png");
+	//const texture = new THREE.TextureLoader().load("graphics/kbrZiQ2.png");
 	const material = new THREE.MeshPhongMaterial({ map: texture });
 	navBall = new THREE.Mesh(geometry, material);
 	scene2.add(navBall);
