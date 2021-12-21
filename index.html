@@ -164,9 +164,9 @@ let earth = body.push({
 	declination: 90,
 	primeMeridian: 190.147,
 
-	map: "graphics/planet3_4k.jpg",
+	map: "graphics/earth1k-FROM-10kPIXEL-POT.jpg",
 	color: 0x419dd9,
-	segments: 64
+	segments: 32
 }) - 1;
 
 
@@ -194,7 +194,7 @@ let planet4 = body.push({
   
 	map: "graphics/planet4_2k.jpg",
 	color: 0xb76247,
-	segments: 48,
+	//segments: 48,
 }) - 1;
 
 /*
@@ -396,7 +396,7 @@ let moon = body.push({
 	
 	map: "graphics/moon301_2k.jpg",
 	color: 0x969392,
-	segments: 64,
+	segments: 32,
 }) - 1;
 
 // 401
@@ -480,7 +480,7 @@ for (let i = body.length - 1; i > -1; i--) {
   
   
   if (body[i].segments === undefined) {
-  	body[i].segments = 32;
+  	body[i].segments = 16;
   }
   
   /*
@@ -965,7 +965,7 @@ let view;
 	
 	// temporary mesh
 	const geometry = new THREE.CylinderGeometry(
-		3.66 * scale, 3.66 * scale, 70 * scale, 32);
+		3.66 * scale, 3.66 * scale, 70 * scale, 8);
 	const texture = new THREE.TextureLoader().load("graphics/test.jpg");
 	const material = new THREE.MeshLambertMaterial({
 		map: texture
