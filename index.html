@@ -1254,11 +1254,27 @@ function throttleDown() { if (throttle > 0) { throttle -= 10 } }
 function throttleOff() { throttle = 0 }
 
 // keys that will be used must be declared first
-const keyState = { KeyF: null, KeyS: null, KeyE: null, KeyD: null, KeyW: null,
-  KeyR: null, KeyQ: null, KeyA: null, KeyZ: null, KeyX: null, KeyV: null,
-  KeyT: null, KeyG: null};
+// initialize last effective date of keypresses for repeat delay
+const keyState = {
+	KeyE: null, eLast: 0,
+	KeyS: null, sLast: 0,
+	KeyD: null, dLast: 0,
+	KeyF: null, fLast: 0,
+	KeyW: null, wLast: 0,
+	KeyR: null, rLast: 0,
+	KeyQ: null, qLast: 0,
+	KeyA: null, aLast: 0,
+	KeyZ: null, zLast: 0,
+	KeyX: null, xLast: 0,
+	KeyV: null, vLast: 0,
+	KeyT: null, tLast: 0,
+	KeyG: null, gLast: 0
+}
 
-// process keyboard input
+let repeatDelay = 100;
+
+// process keyboard input. 2nd true means use capture phase, not bubble phase
+// it is undocumented why capture phase was chosen, could use code review
 window.addEventListener("keydown", function(event) {
 	keyState[event.code] = true;
 }, true);
@@ -1267,28 +1283,59 @@ window.addEventListener("keyup", function(event) {
 }, true);
 
 function rocketControl() {
-	if (keyState.KeyE) { xSpin += spinPower } // e (pitch up)
-	if (keyState.KeyD) { xSpin -= spinPower } // d (pitch down)
-	if (keyState.KeyW) { ySpin -= spinPower } // w (roll left)
-	if (keyState.KeyR) { ySpin += spinPower } // r (roll right)
-	if (keyState.KeyF) { zSpin -= spinPower } // f (yaw right)
-	if (keyState.KeyS) { zSpin += spinPower } // s (yaw left)
+	const newDate = Date.now(); // get new date just once, maybe more efficient
+
+	// e (pitch up)
+	if (keyState.KeyE && newDate - keyState.eLast > repeatDelay) {
+		xSpin += spinPower
+	}
+
+	// s (yaw left)
+	if (keyState.KeyS && newDate - keyState.sLast > repeatDelay) {
+		zSpin += spinPower
+	}
+
+	// d (pitch down)
+	if (keyState.KeyD && newDate - keyState.dLast > repeatDelay) {
+		xSpin -= spinPower
+	}
+
+	// f (yaw right)
+	if (keyState.KeyF && newDate - keyState.fLast > repeatDelay) {
+		zSpin -= spinPower
+	}
+
+	// w (roll left)
+	if (keyState.KeyW && newDate - keyState.wLast > repeatDelay) {
+		ySpin -= spinPower
+	}
+
+	// r (roll right)
+	if (keyState.KeyR && newDate - keyState.rLast > repeatDelay) {
+		ySpin += spinPower
+	}
 
 	// freeze all spin and thrust
-	if (keyState.KeyQ) {
+	if (keyState.KeyQ && newDate - keyState.qLast > repeatDelay) {
 		xSpin = 0;
 		ySpin = 0;
 		zSpin = 0;
 	}
-	
-	if (keyState.KeyA) { throttleUp() };
-	if (keyState.KeyZ) { throttleDown() };
-	if (keyState.KeyX) { throttleOff() };
-	
-	if (keyState.KeyV) { cycleView() };
-	
-	if (keyState.KeyT) { faster() };
-	if (keyState.KeyG) { slower() };
+
+	if (keyState.KeyA && newDate - keyState.aLast > repeatDelay) {
+		throttleUp()
+	}
+	if (keyState.KeyZ && newDate - keyState.zLast > repeatDelay) {
+		throttleDown()
+	}
+	if (keyState.KeyX && newDate - keyState.xLast > repeatDelay) {
+		throttleOff()
+	}
+
+	if (keyState.KeyV && newDate - keyState.vLast > repeatDelay) { cycleView() }
+
+	if (keyState.KeyT && newDate - keyState.tLast > repeatDelay) { faster() }
+	if (keyState.KeyG && newDate - keyState.gLast > repeatDelay) { slower() }
 
 	// rotate rocket
 	body[rocket].mesh.rotateX(xSpin * timestep);
