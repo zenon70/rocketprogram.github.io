@@ -783,22 +783,8 @@ const axesHelper = new THREE.AxesHelper(25e9 * scale);
 scene.add(axesHelper);
 */
 
-/*
-// LOADS EASILY, BUT OBVIOUSLY WRONG ROTATION(S)/ORIENTATION(S)
-// 1k Low Resolution (from bright 8k TIFF)
-// skybox: icrf breakout with rotations
-scene.background = new THREE.CubeTextureLoader().load([
-	"graphics/1kJPG-icrf-attempt/1k-was-negX--now-nzLeft.jpg",
-	"graphics/1kJPG-icrf-attempt/1k-was-posX--now-pzRight.jpg",
-	"graphics/1kJPG-icrf-attempt/1k-was-negZ--now-nx180.jpg",
-	"graphics/1kJPG-icrf-attempt/1k-was-posZ--now-px.jpg",
-	"graphics/1kJPG-icrf-attempt/1k-was-posY--now-pyRight.jpg",
-	"graphics/1kJPG-icrf-attempt/1k-was-negY--now-nyRight.jpg"
-	]);
-*/
 
-
-// 1k Low Resolution (from bright 8k TIFF)
+// 1k (1024x1024) Low Resolution (from bright 8k TIFF)
 // skybox: icrf breakout with rotations
 scene.background = new THREE.CubeTextureLoader().load([
 	"graphics/1k-icrf-bright/1k-nzLeft.jpg",
