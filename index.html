@@ -1290,11 +1290,6 @@ function rocketControl() {
 	if (keyState.KeyT) { faster() };
 	if (keyState.KeyG) { slower() };
 
-	// throttle
-	if (keyState.KeyA) throttleUp();
-	if (keyState.KeyZ) throttleDown();
-	if (keyState.KeyX) throttleOff();
-
 	// rotate rocket
 	body[rocket].mesh.rotateX(xSpin * timestep);
 	body[rocket].mesh.rotateY(ySpin * timestep);
