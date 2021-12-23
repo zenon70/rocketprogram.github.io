@@ -1254,21 +1254,37 @@ function throttleDown() { if (throttle > 0) { throttle -= 10 } }
 function throttleOff() { throttle = 0 }
 
 // keys that will be used must be declared first
-// initialize last effective date of keypresses for repeat delay
 const keyState = {
-	KeyE: null, eLast: 0,
-	KeyS: null, sLast: 0,
-	KeyD: null, dLast: 0,
-	KeyF: null, fLast: 0,
-	KeyW: null, wLast: 0,
-	KeyR: null, rLast: 0,
-	KeyQ: null, qLast: 0,
-	KeyA: null, aLast: 0,
-	KeyZ: null, zLast: 0,
-	KeyX: null, xLast: 0,
-	KeyV: null, vLast: 0,
-	KeyT: null, tLast: 0,
-	KeyG: null, gLast: 0
+	KeyE: null,
+	KeyS: null,
+	KeyD: null,
+	KeyF: null,
+	KeyW: null,
+	KeyR: null,
+	KeyQ: null,
+	KeyA: null,
+	KeyZ: null,
+	KeyX: null,
+	KeyV: null,
+	KeyT: null,
+	KeyG: null
+}
+
+// initialize last effective date of keypresses for repeat delay
+const keyDelay = {
+	KeyE: 0,
+	KeyS: 0,
+	KeyD: 0,
+	KeyF: 0,
+	KeyW: 0,
+	KeyR: 0,
+	KeyQ: 0,
+	KeyA: 0,
+	KeyZ: 0,
+	KeyX: 0,
+	KeyV: 0,
+	KeyT: 0,
+	KeyG: 0
 }
 
 let repeatDelay = 500;
@@ -1280,79 +1296,80 @@ window.addEventListener("keydown", function(event) {
 }, true);
 window.addEventListener("keyup", function(event) {
 	keyState[event.code] = false;
+	keyDelay[event.code] = 0;
 }, true);
 
 function rocketControl() {
 
 	// e (pitch up)
-	if (keyState.KeyE && Date.now() - keyState.eLast > repeatDelay) {
+	if (keyState.KeyE && Date.now() - keyDelay.KeyE > repeatDelay) {
 		xSpin += spinPower;
-		keyState.eLast = Date.now();
+		keyDelay.KeyE = Date.now();
 	}
 
 	// s (yaw left)
-	if (keyState.KeyS && Date.now() - keyState.sLast > repeatDelay) {
+	if (keyState.KeyS && Date.now() - keyDelay.KeyS > repeatDelay) {
 		zSpin += spinPower;
-		keyState.sLast = Date.now();
+		keyDelay.KeyS = Date.now();
 	}
 
 	// d (pitch down)
-	if (keyState.KeyD && Date.now() - keyState.dLast > repeatDelay) {
+	if (keyState.KeyD && Date.now() - keyDelay.KeyD > repeatDelay) {
 		xSpin -= spinPower;
-		keyState.dLast = Date.now();
+		keyDelay.KeyD = Date.now();
 	}
 
 	// f (yaw right)
-	if (keyState.KeyF && Date.now() - keyState.fLast > repeatDelay) {
+	if (keyState.KeyF && Date.now() - keyDelay.KeyF > repeatDelay) {
 		zSpin -= spinPower;
-		keyState.fLast = Date.now();
+		keyDelay.KeyF = Date.now();
 	}
 
 	// w (roll left)
-	if (keyState.KeyW && Date.now() - keyState.wLast > repeatDelay) {
+	if (keyState.KeyW && Date.now() - keyDelay.KeyW > repeatDelay) {
 		ySpin -= spinPower;
-		keyState.wLast = Date.now();
+		keyDelay.KeyW = Date.now();
 	}
 
 	// r (roll right)
-	if (keyState.KeyR && Date.now() - keyState.rLast > repeatDelay) {
+	if (keyState.KeyR && Date.now() - keyDelay.KeyR > repeatDelay) {
 		ySpin += spinPower;
-		keyState.rLast = Date.now();
+		keyDelay.KeyR = Date.now();
 	}
 
 	// freeze all spin and thrust
-	if (keyState.KeyQ && Date.now() - keyState.qLast > repeatDelay) {
+	if (keyState.KeyQ && Date.now() - keyDelay.KeyQ > repeatDelay) {
 		xSpin = 0;
 		ySpin = 0;
 		zSpin = 0;
-		keyState.qLast = Date.now();
+		keyDelay.KeyQ = Date.now();
 	}
 
-	if (keyState.KeyA && Date.now() - keyState.aLast > repeatDelay) {
+	if (keyState.KeyA && Date.now() - keyDelay.KeyA > repeatDelay) {
 		throttleUp();
-		keyState.aLast = Date.now();
+		keyDelay.KeyA = Date.now();
 	}
-	if (keyState.KeyZ && Date.now() - keyState.zLast > repeatDelay) {
+	if (keyState.KeyZ && Date.now() - keyDelay.KeyZ > repeatDelay) {
 		throttleDown();
-		keyState.zLast = Date.now();
+		keyDelay.KeyZ = Date.now();
 	}
-	if (keyState.KeyX && Date.now() - keyState.xLast > repeatDelay) {
+	if (keyState.KeyX && Date.now() - keyDelay.KeyX > repeatDelay) {
 		throttleOff();
-		keyState.xLast = Date.now();
+		keyDelay.KeyX = Date.now();
 	}
 
-	if (keyState.KeyV && Date.now() - keyState.vLast > repeatDelay) {
+	if (keyState.KeyV && Date.now() - keyDelay.KeyV > repeatDelay) {
 		cycleView();
-		keyState.vLast = Date.now();
+		keyDelay.KeyV = Date.now();
 	}
 
-	if (keyState.KeyT && Date.now() - keyState.tLast > repeatDelay) {
+	if (keyState.KeyT && Date.now() - keyDelay.KeyT > repeatDelay) {
 		faster();
-		keyState.tLast = Date.now();
+		keyDelay.KeyT = Date.now();
 	}
-	if (keyState.KeyG && Date.now() - keyState.gLast > repeatDelay) {
+	if (keyState.KeyG && Date.now() - keyDelay.KeyG > repeatDelay) {
 		slower();
-		keyState.gLast = Date.now();
+		keyDelay.KeyG = Date.now();
 	}
 
 	// rotate rocket
