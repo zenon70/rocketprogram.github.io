@@ -1287,32 +1287,38 @@ function rocketControl() {
 
 	// e (pitch up)
 	if (keyState.KeyE && newDate - keyState.eLast > repeatDelay) {
-		xSpin += spinPower
+		xSpin += spinPower;
+		keyState.eLast = newDate;
 	}
 
 	// s (yaw left)
 	if (keyState.KeyS && newDate - keyState.sLast > repeatDelay) {
-		zSpin += spinPower
+		zSpin += spinPower;
+		keyState.sLast = newDate;
 	}
 
 	// d (pitch down)
 	if (keyState.KeyD && newDate - keyState.dLast > repeatDelay) {
-		xSpin -= spinPower
+		xSpin -= spinPower;
+		keyState.dLast = newDate;
 	}
 
 	// f (yaw right)
 	if (keyState.KeyF && newDate - keyState.fLast > repeatDelay) {
-		zSpin -= spinPower
+		zSpin -= spinPower;
+		keyState.fLast = newDate;
 	}
 
 	// w (roll left)
 	if (keyState.KeyW && newDate - keyState.wLast > repeatDelay) {
-		ySpin -= spinPower
+		ySpin -= spinPower;
+		keyState.wLast = newDate;
 	}
 
 	// r (roll right)
 	if (keyState.KeyR && newDate - keyState.rLast > repeatDelay) {
-		ySpin += spinPower
+		ySpin += spinPower;
+		keyState.rLast = newDate;
 	}
 
 	// freeze all spin and thrust
@@ -1320,22 +1326,35 @@ function rocketControl() {
 		xSpin = 0;
 		ySpin = 0;
 		zSpin = 0;
+		keyState.qLast = newDate;
 	}
 
 	if (keyState.KeyA && newDate - keyState.aLast > repeatDelay) {
-		throttleUp()
+		throttleUp();
+		keyState.aLast = newDate;
 	}
 	if (keyState.KeyZ && newDate - keyState.zLast > repeatDelay) {
-		throttleDown()
+		throttleDown();
+		keyState.zLast = newDate;
 	}
 	if (keyState.KeyX && newDate - keyState.xLast > repeatDelay) {
-		throttleOff()
+		throttleOff();
+		keyState.xLast = newDate;
 	}
 
-	if (keyState.KeyV && newDate - keyState.vLast > repeatDelay) { cycleView() }
+	if (keyState.KeyV && newDate - keyState.vLast > repeatDelay) {
+		cycleView();
+		keyState.vLast = newDate;
+	}
 
-	if (keyState.KeyT && newDate - keyState.tLast > repeatDelay) { faster() }
-	if (keyState.KeyG && newDate - keyState.gLast > repeatDelay) { slower() }
+	if (keyState.KeyT && newDate - keyState.tLast > repeatDelay) {
+		faster();
+		keyState.tLast = newDate;
+	}
+	if (keyState.KeyG && newDate - keyState.gLast > repeatDelay) {
+		slower();
+		keyState.gLast = newDate;
+	}
 
 	// rotate rocket
 	body[rocket].mesh.rotateX(xSpin * timestep);
