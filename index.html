@@ -1381,7 +1381,7 @@ function rocketControl() {
 	body[rocket].mesh.rotateZ(zSpin * timestep);
 
 
-	// apply thrust
+	// process thrust
 	if (throttle > 0) {
 		// update the direction vector of rocket
 		body[rocket].pointingM4.extractRotation(body[rocket].mesh.matrix);
@@ -1401,11 +1401,35 @@ function rocketControl() {
 	}
 	
 	/* HALF-BAKED DRAG CODE SO FAR
-	// apply drag
+	// process drag
+	
+	// convert ssb-icrf to local-icrf?? MISSING THAT STEP!
+	
+	let focus = body[rocket].focus;
+	
+	
+	
+	body[rocket].eci = icrfToEci(body[rocket].cartes, body[focus].rightAscension,
+	  body[focus].declination);
+	body[rocket].ecef = eciToEcef(body[rocket].eci,
+		body[focus].spun,
+		body[focus].angularVelocity,
+		body[focus].radiusEquator, body[focus].e2);
+	
+	
+	if (!body[rocket].onSurface) {
+	  
+	  
+	  
+	}
+	
 	if (body[rocket].ecef.vx !== 0 || body[rocket].ecef.vy !== 0 ||
 	  body[rocket].ecef.vz !== 0) {
+	  
+	  // convert ssb-icrf to ecef
+	  
 
-		// get vector of direction from velocity
+		// get prograde vector from velocity
 		let body[rocket].ecef.prograde = new THREE.Vector3(
 		  body[rocket].ecef.vx,
 		  body[rocket].ecef.vy,
@@ -1422,6 +1446,8 @@ function rocketControl() {
 			-body[rocket].ecef.prograde.y * drag * timestep;
 		body[rocket].ecef.vz +=
 			-body[rocket].ecef.prograde.z * drag * timestep;
+			
+		// convert ecef back to ssb-icrf
 	}
 	*/
 	
@@ -1737,6 +1763,11 @@ function keplerPosition() {
 					body[focus].spun,
 					body[focus].angularVelocity,
 					body[focus].radiusEquator, body[focus].e2);
+				
+				// drag goes here
+				
+				
+				
 				body[i].gps = ecefToGps(body[i].ecef, body[focus].radiusEquator,
 					body[focus].e2);
 				if (body[i].gps.alt <= 0) {
