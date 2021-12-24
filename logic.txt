@@ -50,6 +50,8 @@ systemPosition() LOOP BODY
 viewControl
 time
 
+
+
 --- main loop ---
 
 rocketControl()
@@ -95,7 +97,11 @@ animate()
 
 
 
-
+VARIABLE          POSITION
+body[i].x         universal icrf (solar system barycenter)
+body[i].cartes.x  local icrf (when finished)
+body[i].eci.x     local eci (if not commented out)
+body[i].ecef.x    local ecef
 
 
 
