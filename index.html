@@ -1378,7 +1378,7 @@ function rocketControl() {
 	body[rocket].mesh.rotateZ(zSpin * timestep);
 
 
-	// perform thrust
+	// apply thrust
 	if (throttle > 0) {
 		// update the direction vector of rocket
 		body[rocket].pointingM4.extractRotation(body[rocket].mesh.matrix);
@@ -1396,6 +1396,9 @@ function rocketControl() {
 		
 		body[rocket].onSurface = false;
 	}
+	
+	// apply drag
+	// no code yet...
 }
 
 
