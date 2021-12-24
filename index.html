@@ -1539,7 +1539,7 @@ function keplerPosition() {
 		body[i].cartes.vz = body[i].vz - body[focus].vz;
 		
 ////////////////////////////////////////////////////////////////////////////////
-// compite new position using kepler's equation (change meanAnom)
+// compute new position using kepler's equation (change meanAnom)
 
 		// subtract gravity of parent. the keplerian orbit will add this.
 	  body[i].cartes.vx -= body[i].focusForce *
