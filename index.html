@@ -54,6 +54,9 @@
 		<script>
 "use strict";
 
+// debug
+let dragx;
+
 ////////////////////////////////////////////////////////////////////////////////
 // n-body initialization
 
@@ -1724,13 +1727,16 @@ function keplerPosition() {
 					body[i].onSurface = true;
 				}
 			}
+			let focusIndex = body[i].focus;
+			let focusName = body[focusIndex].name;
+			
 			if (body[i].onSurface) {
 				// use ecef to move with surface
 				body[i].cartes = ecefToEci(body[i].ecef,
 					body[focus].spun,
 					body[focus].angularVelocity, body[focus].radiusEquator,
 					body[focus].e2);
-			} else if (body[i].focus === 399) {
+			} else if (focusName === "399") {
 			  
 				// drag goes here
 	
@@ -1738,7 +1744,7 @@ function keplerPosition() {
       	// process drag
       
       		// get prograde vector from velocity
-      		let body[i].ecef.prograde = new THREE.Vector3(
+      		body[i].ecef.prograde = new THREE.Vector3(
       		  body[i].ecef.vx,
       		  body[i].ecef.vy,
       		  body[i].ecef.vz);
@@ -1762,12 +1768,8 @@ function keplerPosition() {
       			-body[i].ecef.prograde.y * drag * timestep;
       		body[i].ecef.vz +=
       			-body[i].ecef.prograde.z * drag * timestep;
-      			
       	}
-      	
-			  
 			}
-		}
 		
 		// tilt back, to match icrf frame
 		body[i].cartes = eciToIcrf(body[i].cartes,
