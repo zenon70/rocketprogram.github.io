@@ -1399,59 +1399,7 @@ function rocketControl() {
 		
 		body[rocket].onSurface = false;
 	}
-	
-	/* HALF-BAKED DRAG CODE SO FAR
-	// process drag
-	
-	// convert ssb-icrf to local-icrf?? MISSING THAT STEP!
-	
-	let focus = body[rocket].focus;
-	
-	
-	
-	body[rocket].eci = icrfToEci(body[rocket].cartes, body[focus].rightAscension,
-	  body[focus].declination);
-	body[rocket].ecef = eciToEcef(body[rocket].eci,
-		body[focus].spun,
-		body[focus].angularVelocity,
-		body[focus].radiusEquator, body[focus].e2);
-	
-	
-	if (!body[rocket].onSurface) {
-	  
-	  
-	  
-	}
-	
-	if (body[rocket].ecef.vx !== 0 || body[rocket].ecef.vy !== 0 ||
-	  body[rocket].ecef.vz !== 0) {
-	  
-	  // convert ssb-icrf to ecef
-	  
 
-		// get prograde vector from velocity
-		let body[rocket].ecef.prograde = new THREE.Vector3(
-		  body[rocket].ecef.vx,
-		  body[rocket].ecef.vy,
-		  body[rocket].ecef.vz);
-		body[rocket].ecef.prograde.normalize();
-		
-		// i guess i'll have to convert to eci, local icrf, and ssb icrf...
-		
-		
-		// apply drag. negative prograde is retrograde.
-		body[rocket].ecef.vx +=
-			-body[rocket].ecef.prograde.x * drag * timestep;
-		body[rocket].ecef.vy +=
-			-body[rocket].ecef.prograde.y * drag * timestep;
-		body[rocket].ecef.vz +=
-			-body[rocket].ecef.prograde.z * drag * timestep;
-			
-		// convert ecef back to ssb-icrf
-	}
-	*/
-	
-	
 }
 
 
@@ -1763,11 +1711,6 @@ function keplerPosition() {
 					body[focus].spun,
 					body[focus].angularVelocity,
 					body[focus].radiusEquator, body[focus].e2);
-				
-				// drag goes here
-				
-				
-				
 				body[i].gps = ecefToGps(body[i].ecef, body[focus].radiusEquator,
 					body[focus].e2);
 				if (body[i].gps.alt <= 0) {
@@ -1787,6 +1730,42 @@ function keplerPosition() {
 					body[focus].spun,
 					body[focus].angularVelocity, body[focus].radiusEquator,
 					body[focus].e2);
+			} else if (body[i].focus === 399) {
+			  
+				// drag goes here
+	
+      	
+      	// process drag
+      
+      		// get prograde vector from velocity
+      		let body[i].ecef.prograde = new THREE.Vector3(
+      		  body[i].ecef.vx,
+      		  body[i].ecef.vy,
+      		  body[i].ecef.vz);
+      		body[i].ecef.prograde.normalize();
+      		
+      		let airData = earthAirData(body[i].gps.alt);
+      		let velocity = Math.sqrt(
+      		  body[i].ecef.vx**2 +
+      		  body[i].ecef.vy**2 +
+      		  body[i].ecef.vz**2);
+      		
+      		let drag = dragEquation(airData.airDensity, velocity);
+      		
+      		// debug
+      		dragx = drag;
+      		
+      		// apply drag. negative prograde is retrograde.
+      		body[i].ecef.vx +=
+      			-body[i].ecef.prograde.x * drag * timestep;
+      		body[i].ecef.vy +=
+      			-body[i].ecef.prograde.y * drag * timestep;
+      		body[i].ecef.vz +=
+      			-body[i].ecef.prograde.z * drag * timestep;
+      			
+      	}
+      	
+			  
 			}
 		}
 		
@@ -1902,7 +1881,8 @@ function displayText() {
 			"<br>Pe " +
 			((body[view].kepler.periapsis - body[vFocus].radiusEquator) / 1000).
 			toFixed(3) +
-			"<br>kms " + (body[view].kepler.v / 1000).toFixed(3);
+			"<br>kms " + (body[view].kepler.v / 1000).toFixed(3) +
+			"<br>drag " + dragx;
 	}
 	
 	
