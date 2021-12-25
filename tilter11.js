@@ -363,3 +363,88 @@ siderealHr from rotRate:
 x = 86164.100637527 / 60 / 60 = 23.934472399313
 
 */
+
+
+
+// PURE FUNCTION
+// Formula accurate if (altitude < 86000)
+// but still provides value if (altitude < 178325)
+// input altitude in meters
+function earthAirData(altitude) {
+  
+  // https://physics.nist.gov/cgi-bin/cuu/Value?r
+  const UNIVERSAL_GAS = 8.314462618; // J
+
+  // https://physics.nist.gov/cgi-bin/cuu/Value?gn
+  const EARTH_GRAVITY_SEA = 9.80665; // m/s^2
+
+  // https://www.engineeringtoolbox.com/air-composition-d_212.html
+  const EARTH_MOLAR_MASS = 0.0289647; // kg/mol
+
+  let airPressure = 0;  // 101325 Pa at sea level
+  let airDensity = 0;  // 1.225 kg/m^3 at sea level
+  let airAccurate = true;
+  let airFormula = "nonzero";
+
+  if (altitude < 86000) {
+    airAccurate = true;
+  }
+  else {
+    airAccurate = false;
+  }
+  
+  if (altitude >= 178325) {
+    airFormula = "out of range";
+    return {airPressure, airDensity, airAccurate, airFormula};
+  }
+  else {
+    let base;
+    let staticPressure;
+    let massDensity;
+    let standardTemperature;
+    let lapse;
+    
+         if (altitude < 11000) { base = 0;     staticPressure = 101325;   massDensity = 1.2250;   standardTemperature = 288.15; lapse = -0.0065 }
+    else if (altitude < 20000) { base = 11000; staticPressure = 22632.10; massDensity = 0.36391;  standardTemperature = 216.65; lapse = 0 }
+    else if (altitude < 32000) { base = 20000; staticPressure = 5474.89;  massDensity = 0.08803;  standardTemperature = 216.65; lapse = 0.001 }
+    else if (altitude < 47000) { base = 32000; staticPressure = 868.02;   massDensity = 0.01322;  standardTemperature = 228.65; lapse = 0.0028 }
+    else if (altitude < 51000) { base = 47000; staticPressure = 110.91;   massDensity = 0.00143;  standardTemperature = 270.65; lapse = 0 }
+    else if (altitude < 71000) { base = 51000; staticPressure = 66.94;    massDensity = 0.00086;  standardTemperature = 270.65; lapse = -0.0028 }
+    else                       { base = 71000; staticPressure = 3.96;     massDensity = 0.000064; standardTemperature = 214.65; lapse = -0.002 }
+    
+    if (lapse != 0) {
+      airFormula = "nonzero";
+      airPressure = staticPressure * Math.pow((standardTemperature / (standardTemperature + (lapse * (altitude - base)))),
+          ((EARTH_GRAVITY_SEA * EARTH_MOLAR_MASS) / (UNIVERSAL_GAS * lapse)));
+      airDensity = massDensity * Math.pow((standardTemperature / (standardTemperature + (lapse * (altitude - base)))),
+          (1 + ((EARTH_GRAVITY_SEA * EARTH_MOLAR_MASS) / (UNIVERSAL_GAS * lapse))));
+      return {airPressure, airDensity, airAccurate, airFormula};
+    }
+    else {
+      airFormula = "zero";
+      airPressure = staticPressure * Math.exp((-EARTH_GRAVITY_SEA * EARTH_MOLAR_MASS * (altitude - base)) / (UNIVERSAL_GAS * standardTemperature));
+      airDensity = massDensity * Math.exp((-EARTH_GRAVITY_SEA * EARTH_MOLAR_MASS * (altitude - base)) / (UNIVERSAL_GAS * standardTemperature));
+      return {airPressure, airDensity, airAccurate, airFormula};
+    }
+  }
+}
+
+
+
+
+
+
+// https://en.wikipedia.org/wiki/Drag_equation
+// No attempt to address sound barrier resistance
+//let drag_now = 0; // N
+function dragEquation(airDensity, velocity) {
+  const drag_coefficient = 0.342; // unitless number. average of 0.237 and 0.447
+  const payload_diameter = 5.2; // meters
+  const drag_area = (payload_diameter / 2)**2 * Math.PI; // m^2
+
+  return (airDensity * velocity**2 * drag_coefficient * drag_area) / 2;
+}
+
+
+
+
