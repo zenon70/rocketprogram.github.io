@@ -364,7 +364,7 @@ x = 86164.100637527 / 60 / 60 = 23.934472399313
 
 */
 
-
+let dragy = true;
 
 // PURE FUNCTION
 // Formula accurate if (altitude < 86000)
