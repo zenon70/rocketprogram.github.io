@@ -1758,6 +1758,8 @@ function keplerPosition() {
       		
       		let drag = dragEquation(airData.airDensity, velocity);
       		
+      	  drag /= 1000; 
+      		
       		// debug
       		dragx = drag;
       		
@@ -1768,6 +1770,12 @@ function keplerPosition() {
       			-body[i].ecef.prograde.y * drag * timestep;
       		body[i].ecef.vz +=
       			-body[i].ecef.prograde.z * drag * timestep;
+      			
+      		// send info back up the chain
+			  	body[i].cartes = ecefToEci(body[i].ecef,
+					body[focus].spun,
+					body[focus].angularVelocity, body[focus].radiusEquator,
+					body[focus].e2);
       	}
 			}
 		
