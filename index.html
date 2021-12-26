@@ -54,7 +54,7 @@
     
 		<script>
 "use strict";
-let versionInfo = "v5"
+let versionInfo = "v6"
 
 // debug
 let dragx = 0;
@@ -1752,13 +1752,15 @@ function keplerPosition() {
       		  body[i].ecef.vz);
       		body[i].ecef.prograde.normalize();
       		
-      		let airData = earthAirData(body[i].gps.alt);
+      		//let airData = earthAirData(body[i].gps.alt);
       		let velocity = Math.sqrt(
       		  body[i].ecef.vx**2 +
       		  body[i].ecef.vy**2 +
       		  body[i].ecef.vz**2);
       		
-      		let drag = dragEquation(airData.airDensity, velocity, body[i].mass);
+      		//let drag = dragEquation(airData.airDensity, velocity, body[i].mass);
+      		let drag = dragEquation(isothermalAirDensity(body[i].gps.alt),
+      		  velocity, body[i].mass);
       		
       	  drag /= 1000; 
       		
