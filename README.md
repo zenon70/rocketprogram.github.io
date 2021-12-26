@@ -80,9 +80,11 @@ kms | kilometers per second*
 
 - surface speed is accurate, even with oblate sphereoid bodies.
 
+- atmosphere of earth and aerodynamic drag
+
 ## what is not simulated
 
-- atmosphere is not simulated at the moment, but i wrote a bunch of formulas and JavaScript code for it that i look forward to implementing in the future. this atmosphere code is not yet in this project, and makes several calculations based on altitude because the in real life, the natural air temperature goes up and down several times as altitude increases.
+- atmosphere for other planets
 
 - the rings of the 6th planet appear unrealistic in a way: they do not receive the shade of the planet, nor do they cast shade. the three.js JavaScript library does not have a good out-of-the-box solution for this. i have experimented with different possible solutions, but they all look worse than just not simulating shade. eclipse shade is also not simulated.
 
