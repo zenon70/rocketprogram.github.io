@@ -460,10 +460,10 @@ function isothermalAirDensity(altitude) {
   
   // H is scale height. nasa says 8.5km
   
-  return 1.225 * Math.exp( - altitude / 8.5);
+  return 1.225 * Math.exp( - altitude / 8500000);
   
   // easily a function for any planet if 3 arguments are used
 }
 
-const version = 7
+const version = "v8";
 
