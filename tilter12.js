@@ -455,12 +455,15 @@ function isothermalAirDensity(altitude) {
 
   //const k = 1.38e-23; // boltz
   //const g = 9.80665;
+  // m is mean molecular mass. T is temperature Kelvin
   //const H = ( k * T ) / ( m * g );
   
   // H is scale height. nasa says 8.5km
   
-  return 1.225 * Math.exp( - altitude / 8500);
+  return 1.225 * Math.exp( - altitude / 8.5);
   
   // easily a function for any planet if 3 arguments are used
 }
+
+const version = 7
 
