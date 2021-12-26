@@ -1760,7 +1760,7 @@ function keplerPosition() {
       		
       		//let drag = dragEquation(airData.airDensity, velocity, body[i].mass);
       		let drag = dragEquation(isothermalAirDensity(body[i].gps.alt),
-      		  velocity, body[i].mass);
+      		  velocity);
       		
       	  drag /= 1000; 
       		
