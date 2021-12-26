@@ -439,8 +439,8 @@ function earthAirData(altitude) {
 //let drag_now = 0; // N
 // i think this outputs kN of force. so i divide by 1000 after getting it.
 function dragEquation(airDensity, velocity, mass) {
-  const drag_coefficient = 0.342; // unitless number. average of 0.237 and 0.447
-  //const drag_coefficient = 2.2; // cube sat
+  //const drag_coefficient = 0.342; // nosecone. avg of 0.237 and 0.447
+  const drag_coefficient = 2.2; // cube sat
   //const payload_diameter = 5.2; // meters. falcon 9 with payload fairing
   const payload_diameter = 9; // meters. starship
   const drag_area = (payload_diameter / 2)**2 * Math.PI; // m^2
@@ -460,10 +460,10 @@ function isothermalAirDensity(altitude) {
   
   // H is scale height. nasa says 8.5km
   
-  return 1.225 * Math.exp( - altitude / 8500000);
+  return 1.225 * Math.exp( - altitude / 8500);
   
   // easily a function for any planet if 3 arguments are used
 }
 
-const version = "v8";
+const version = "v9";
 
