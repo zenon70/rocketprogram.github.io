@@ -448,6 +448,10 @@ function dragEquation(airDensity, velocity, mass) {
   return (airDensity * velocity**2 * drag_coefficient * (drag_area/mass)) / 2;
 }
 
-
-
+// https://www.spaceacademy.net.au/watch/debris/atmosmod.htm
+function isothermalAirDensity(altitude) {
+  // 1.225 is kg/m^3 air density at sea level of earth
+  // 0.45065 is 1.225/e
+  return 1.225 * Math.exp( - altitude / 0.45065);
+}
 
