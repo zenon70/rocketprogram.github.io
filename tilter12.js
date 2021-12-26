@@ -438,7 +438,7 @@ function earthAirData(altitude) {
 // No attempt to address sound barrier resistance
 //let drag_now = 0; // N
 // i think this outputs kN of force. so i divide by 1000 after getting it.
-function dragEquation(airDensity, velocity, mass) {
+function dragEquation(airDensity, velocity) {
   //const drag_coefficient = 0.342; // nosecone. avg of 0.237 and 0.447
   const drag_coefficient = 2.2; // cube sat
   //const payload_diameter = 5.2; // meters. falcon 9 with payload fairing
@@ -465,5 +465,5 @@ function isothermalAirDensity(altitude) {
   // easily a function for any planet if 3 arguments are used
 }
 
-const version = "v11";
+const version = "v12 ... 13";
 
