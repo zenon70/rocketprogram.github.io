@@ -54,9 +54,10 @@
     
 		<script>
 "use strict";
+let versionInfo = "v4"
 
 // debug
-let dragx;
+let dragx = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
 // n-body initialization
@@ -1893,8 +1894,7 @@ function displayText() {
 			((body[view].kepler.periapsis - body[vFocus].radiusEquator) / 1000).
 			toFixed(3) +
 			"<br>kms " + (body[view].kepler.v / 1000).toFixed(3) +
-			"<br>drag " + dragx +
-			"<br>v3 ";
+			"<br>" + versionInfo;
 	}
 	
 	
@@ -1905,7 +1905,8 @@ function displayText() {
 			"<br>Lon " + (body[view].gps.lon * 180 / Math.PI).toFixed(3) +
 			"<br>Alt " + (body[view].gps.alt / 1000).toFixed(3) +
 			"<br>kms " + (Math.sqrt(body[view].ecef.vx**2 +
-			body[view].ecef.vy**2 + body[view].ecef.vz**2) / 1000).toFixed(3);
+			body[view].ecef.vy**2 + body[view].ecef.vz**2) / 1000).toFixed(3) +
+		  "<br>drag " + (dragx).toFixed(3);
 	}
 	
 	/*
