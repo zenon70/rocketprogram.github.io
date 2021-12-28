@@ -1758,11 +1758,16 @@ function keplerPosition() {
       		  body[i].ecef.vy**2 +
       		  body[i].ecef.vz**2);
       		
-      		//let drag = dragEquation(airData.airDensity, velocity, body[i].mass);
-      		let drag = dragEquation(isothermalAirDensity(body[i].gps.alt),
-      		  velocity);
+      		// use densest air between these methods
+      		let density = isothermalAirDensity(body[i].gps.alt);
+      		let airData = earthAirData(body[i].gps.alt);
+      		if (airData.airDensity > density) { density = airData.airDensity }
       		
-      	  drag /= 1000; 
+      		let dragCoefficient = 0.342;
+      		if (body[i].gps.alt > 100000) { dragCoefficient = 2.2 }
+      		
+      		let drag = dragEquation(density, velocity, body[i].mass,
+      			dragCoefficient) / 1000; 
       		
       		// debug
       		dragx = drag;
