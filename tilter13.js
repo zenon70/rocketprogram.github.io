@@ -446,7 +446,7 @@ function dragEquation(airDensity, velocity, mass, dragCoefficient) {
   const payloadDiameter = 9; // meters. starship
   const dragArea = (payloadDiameter / 2)**2 * Math.PI; // m^2
 
-  return (airDensity * velocity**2 * dragCoefficient * dragArea) / 2;
+  return (airDensity * velocity**2 * dragCoefficient * (dragArea/mass)) / 2;
 }
 
 // https://www.spaceacademy.net.au/watch/debris/atmosmod.htm
@@ -466,5 +466,5 @@ function isothermalAirDensity(altitude) {
   // easily a function for any planet if 3 arguments are used
 }
 
-const version = "v21";
+const version = "v22";
 
