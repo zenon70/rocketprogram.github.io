@@ -438,14 +438,15 @@ function earthAirData(altitude) {
 // No attempt to address sound barrier resistance
 //let drag_now = 0; // N
 // i think this outputs kN of force. so i divide by 1000 after getting it.
-function dragEquation(airDensity, velocity) {
+function dragEquation(airDensity, velocity, mass, dragCoefficient) {
   //const drag_coefficient = 0.342; // nosecone. avg of 0.237 and 0.447
-  const drag_coefficient = 2.2; // cube sat
+  //const drag_coefficient = 2.2; // cube sat
+  if (!dragCoefficient) { dragCoefficient = 2.2 }
   //const payload_diameter = 5.2; // meters. falcon 9 with payload fairing
   const payload_diameter = 9; // meters. starship
   const drag_area = (payload_diameter / 2)**2 * Math.PI; // m^2
 
-  return (airDensity * velocity**2 * drag_coefficient * drag_area) / 2;
+  return (airDensity * velocity**2 * drag_coefficient * (drag_area / mass)) / 2;
 }
 
 // https://www.spaceacademy.net.au/watch/debris/atmosmod.htm
