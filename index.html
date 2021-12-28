@@ -54,7 +54,7 @@
     
 		<script>
 "use strict";
-const versionInfo = version;
+const versionInfo = "v17";//version;
 
 // debug
 let dragx = 0;
@@ -1767,7 +1767,7 @@ function keplerPosition() {
       		if (body[i].gps.alt > 100000) { dragCoefficient = 2.2 }
       		
       		let drag = dragEquation(density, velocity, body[i].mass,
-      			dragCoefficient) / 1000; 
+      			dragCoefficient); 
       		
       		// debug
       		dragx = drag;
@@ -1913,7 +1913,7 @@ function displayText() {
 			"<br>Alt " + (body[view].gps.alt / 1000).toFixed(3) +
 			"<br>kms " + (Math.sqrt(body[view].ecef.vx**2 +
 			body[view].ecef.vy**2 + body[view].ecef.vz**2) / 1000).toFixed(3) +
-		  "<br>drag " + dragx;
+		  "<br>drag " + dragx.toFixed(5);
 	}
 	
 	/*
