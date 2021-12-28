@@ -54,7 +54,7 @@
     
 		<script>
 "use strict";
-const versionInfo = "v18";//version;
+const versionInfo = "v19";//version;
 
 // debug
 let dragx = 0;
@@ -1764,7 +1764,10 @@ function keplerPosition() {
       		if (airData.airDensity > density) { density = airData.airDensity }
       		
       		let dragCoefficient = 0.342;
-      		if (body[i].gps.alt > 100000) { dragCoefficient = 2.2 }
+      		if (body[i].gps.alt > 100000) {
+      			dragCoefficient = 2.2;
+      			body[i].mass = 138054; // falcon 9 without fuel in stage 1
+      		}
       		
       		let drag = dragEquation(density, velocity, body[i].mass,
       			dragCoefficient); 
