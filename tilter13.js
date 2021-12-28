@@ -1,5 +1,5 @@
-// revision 12
-// getDirections() depends on three.js r124
+// revision 13
+// getDirections() depends on three.js
 //   ECI<->ECEF depends on getDirections
 
 
@@ -466,5 +466,5 @@ function isothermalAirDensity(altitude) {
   // easily a function for any planet if 3 arguments are used
 }
 
-const version = "v16";
+const version = "v..";
 
