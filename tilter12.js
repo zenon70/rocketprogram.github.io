@@ -466,5 +466,5 @@ function isothermalAirDensity(altitude) {
   // easily a function for any planet if 3 arguments are used
 }
 
-const version = "v12 ... 13";
+const version = "v16";
 
