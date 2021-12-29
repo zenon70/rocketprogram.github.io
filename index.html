@@ -17,11 +17,11 @@
 		<p id="hudPitch"></p>
 		<p id="hudRoll"></p>
 		
-		<script src="threejs/three129.min.js"></script>
-		<script src="threejs/TrackballControls129.js"></script>
+		<!--<script src="threejs/three129.min.js"></script>
+		<script src="threejs/TrackballControls129.js"></script>-->
 		<!--<script src="threejs/GLTFLoader129.js"></script>-->
 		<script src="orbMech59.js"></script>
-		<script src="tilter13.js"></script>
+		<!--<script src="tilter13.js"></script>-->
 		
     <button id="throttleUp" onclick="throttleUp()">throttle up (a)</button>
     <button id="throttleDown" onclick="throttleDown()">throttle down (z)
@@ -52,8 +52,517 @@
     <button id="rollRight" onclick="rollRight()">roll right (r)</button>
     <button id="stopSpin" onclick="stopSpin()">stop rotation (q)</button>
     
-		<script>
+		<script type="module">
 "use strict";
+
+import { TrackballControls } from './threejs/TrackballControls129jsmHere.js';
+
+import {
+	Vector3,
+	Matrix4,
+	Object3D,
+	WebGLRenderer,
+	Scene,
+	PerspectiveCamera,
+	OrthographicCamera,
+	TrackballControls,
+	AmbientLight,
+	PointLight,
+	SphereGeometry,
+	TextureLoader,
+	MeshPhongMaterial,
+	Mesh,
+	CubeTextureLoader,
+	MeshLambertMaterial,
+	PlaneGeometry,
+	MeshBasicMaterial,
+	DoubleSide,
+	Sprite,
+	SpriteMaterial,
+	CylinderGeometry,
+	AxesHelper,
+	ArrowHelper,
+	EllipseCurve,
+	BufferGeometry,
+	LineBasicMaterial,
+	Line,
+	Quaternion
+	//CameraHelper,
+	//GLTFLoader
+} from './threejs/three129.module.js';
+
+// revision 13
+// getDirections() depends on three.js Vector3()
+//   ECI<->ECEF depends on getDirections()
+
+
+////////////////////////////////////////////////////////////////////////////////
+// tilting (rotate/transform) between icrf and body frame (eci)
+/*
+	// see iau report: WGCCRE2009reprint.pdf
+	// for reference, this is how bodies are oriented:
+	// setup (threejs creates objects y-up even if defaultUp is z)
+	body[moon].mesh.rotation.set(Math.PI / 2, 0, 0);
+	
+	// apply dec, then ra, then W eastward
+  body[moon].mesh.rotateOnWorldAxis(
+  	yAxis, (Math.PI / 2) - body[moon].declination);
+  body[moon].mesh.rotateOnWorldAxis(zAxis, body[moon].rightAscension);
+	body[moon].mesh.rotation.y += (Math.PI / 2) + body[moon].primeMeridian;
+
+// in three.js, tilting could be done like this:
+
+// transform vector from icrf to tilt (z-up)
+rotateOnWorldAxis(z, -ra)
+rotateOnWorldAxis(y, dec - Math.PI / 2)
+
+// transform vector from tilt to icrf (z-up)
+rotateOnWorldAxis(y, Math.PI / 2 - dec)
+rotateOnWorldAxis(z, ra)
+
+*/
+
+// to convert orbital coordinates to a local body frame,
+// don't rotate to MATCH the body frame,
+// but rather rotate in the equal and opposite direction
+
+// transform vectors from icrf to local body frame (all z-up)
+function icrfToEci(icrf, ra, dec) {
+	let {x, y, z, vx, vy, vz} = icrf;
+
+	// rotate on z axis, -ra
+	let x2 = x * Math.cos(-ra) - y * Math.sin(-ra);
+	let vx2 = vx * Math.cos(-ra) - vy * Math.sin(-ra);
+	let y2 = y * Math.cos(-ra) + x * Math.sin(-ra);
+	let vy2 = vy * Math.cos(-ra) + vx * Math.sin(-ra);
+	
+	// rotate on y axis (dec - Math.PI / 2) must swap signs
+	let angle = -dec + Math.PI / 2;
+	let x3 = x2 * Math.cos(angle) - z * Math.sin(angle);
+	let vx3 = vx2 * Math.cos(angle) - vz * Math.sin(angle);
+	let z2 = z * Math.cos(angle) + x2 * Math.sin(angle);
+	let vz2 = vz * Math.cos(angle) + vx2 * Math.sin(angle);
+	
+	x = x3;
+	vx = vx3;
+	y = y2;
+	vy = vy2;
+	z = z2;
+	vz = vz2;
+	
+	return {x, y, z, vx, vy, vz};
+}
+
+// transform vectors from local body frame to icrf (all z-up)
+function eciToIcrf(eci, ra, dec) {
+	let {x, y, z, vx, vy, vz} = eci;
+	
+	// rotate on y axis (Math.PI / 2 - dec) must swap signs
+	let angle = -Math.PI / 2 + dec;
+	let x2 = x * Math.cos(angle) - z * Math.sin(angle);
+	let vx2 = vx * Math.cos(angle) - vz * Math.sin(angle);
+	let z2 = z * Math.cos(angle) + x * Math.sin(angle);
+	let vz2 = vz * Math.cos(angle) + vx * Math.sin(angle);
+	
+	// rotate on z axis, ra
+	let x3 = x2 * Math.cos(ra) - y * Math.sin(ra);
+	let vx3 = vx2 * Math.cos(ra) - vy * Math.sin(ra);
+	let y2 = y * Math.cos(ra) + x2 * Math.sin(ra);
+	let vy2 = vy * Math.cos(ra) + vx2 * Math.sin(ra);
+	
+	x = x3;
+	vx = vx3;
+	y = y2;
+	vy = vy2;
+	z = z2;
+	vz = vz2;
+
+	return {x, y, z, vx, vy, vz};
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Convert Earth-Centered-Earth-Fixed (ECEF) to Lat, Lon, Altitude
+// Input is x, y, z in meters
+// Returned array contains lat and lon in radians, and altitude in meters
+function ecefToGps(ecef, radiusEquator, e2) {
+	let {x, y, z} = ecef;
+	
+	const a = radiusEquator;
+	const a1 = a*e2;
+	const a2 = a1*a1;
+	const a3 = a1*e2/2;
+	const a4 = 2.5*a2;
+	const a5 = a1+a3;
+	const a6 = 1-e2;
+	
+	let s,c,ss;
+	let lat;
+	
+	let zp = Math.abs( z );
+	let w2 = x*x + y*y;
+	let w = Math.sqrt( w2 );
+	let r2 = w2 + z*z;
+	let r = Math.sqrt( r2 );
+	const lon = Math.atan2( y, x );       //Lon (final)
+	let s2 = z*z/r2;
+	let c2 = w2/r2;
+	let u = a2/r;
+	let v = a3 - a4/r;
+	if ( c2 > 0.3 ) {
+	  s = ( zp/r )*( 1.0 + c2*( a1 + u + s2*v )/r );
+	  lat = Math.asin( s );      //Lat
+	  ss = s*s;
+	  c = Math.sqrt( 1.0 - ss );
+	}
+	else {
+	  c = ( w/r )*( 1.0 - s2*( a5 - u - c2*v )/r );
+	  lat = Math.acos( c );      //Lat
+	  ss = 1.0 - c*c;
+	  s = Math.sqrt( ss );
+	}
+	let g = 1.0 - e2*ss;
+	let rg = a/Math.sqrt( g );
+	let rf = a6*rg;
+	u = w - rg*c;
+	v = zp - rf*s;
+	let f = c*u + s*v;
+	let m = c*v - s*u;
+	let p = m/( rf/g + f );
+	lat += p;      //Lat
+	const alt = f + m*p/2.0;     //Altitude
+	if ( z < 0.0 ) {
+		lat *= -1.0;     //Lat
+	}
+	return {lat, lon, alt};    //Return Lat, Lon, Altitude in that order
+}
+
+//Convert Lat, Lon, Altitude to Earth-Centered-Earth-Fixed (ECEF)
+//Input is lat, lon (rads) and alt (m)
+//Returns x, y, z in meters
+function gpsToEcef(gps, radiusEquator, e2) {
+	let {lat, lon, alt} = gps;
+	const a = radiusEquator;
+	let n = a/Math.sqrt( 1 - e2*Math.sin( lat )*Math.sin( lat ) );
+	const x = ( n + alt )*Math.cos( lat )*Math.cos( lon );
+	const y = ( n + alt )*Math.cos( lat )*Math.sin( lon );
+	const z = ( n*(1 - e2 ) + alt )*Math.sin( lat );
+	const vx = 0;
+	const vy = 0;
+	const vz = 0;
+	return {x, y, z, vx, vy, vz};
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// COMPASS
+/*
+  depends:
+  	three.js r124 (NOT as modules)
+	requires:
+		position vector (icrf frame, or unspecified) of satellite
+	optional:
+		celestial body quaternion
+	returns:
+		ENU unit vectors: East, North, and Up in z-up or y-up
+	
+	NOTE: the "up" produced here is "away from the center of mass",
+		but not necessarily perpendicular to the surface on an ellipsoid
+*/
+// re-use instead of recreating
+const localPosition = new Vector3();
+let upAxisV3 = new Vector3();
+let eastAxisV3 = new Vector3();
+let northAxisV3 = new Vector3();
+let navAxesFailsafe = false;
+// passing a quaternion argument is OPTIONAL, and changes y-up/z-up
+function getDirections(x, y, z, quaternion) {
+	
+	// uses ICRF (non-tilted), and tilts if specified
+	// use local position for nearby object, not system position
+	localPosition.set(x, y, z);
+
+	// ENU convention: East, North, Up
+	// up is +z, which is different from NED orientation for spacecraft
+	// not to be confused with y-up or z-up
+	////////// UP: CREATE A UNIT VECTOR
+	upAxisV3 = localPosition.normalize();
+
+	// edge case safety: if the rocket has journeyed to the centre of the earth
+	if (upAxisV3.x === 0 && upAxisV3.y === 0 && upAxisV3.z === 0) {
+		upAxisV3.z = Number.EPSILON;
+		navAxesFailsafe = true;
+	}
+	else {
+		navAxesFailsafe = false;
+	}
+
+	////////// EAST: CREATE A UNIT VECTOR
+	// z is up, but sphere textures load y-up by default
+	if (quaternion !== undefined) {
+		eastAxisV3.set(0, 1, 0)
+			.applyQuaternion(quaternion)
+			.cross(localPosition)
+			.normalize();
+	}
+	else {
+		// without quaternion. USE Z-UP FOR PURE SPACE DIRECTIONS!!!
+		eastAxisV3.set(0, 0, 1)
+			.cross(localPosition)
+			.normalize();
+	}
+
+	// edge case safety: if exactly above the north or south pole.
+	if (eastAxisV3.x === 0 && eastAxisV3.y === 0 && eastAxisV3.z === 0) {
+		eastAxisV3.x = Number.EPSILON;
+		navAxesFailsafe = true;
+	}
+	else {
+		navAxesFailsafe = false;
+	}
+
+	////////// NORTH: CREATE A UNIT VECTOR
+	northAxisV3 = upAxisV3.clone().cross(eastAxisV3);
+	
+	return {eastAxisV3, northAxisV3, upAxisV3};
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Earth-Centered-Inertial and Earth-Centered-Earth-Fixed
+
+// depends on gps and getDirections()
+// ECI/Orbit (body frame) to ECEF/Surface (body frame) (all z-up)
+function eciToEcef(eci, angle, angularVelocity, radiusEquator, e2) {
+	let {x, y, z, vx, vy, vz} = eci;
+	// rotate on z axis
+	let x2 = x * Math.cos(-angle) - y * Math.sin(-angle);
+	let vx2 = vx * Math.cos(-angle) - vy * Math.sin(-angle);
+	let y2 = y * Math.cos(-angle) + x * Math.sin(-angle);
+	let vy2 = vy * Math.cos(-angle) + vx * Math.sin(-angle);
+	x = x2;
+	vx = vx2;
+	y = y2;
+	vy = vy2;
+	
+	// to modify speed according to planet rotation, first find
+	// the surface below the spacecraft
+	let gpsNow = ecefToGps({x, y, z}, radiusEquator, e2);
+	gpsNow.alt = 0;
+	let centerToSurface = gpsToEcef(gpsNow, radiusEquator, e2);
+	
+	// surface speed is xy (not xyz) distance from origin to surface
+	let distance = Math.sqrt(centerToSurface.x**2 + centerToSurface.y**2);
+	let tangentVelocity = angularVelocity * distance;
+	
+	// get eastAxisV3 (don't use quaternion!)
+	const enu = getDirections(x, y, z);
+	
+	// negate planetary spin velocity
+	vx -= tangentVelocity * enu.eastAxisV3.x;
+	vy -= tangentVelocity * enu.eastAxisV3.y;
+	
+	// z and vz pass through unchanged
+	return {x, y, z, vx, vy, vz};
+}
+
+
+
+// depends on gps and getDirections()
+// ECEF/Surface (body frame) to ECI (all z-up)
+function ecefToEci(ecef, angle, angularVelocity, radiusEquator, e2) {
+	let {x, y, z, vx, vy, vz} = ecef;
+	// rotate on z axis
+	let x2 = x * Math.cos(angle) - y * Math.sin(angle);
+	let vx2 = vx * Math.cos(angle) - vy * Math.sin(angle);
+	let y2 = y * Math.cos(angle) + x * Math.sin(angle);
+	let vy2 = vy * Math.cos(angle) + vx * Math.sin(angle);
+	x = x2;
+	vx = vx2;
+	y = y2;
+	vy = vy2;
+	
+	// to modify speed according to planet rotation, first find
+	// the surface below the spacecraft
+	let gpsNow = ecefToGps({x, y, z}, radiusEquator, e2);
+	gpsNow.alt = 0;
+	let centerToSurface = gpsToEcef(gpsNow, radiusEquator, e2);
+	
+	// surface speed is xy (not xyz) distance from origin to surface
+	let distance = Math.sqrt(centerToSurface.x**2 + centerToSurface.y**2);
+	let tangentVelocity = angularVelocity * distance;
+	
+	// get eastAxisV3 (don't use a quaternion!)
+	const enu = getDirections(x, y, z);
+	
+	// add planetary spin velocity
+	vx += tangentVelocity * enu.eastAxisV3.x;
+	vy += tangentVelocity * enu.eastAxisV3.y;
+	
+	// z and vz pass through unchanged
+	return {x, y, z, vx, vy, vz};
+}
+
+
+
+
+/*
+use radiusEquator & flattening to get e2 and radiusPole
+not radiusEquator & radiusPole to get flattening and e2
+
+reason:
+
+NASA HORIZONS earth data:
+a = 6378.137 km
+b = 6356.752 km
+f = 1/298.257223563
+f = 0.0033528106647
+
+// extremely precise
+pole radius from eq radius & flattening
+diff = a * f = 21.3846857545176639
+b = a - diff = 6356.7523142454823361
+
+// inaccurate
+flattening from radii
+f = (a - b) / a
+f = 21.385 / a
+f = 0.0033528599338
+1 / f = 298.25284078200
+
+*/
+
+
+
+/*
+use sidereal to get angular velocity (rot. rate rad/s)
+not the other way around
+
+reason:
+
+NASA HORIZONS earth data:
+Mean sidereal day, hr    = 23.9344695944
+Rot. Rate (rad/s)        = 0.00007292115
+
+// accurate
+rotRate from siderealHr:
+23.9344695944 * 60 * 60 = 86,164.09053984 = x
+1/x * 2π = 0.0000729211585454
+
+// inaccurate
+siderealHr from rotRate:
+0.00007292115 / (2π) = 0.0000116057614784
+x = 86164.100637527 / 60 / 60 = 23.934472399313
+
+*/
+
+let dragy = true;
+
+// PURE FUNCTION
+// Formula accurate if (altitude < 86000)
+// but still provides value if (altitude < 178325)
+// input altitude in meters
+function earthAirData(altitude) {
+  
+  // https://physics.nist.gov/cgi-bin/cuu/Value?r
+  const UNIVERSAL_GAS = 8.314462618; // J
+
+  // https://physics.nist.gov/cgi-bin/cuu/Value?gn
+  const EARTH_GRAVITY_SEA = 9.80665; // m/s^2
+
+  // https://www.engineeringtoolbox.com/air-composition-d_212.html
+  const EARTH_MOLAR_MASS = 0.0289647; // kg/mol
+
+  let airPressure = 0;  // 101325 Pa at sea level
+  let airDensity = 0;  // 1.225 kg/m^3 at sea level
+  let airAccurate = true;
+  let airFormula = "nonzero";
+
+  if (altitude < 86000) {
+    airAccurate = true;
+  }
+  else {
+    airAccurate = false;
+  }
+  
+  if (altitude >= 178325) {
+    airFormula = "out of range";
+    return {airPressure, airDensity, airAccurate, airFormula};
+  }
+  else {
+    let base;
+    let staticPressure;
+    let massDensity;
+    let standardTemperature;
+    let lapse;
+    
+         if (altitude < 11000) { base = 0;     staticPressure = 101325;   massDensity = 1.2250;   standardTemperature = 288.15; lapse = -0.0065 }
+    else if (altitude < 20000) { base = 11000; staticPressure = 22632.10; massDensity = 0.36391;  standardTemperature = 216.65; lapse = 0 }
+    else if (altitude < 32000) { base = 20000; staticPressure = 5474.89;  massDensity = 0.08803;  standardTemperature = 216.65; lapse = 0.001 }
+    else if (altitude < 47000) { base = 32000; staticPressure = 868.02;   massDensity = 0.01322;  standardTemperature = 228.65; lapse = 0.0028 }
+    else if (altitude < 51000) { base = 47000; staticPressure = 110.91;   massDensity = 0.00143;  standardTemperature = 270.65; lapse = 0 }
+    else if (altitude < 71000) { base = 51000; staticPressure = 66.94;    massDensity = 0.00086;  standardTemperature = 270.65; lapse = -0.0028 }
+    else                       { base = 71000; staticPressure = 3.96;     massDensity = 0.000064; standardTemperature = 214.65; lapse = -0.002 }
+    
+    if (lapse != 0) {
+      airFormula = "nonzero";
+      airPressure = staticPressure * Math.pow((standardTemperature / (standardTemperature + (lapse * (altitude - base)))),
+          ((EARTH_GRAVITY_SEA * EARTH_MOLAR_MASS) / (UNIVERSAL_GAS * lapse)));
+      airDensity = massDensity * Math.pow((standardTemperature / (standardTemperature + (lapse * (altitude - base)))),
+          (1 + ((EARTH_GRAVITY_SEA * EARTH_MOLAR_MASS) / (UNIVERSAL_GAS * lapse))));
+      return {airPressure, airDensity, airAccurate, airFormula};
+    }
+    else {
+      airFormula = "zero";
+      airPressure = staticPressure * Math.exp((-EARTH_GRAVITY_SEA * EARTH_MOLAR_MASS * (altitude - base)) / (UNIVERSAL_GAS * standardTemperature));
+      airDensity = massDensity * Math.exp((-EARTH_GRAVITY_SEA * EARTH_MOLAR_MASS * (altitude - base)) / (UNIVERSAL_GAS * standardTemperature));
+      return {airPressure, airDensity, airAccurate, airFormula};
+    }
+  }
+}
+
+
+
+
+
+
+// https://en.wikipedia.org/wiki/Drag_equation
+// No attempt to address sound barrier resistance
+//let drag_now = 0; // N
+// i think this outputs kN of force. so i divide by 1000 after getting it.
+function dragEquation(airDensity, velocity, mass, dragCoefficient) {
+  //const dragCoefficient = 0.342; // nosecone. avg of 0.237 and 0.447
+  //const dragCoefficient = 2.2; // cube sat
+  if (!dragCoefficient) { dragCoefficient = 2.2 }
+  //const payloadDiameter = 5.2; // meters. falcon 9 with payload fairing
+  const payloadDiameter = 9; // meters. starship
+  const dragArea = (payloadDiameter / 2)**2 * Math.PI; // m^2
+
+  return (airDensity * velocity**2 * dragCoefficient * (dragArea/mass)) / 2;
+}
+
+// https://www.spaceacademy.net.au/watch/debris/atmosmod.htm
+// https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
+function isothermalAirDensity(altitude) {
+  // 1.225 is kg/m^3 air density at sea level of earth
+
+  //const k = 1.38e-23; // boltz
+  //const g = 9.80665;
+  // m is mean molecular mass. T is temperature Kelvin
+  //const H = ( k * T ) / ( m * g );
+  
+  // H is scale height. nasa says 8.5km
+  
+  return 1.225 * Math.exp( - altitude / 8500);
+  
+  // easily a function for any planet if 3 arguments are used
+}
+
+const version = "v24";
+
+
+
 const versionInfo = version;
 
 // debug
@@ -550,8 +1059,8 @@ let rocket = body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 	
-	pointingV3: new THREE.Vector3(0, 1, 0), // loads y-up
-	pointingM4: new THREE.Matrix4(),
+	pointingV3: new Vector3(0, 1, 0), // loads y-up
+	pointingM4: new Matrix4(),
 	
 	//onSurface: true,
 	type: "Artificial",
@@ -628,9 +1137,9 @@ let mostMassiveBody = 0;
 ////////////////////////////////////////////////////////////////////////////////
 // set up three.js
 
-THREE.Object3D.DefaultUp.set(0, 0, 1);
+Object3D.DefaultUp.set(0, 0, 1);
 
-const renderer = new THREE.WebGLRenderer({logarithmicDepthBuffer: true});
+const renderer = new WebGLRenderer({logarithmicDepthBuffer: true});
 
 let virtualPixel;
 if (window.devicePixelRatio) {
@@ -647,13 +1156,13 @@ renderer.autoClear = false;
 //renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
 
-const scene = new THREE.Scene();
-const scene2 = new THREE.Scene();
+const scene = new Scene();
+const scene2 = new Scene();
 
 // meters to rendering scale for space scene
 let scale = 1e-4;
 
-const camera = new THREE.PerspectiveCamera(
+const camera = new PerspectiveCamera(
 	45,
 	window.innerWidth / window.innerHeight,
 	0.001,
@@ -661,7 +1170,7 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(-200000 * scale, 0 * scale, -250000 * scale);
 
-const camera2 = new THREE.OrthographicCamera(
+const camera2 = new OrthographicCamera(
 	-window.innerWidth / 2,
 	window.innerWidth / 2,
 	window.innerHeight / 2,
@@ -671,7 +1180,7 @@ const camera2 = new THREE.OrthographicCamera(
 );
 
 // trackball controls
-const controls = new THREE.TrackballControls(camera, renderer.domElement);
+const controls = new TrackballControls(camera, renderer.domElement);
 
 // increase damping 4x for snappier controls (default 0.2)
 controls.dynamicDampingFactor = 0.8;
@@ -687,24 +1196,24 @@ controls.update;
 ////////////////////////////////////////////////////////////////////////////////
 // gui overlay scene
 
-const ambientLight2 = new THREE.AmbientLight (0xffffff, 0.7);
+const ambientLight2 = new AmbientLight (0xffffff, 0.7);
 scene2.add(ambientLight2);
 
 // give navball nice appearance, with bright shine exactly in the center
-const pointLight2 = new THREE.PointLight(0xffffff, 0.5);
+const pointLight2 = new PointLight(0xffffff, 0.5);
 scene2.add(pointLight2);
 
 let navBall;
 {
 	// sphere geometry north pole is always +y
-	const geometry = new THREE.SphereGeometry(50, 32, 32);
+	const geometry = new SphereGeometry(50, 32, 32);
 	// the center of image is mapped to +x, with the north pole as +y
-	//const texture = new THREE.TextureLoader().load("graphics/navball.png");
-	const texture = new THREE.TextureLoader().load("graphics/navball_blackgrey.png");
-	//const texture = new THREE.TextureLoader().load("graphics/wb2mpmt.png");
-	//const texture = new THREE.TextureLoader().load("graphics/kbrZiQ2.png");
-	const material = new THREE.MeshPhongMaterial({ map: texture });
-	navBall = new THREE.Mesh(geometry, material);
+	//const texture = new TextureLoader().load("graphics/navball.png");
+	const texture = new TextureLoader().load("graphics/navball_blackgrey.png");
+	//const texture = new TextureLoader().load("graphics/wb2mpmt.png");
+	//const texture = new TextureLoader().load("graphics/kbrZiQ2.png");
+	const material = new MeshPhongMaterial({ map: texture });
+	navBall = new Mesh(geometry, material);
 	scene2.add(navBall);
 }
 
@@ -781,20 +1290,20 @@ function toggleFullscreen() {
 // space scene
 
 // use for setting tilts, etc
-const xAxis = new THREE.Vector3(1, 0, 0);
-const yAxis = new THREE.Vector3(0, 1, 0);
-const zAxis = new THREE.Vector3(0, 0, 1);
+const xAxis = new Vector3(1, 0, 0);
+const yAxis = new Vector3(0, 1, 0);
+const zAxis = new Vector3(0, 0, 1);
 
 /*
 // scene axes at origin
-const axesHelper = new THREE.AxesHelper(25e9 * scale);
+const axesHelper = new AxesHelper(25e9 * scale);
 scene.add(axesHelper);
 */
 
 
 // 1k (1024x1024) Low Resolution (from bright 8k TIFF)
 // skybox: icrf breakout with rotations
-scene.background = new THREE.CubeTextureLoader().load([
+scene.background = new CubeTextureLoader().load([
 	"graphics/1k-icrf-bright/1k-nzLeft.jpg",
 	"graphics/1k-icrf-bright/1k-pzRight.jpg",
 	"graphics/1k-icrf-bright/1k-nx180.jpg",
@@ -808,7 +1317,7 @@ scene.background = new THREE.CubeTextureLoader().load([
 // WORKS CORRECTLY
 // 2k Medium Resolution (from dark 16k TIFF)
 // skybox: icrf breakout with rotations
-scene.background = new THREE.CubeTextureLoader().load([
+scene.background = new CubeTextureLoader().load([
 	"graphics/4k-break-mod-jpg-2k/nzLeft.jpg",
 	"graphics/4k-break-mod-jpg-2k/pzRight.jpg",
 	"graphics/4k-break-mod-jpg-2k/nx180.jpg",
@@ -822,7 +1331,7 @@ scene.background = new THREE.CubeTextureLoader().load([
 /* TOO LARGE. CRASHES BROWSER ON SMARTPHONE WITH 2GB MEMORY
 // 4k High Resolution (from dark 16k TIFF)
 // skybox: icrf breakout with rotations
-scene.background = new THREE.CubeTextureLoader().load([
+scene.background = new CubeTextureLoader().load([
 	"graphics/4k-break-mod-jpg-4k/nzLeft.jpg",
 	"graphics/4k-break-mod-jpg-4k/pzRight.jpg",
 	"graphics/4k-break-mod-jpg-4k/nx180.jpg",
@@ -838,7 +1347,7 @@ scene.background = new THREE.CubeTextureLoader().load([
 
 
 // ambient light (stars, etc)
-const starlight = new THREE.AmbientLight (0xffffff);
+const starlight = new AmbientLight (0xffffff);
 scene.add(starlight);
 
 // planets, moons, etc: oblate spheroids (with helpers)
@@ -848,16 +1357,16 @@ for (let i = body.length - 1; i > -1; i--) {
 	let material;
 	
 	if (body[i].map !== undefined) {
-		material = new THREE.MeshLambertMaterial({
-			map: new THREE.TextureLoader().load(body[i].map)});
+		material = new MeshLambertMaterial({
+			map: new TextureLoader().load(body[i].map)});
 	} else if (body[i].color !== undefined) {
-			material = new THREE.MeshLambertMaterial({
+			material = new MeshLambertMaterial({
 				color: body[i].color});
 	} else {
-		material = new THREE.MeshLambertMaterial();
+		material = new MeshLambertMaterial();
 	}
 	
-	body[i].mesh = new THREE.Mesh(new THREE.SphereGeometry(
+	body[i].mesh = new Mesh(new SphereGeometry(
 		body[i].radiusEquator * scale, body[i].segments, body[i].segments),
 		material);
 	
@@ -881,13 +1390,13 @@ for (let i = body.length - 1; i > -1; i--) {
 
 	// rings
 	if (body[i].ringsRadius !== undefined && body[i].ringsMap !== undefined) {
-		body[i].rings = new THREE.Mesh(
-			new THREE.PlaneGeometry(
+		body[i].rings = new Mesh(
+			new PlaneGeometry(
 				body[i].ringsRadius * 2 * scale, body[i].ringsRadius * 2 * scale),
-			new THREE.MeshBasicMaterial({
-				map: new THREE.TextureLoader().load(body[i].ringsMap),
+			new MeshBasicMaterial({
+				map: new TextureLoader().load(body[i].ringsMap),
 				transparent: true,
-				side: THREE.DoubleSide})
+				side: DoubleSide})
 			);
 		body[i].rings.rotation.set(Math.PI / 2, 0, 0);
 		//body[i].rings.castShadow = true;
@@ -903,7 +1412,7 @@ for (let i = body.length - 1; i > -1; i--) {
 	scene.add(body[i].mesh);
 	/*
 	// create helper
-	body[i].axesHelper = new THREE.AxesHelper(body[i].radiusEquator * 1.5*scale);
+	body[i].axesHelper = new AxesHelper(body[i].radiusEquator * 1.5*scale);
 	// same config as spheroid
 	body[i].axesHelper.rotation.set(Math.PI / 2, 0, -Math.PI / 2 +
 		body[i].declination);
@@ -915,7 +1424,7 @@ for (let i = body.length - 1; i > -1; i--) {
 	body[i].mesh.attach(body[i].axesHelper);
 	
 	// axes icrf. set position manually!
-	body[i].axesHelperICRF = new THREE.AxesHelper(
+	body[i].axesHelperICRF = new AxesHelper(
 		body[i].radiusEquator * 3 * scale);
 	scene.add(body[i].axesHelperICRF);
 	*/
@@ -925,8 +1434,8 @@ for (let i = body.length - 1; i > -1; i--) {
 	
 	
 	{
-		const map = new THREE.TextureLoader().load("graphics/circle-64.png");
-		body[i].sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+		const map = new TextureLoader().load("graphics/circle-64.png");
+		body[i].sprite = new Sprite(new SpriteMaterial({
 			map: map,
 			color: body[i].color,
 			sizeAttenuation: false}));
@@ -943,7 +1452,7 @@ for (let i = body.length - 1; i > -1; i--) {
 
 
 // sunlight
-body[sun].sunlight = new THREE.PointLight(0xffffff, 1);
+body[sun].sunlight = new PointLight(0xffffff, 1);
 //body[sun].sunlight.castShadow = true;
 
 //Set up shadow properties for the light
@@ -957,7 +1466,7 @@ body[sun].mesh.add(body[sun].sunlight);
 
 
 //Create a helper for the shadow camera (optional)
-//const shadowHelper = new THREE.CameraHelper(body[sun].sunlight.shadow.camera);
+//const shadowHelper = new CameraHelper(body[sun].sunlight.shadow.camera);
 //scene.add(shadowHelper);
 
 
@@ -976,18 +1485,18 @@ let view;
 	
 	
 	// temporary mesh
-	const geometry = new THREE.CylinderGeometry(
+	const geometry = new CylinderGeometry(
 		//3.66 * scale, 3.66 * scale, 70 * scale, 8);  // falcon 9
 		9 * scale, 9 * scale, 50 * scale, 8);  // starship
-	const texture = new THREE.TextureLoader().load("graphics/test.jpg");
-	const material = new THREE.MeshLambertMaterial({
+	const texture = new TextureLoader().load("graphics/test.jpg");
+	const material = new MeshLambertMaterial({
 		map: texture
 		});
-	body[i].mesh = new THREE.Mesh(geometry, material);
+	body[i].mesh = new Mesh(geometry, material);
 	
 	
 	// load rocket model
-	//const gLoader = new THREE.GLTFLoader();
+	//const gLoader = new GLTFLoader();
 	//gLoader.load("graphics/falcon_9_-_spacex/scene.gltf", function(gltf) {
 	//gLoader.load("graphics/spacex_starship/scene.gltf", function(gltf) {
 	//gLoader.load("graphics/starship_mk1/scene.gltf", function(gltf) {
@@ -1014,7 +1523,7 @@ let view;
 		const focus = body[i].focus;
 		let enu = getDirections(body[i].cartes.x, body[i].cartes.y, body[i].cartes.z,
 			body[focus].mesh.quaternion);
-		let navM4 = new THREE.Matrix4().makeBasis(
+		let navM4 = new Matrix4().makeBasis(
 			enu.northAxisV3, enu.upAxisV3, enu.eastAxisV3);
 		body[i].mesh.quaternion.setFromRotationMatrix(navM4);
 		
@@ -1028,7 +1537,7 @@ let view;
 		scene.add(body[i].mesh);
 		
 		
-		body[i].axesHelper = new THREE.AxesHelper(250e3 * scale);
+		body[i].axesHelper = new AxesHelper(250e3 * scale);
 		body[i].axesHelper.rotation.copy(body[i].mesh.rotation);
 		// rotate to NED (north, east, down) convention for spacecraft
 		// +x forward, -x aft
@@ -1038,15 +1547,15 @@ let view;
 		body[i].axesHelper.rotateZ(-Math.PI / 2);
 		body[i].mesh.attach(body[i].axesHelper);
 		
-		body[i].thrustArrow = new THREE.ArrowHelper(
+		body[i].thrustArrow = new ArrowHelper(
 			body[i].pointingV3,
 			body[i].mesh.position,
 			1000e3 * scale,
 			0xff0000);
 		body[i].mesh.attach(body[i].thrustArrow);
 		
-		body[i].sprite = new THREE.Sprite(new THREE.SpriteMaterial({
-			map: new THREE.TextureLoader().load("graphics/triangle-64.png"),
+		body[i].sprite = new Sprite(new SpriteMaterial({
+			map: new TextureLoader().load("graphics/triangle-64.png"),
 			color: body[i].color,
 			sizeAttenuation: false}));
 		// model is scaled, and this is being ADDed, so don't scale it down again
@@ -1746,7 +2255,7 @@ function keplerPosition() {
       	// process drag
       
       		// get prograde vector from velocity
-      		body[i].ecef.prograde = new THREE.Vector3(
+      		body[i].ecef.prograde = new Vector3(
       		  body[i].ecef.vx,
       		  body[i].ecef.vy,
       		  body[i].ecef.vz);
@@ -1828,7 +2337,7 @@ function drawEllipse(draw, shade, scale) {
 	const b = a * Math.sqrt(1 - e**2);
 	const c = -Math.sqrt(a**2 - b**2);
 
-	const curve = new THREE.EllipseCurve(
+	const curve = new EllipseCurve(
 		c, 0,                  // aX, aY (center of rotation)
 		a, b,                  // xRadius, yRadius
 		0, 2 * Math.PI,        // aStartAngle, aEndAngle
@@ -1840,9 +2349,9 @@ function drawEllipse(draw, shade, scale) {
 
 	if (body[draw].ellipse === undefined) {
 
-		const geometry = new THREE.BufferGeometry().setFromPoints(points);
-		const material = new THREE.LineBasicMaterial({ color: shade });
-		body[draw].ellipse = new THREE.Line(geometry, material);
+		const geometry = new BufferGeometry().setFromPoints(points);
+		const material = new LineBasicMaterial({ color: shade });
+		body[draw].ellipse = new Line(geometry, material);
 		
 		// prevent clipping
 		body[draw].ellipse.frustumCulled = false;
@@ -2022,7 +2531,7 @@ function toggleLocalOrbits() {
 
 let running = true;
 let skipDraw = 0;
-let navQ = new THREE.Quaternion();
+let navQ = new Quaternion();
 let oldViewX = 0;
 let oldViewY = 0;
 let oldViewZ = 0;
@@ -2072,22 +2581,22 @@ function animate() {
 	let enu = getDirections(body[rocket].cartes.x, body[rocket].cartes.y,
 		body[rocket].cartes.z, body[focus].mesh.quaternion);
 
-	let navM4 = new THREE.Matrix4().makeBasis(
+	let navM4 = new Matrix4().makeBasis(
 		enu.northAxisV3, enu.upAxisV3, enu.eastAxisV3);
 
 	navQ.setFromRotationMatrix(navM4);
 
 	navBall.quaternion.copy(
 		// functional orientation before applying navQ (rotations in world space)
-		new THREE.Quaternion().setFromAxisAngle(zAxis, Math.PI)
-		.multiply(new THREE.Quaternion().setFromAxisAngle(xAxis, -Math.PI / 2))
+		new Quaternion().setFromAxisAngle(zAxis, Math.PI)
+		.multiply(new Quaternion().setFromAxisAngle(xAxis, -Math.PI / 2))
 	
 		// apply nav
 		.multiply(navQ)
 
 		// texture orientation after applying nav (rotations in local/object space)
-		.multiply(new THREE.Quaternion().setFromAxisAngle(xAxis, Math.PI))
-		.multiply(new THREE.Quaternion().setFromAxisAngle(yAxis, Math.PI))
+		.multiply(new Quaternion().setFromAxisAngle(xAxis, Math.PI))
+		.multiply(new Quaternion().setFromAxisAngle(yAxis, Math.PI))
 	);
 
 	// apply spacecraft rotation relative to stars
