@@ -4,7 +4,7 @@ import {
 	Quaternion,
 	Vector2,
 	Vector3
-} from './threejs/three129.module.js';
+} from './three129.module.js';
 
 const _changeEvent = { type: 'change' };
 const _startEvent = { type: 'start' };
