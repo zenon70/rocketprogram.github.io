@@ -54,7 +54,7 @@
     
 		<script>
 "use strict";
-const versionInfo = "v25";
+const versionInfo = "v26";
 
 // debug
 let dragx = 0;
@@ -94,7 +94,7 @@ let sun = body.push({
 	emissive: 0xffffff
 }) - 1;
 
-/*
+
 // 199 sun-centric kms frame
 //2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
  X =-1.946172639275932E+07, Y =-5.992796771076561E+07, Z =-2.999277272986019E+07
@@ -145,7 +145,7 @@ body.push({
   color: 0xe4bd7f
 });
 
-*/
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // earth suncentric kms frame
@@ -171,7 +171,7 @@ let earth = body.push({
 
 	map: "graphics/earth1k-FROM-10kPIXEL-POT.jpg",
 	color: 0x419dd9,
-	segments: 32
+	segments: 128
 }) - 1;
 
 
@@ -202,7 +202,7 @@ let planet4 = body.push({
 	//segments: 48,
 }) - 1;
 
-/*
+
 //2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
  X = 5.985676246570733E+08, Y = 4.093863059842168E+08, Z = 1.608943268775537E+08
  VX=-7.909860298437398E+00, VY= 1.018357408916719E+01, VZ= 4.557755398163733E+00
@@ -368,7 +368,7 @@ body.push({
   color: 0x967a63,
 });
 
-*/
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
