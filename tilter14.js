@@ -1,4 +1,4 @@
-// revision 13
+// revision 14
 // getDirections() depends on three.js
 //   ECI<->ECEF depends on getDirections
 
@@ -486,16 +486,11 @@ function earthAtmosphere(altitude) {
 		2.076e-9, 5.194e-10, 2.541e-10, 6.073e-11, 1.916e-11, 7.014e-12, 2.803e-12,
 		1.184e-12, 5.215e-13, 1.137e-13, 3.070e-14, 1.136e-14, 5.759e-15, 3.561e-15
 		];
+	// the book was missing data for index 27, so 283 is a guess estimate
 	const scaleHeight = [7.310, 6.427, 6.546, 7.360, 8.342, 7.583, 6.661,
 		5.927, 5.533, 5.703, 6.782, 9.973, 13.243, 16.322,
 		21.652, 27.974, 34.934, 43.342, 49.755, 54.513, 58.019,
-		60.980, 65.654, 76.377, 100.587, 147.203, 208.020];
-
-	if (altitude > 1000) {
-		altitude = 1000;
-	} else if (altitude < 0) {
-		altitude = 0;
-	}
+		60.980, 65.654, 76.377, 100.587, 147.203, 208.020, 283]; // 283 is a guess
 
 	let i;
 	for (j = 0; j < 27; j++) {
@@ -503,22 +498,16 @@ function earthAtmosphere(altitude) {
 			i = j;
 		}
 	}
-	if (altitude === 1000) {
+	if (altitude >= 1000) {
 		i = 27;
+	} else if (altitude < 0) {
+		i = 0;
 	}
 	
-	let safe = density[i] * Math.exp( - (altitude - height[i]) / scaleHeight[i]);
-
-	// does JavaScript output NaN for extremely low values?
-	// further investigation is necessary for altitudes >= 1000 km
-	if (isNaN(safe)) {
-		safe = 0;
-	}
-
 	// outputs air density in kg/m**3
-	return safe;
+	return density[i] * Math.exp( - (altitude - height[i]) / scaleHeight[i]);
 }
 
 
-const ver = "v35";
+const ver = "v36";
 
