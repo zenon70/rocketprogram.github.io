@@ -12,6 +12,11 @@ button {
 	border-radius: 20%;
 	/*font-weight: bold;*/
 	bottom: 1px;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 p {
 	position: fixed;
