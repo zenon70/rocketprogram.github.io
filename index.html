@@ -9,14 +9,14 @@
     <link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<p id="hudDateOrbit">Loading...</p>
-		<p id="hudGpsInfo"></p>
-		<p id="hudThrottle"></p>
-		<p id="hudStep"></p>
-		<p id="hudView"></p>
-		<p id="hudYaw"></p>
-		<p id="hudPitch"></p>
-		<p id="hudRoll"></p>
+		<p class="hud" id="hudDateOrbit">Loading...</p>
+		<p class="hud" id="hudGpsInfo"></p>
+		<p class="hud" id="hudThrottle">0</p>
+		<p class="hud" id="hudStep">1</p>
+		<p class="hud" id="hudView">rocket</p>
+		<p class="hud" id="hudYaw">0<br>yaw</p>
+		<p class="hud" id="hudPitch">0<br>pitch</p>
+		<p class="hud" id="hudRoll">0<br>roll</p>
 		
 		<script src="threejs/three129.min.js"></script>
 		<script src="threejs/TrackballControls129.js"></script>
@@ -34,17 +34,10 @@
 		<button id="playPause" onclick="playPause()">pause</button>
 		
 		<button id="view" onclick="cycleView()">change view (v)</button>
-		<button id="toggleRocketAxes" onclick="toggleRocketAxes()">toggle rocket
-			axes</button>
+		<button id="menuButton" onclick="menu()">menu</button>
     <button id="toggleFullscreen" onclick="toggleFullscreen()">full screen
     </button>
 
-    <button id="toggleAllOrbits" onclick="toggleAllOrbits()">toggle all orbits
-    </button>
-    <button id="toggleLocalOrbits" onclick="toggleLocalOrbits()">toggle local
-    	orbits</button>
-		<button id="toggleSprites" onclick="toggleSprites()">toggle sprites</button>
-		
     <button id="up" onclick="up()">pitch up (e)</button>
     <button id="down" onclick="down()">pitch down (d)</button>
     <button id="left" onclick="left()">yaw left (s)</button>
@@ -53,12 +46,308 @@
     <button id="rollRight" onclick="rollRight()">roll right (r)</button>
     <button id="stopSpin" onclick="stopSpin()">stop rotation (q)</button>
     
-		<script>
-"use strict";
-const versionInfo = ver;
+    
+    
 
-// debug
+<div id="menuWindow">
+	<h5>Visual Helpers</h5>
+
+  <input type="checkbox" id="sprites" onchange="toggleSprites()" checked>
+  <label for="sprites">Sprites</label>
+
+  <input type="checkbox" id="rocketAxes"  onchange="toggleRocketAxes()">
+  <label for="rocketAxes">Rocket Axes</label>
+
+  <input type="checkbox" id="allOrbits"  onchange="toggleAllOrbits()">
+  <label for="allOrbits">All Orbits</label>
+
+  <input type="checkbox" id="localOrbits"  onchange="toggleLocalOrbits()">
+  <label for="localOrbits">Local Orbits</label>
+
+	<h5>Stars Resolution</h5>
+	<input type="radio" id="noStars" value="0" name="stars"
+		onchange="changeStars(value)" checked>
+	<label for="noStars">None</label>
+	
+	<br>
+	<input type="radio" id="1kStars" value="1" name="stars"
+		onchange="changeStars(value)">
+	<label for="1kStars">1024 x 1024 x 6, Bright</label>
+	
+	<br>
+	<input type="radio" id="2kStars" value="2" name="stars"
+		onchange="changeStars(value)">
+	<label for="2kStars">2048 x 2048 x 6, Dark</label>
+	
+	<br>
+	<input type="radio" id="4kStars" value="3" name="stars"
+		onchange="changeStars(value)">
+	<label for="4kStars">4096 x 4096 x 6, Dark</label>
+	<br>
+
+	<h5>Earth Resolution</h5>
+	<input type="radio" id="noEarth" value="0" name="earth"
+		onchange="changeEarth(value)">
+	<label for="noEarth">None</label>
+
+	<br>
+	<input type="radio" id="1kEarth" value="1" name="earth"
+		onchange="changeEarth(value)" checked>
+	<label for="1kEarth">1024 x 512</label>
+
+	<br>
+	<input type="radio" id="4kEarth" value="2" name="earth"
+		onchange="changeEarth(value)">
+	<label for="4kEarth">4096 x 2048, Jpeg Quality 90%</label>
+	
+
+	<h5>About</h5>
+	
+	<div id="readme">
+<h1 id="rocket-program">Rocket Program</h1>
+<p>this program simulates rocket launches, orbits, and interplanetary spaceflight.  </p>
+<p><em>orbMechXX.js can be used to convert between Keplerian Orbital Elements and Cartesian State Vectors</em>  </p>
+<h2 id="main-features">main features</h2>
+<ul>
+<li><p>n-body physics integrated with keplerian physics</p>
+<ul>
+<li>lagrange points, lissajous orbits, horseshoe orbits, etc.</li>
+<li>more accurate and stable than simplectic euler n-body physics  </li>
+</ul>
+</li>
+<li><p>oblate spheroids and nodal precession</p>
+<ul>
+<li>acheive special sun-synchronous orbits, etc.  </li>
+</ul>
+</li>
+<li><p>accurate Global Positioning System, altitude, and surface speed</p>
+<ul>
+<li>track spacecraft in real-scale space, to millimeter precision  </li>
+</ul>
+</li>
+<li><p>a navball, affected by both orbital position, and pitch, yaw, and roll</p>
+<ul>
+<li>a useful tool for monitoring spacecraft orientation  </li>
+</ul>
+</li>
+<li><p>US Standard Atmosphere air density model and aerodynamic drag</p>
+<ul>
+<li>simulate MaxQ (maximum aerodynamic pressure), and orbital decay  </li>
+</ul>
+</li>
+<li><p>NASA space object parameters</p>
+<ul>
+<li>all space objects are placed according to NASA Horizons space data  </li>
+</ul>
+</li>
+<li><p>IAU (International Astronomical Union) data for space object axial tilt</p>
+<ul>
+<li>accurate right ascension, declination, and object rotation in time  </li>
+</ul>
+</li>
+</ul>
+<h2 id="links">links</h2>
+<p><em>development version:</em></p>
+<ul>
+<li>Live: <a href="https://cubetronic.github.io">https://cubetronic.github.io</a></li>
+<li>Code: <a href="https://github.com/cubetronic/cubetronic.github.io">https://github.com/cubetronic/cubetronic.github.io</a>  </li>
+</ul>
+<p><em>stable version:</em></p>
+<ul>
+<li>Live: <a href="https://rocketprogram.github.io">https://rocketprogram.github.io</a></li>
+<li>Code: <a href="https://github.com/rocketprogram/rocketprogram.github.io">https://github.com/rocketprogram/rocketprogram.github.io</a>  </li>
+</ul>
+<hr>
+<ul>
+<li><p>many orbital formulas in this program are based on MATLAB scripts from the 2020 textbook <em>Orbital Mechanics for Engineering Students</em> by Curtis. in the practical application of these scripts, necessary adjustments and additions have been made.  </p>
+</li>
+<li><p>this program was developed from scratch, starting with a simple 1-Dimensional concept of a rocket going up. then it became a 2D simulation with a JavaScript canvas. now it&#39;s 3D, with <em>three.js</em> used to render 3D graphics.  </p>
+</li>
+</ul>
+<h2 id="user-guide">user guide</h2>
+<h3 id="key">key</h3>
+<p><strong>orbital info</strong>  </p>
+<table>
+<thead>
+<tr>
+<th>symbol</th>
+<th>meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>semi-major axis</td>
+</tr>
+<tr>
+<td>e</td>
+<td>eccentricity</td>
+</tr>
+<tr>
+<td>i</td>
+<td>inclination</td>
+</tr>
+<tr>
+<td>Ω</td>
+<td>longitude of the ascending node</td>
+</tr>
+<tr>
+<td>ω</td>
+<td>argument of periapsis</td>
+</tr>
+<tr>
+<td>M</td>
+<td>mean anomaly</td>
+</tr>
+<tr>
+<td>Ap</td>
+<td>apoapsis altitude from MSL (mean sea level)</td>
+</tr>
+<tr>
+<td>Pe</td>
+<td>periapsis altitude from MSL (mean sea level)</td>
+</tr>
+<tr>
+<td>kms</td>
+<td>kilometers per second*</td>
+</tr>
+</tbody>
+</table>
+<p>* the kms listed with orbital info is orbital speed. this is the ECI (earth centered inertial) frame, which means it does not consider the spin of the planet/moon/etc.  </p>
+<p><strong>surface info</strong>  </p>
+<table>
+<thead>
+<tr>
+<th>abbv</th>
+<th>meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lat</td>
+<td>latitude</td>
+</tr>
+<tr>
+<td>Lon</td>
+<td>longitude</td>
+</tr>
+<tr>
+<td>Alt</td>
+<td>altitude from MSL (mean sea level)</td>
+</tr>
+<tr>
+<td>kms</td>
+<td>kilometers per second*</td>
+</tr>
+<tr>
+<td>drag</td>
+<td>newtons of force</td>
+</tr>
+</tbody>
+</table>
+<p>* the kms listed with gps info is surface speed. this is the ECEF (earth-centered earth-fixed) frame, and it does consider the spin of the planet/moon/etc.  </p>
+<h2 id="navigation-tips">navigation tips</h2>
+<ul>
+<li><p>if you feel <em>upside down</em>, you can spin the view. tap (or click) and hold and make a circular motion. go clockwise or counter-clockwise to rotate the view. astronauts are always faced with the challenge of determining which was is <em>up</em>. if the ISS (International Space Station) had an axes helper, it would show red forward, roughly east, and blue pointing down towards earth, and green to the right, starboard, which is roughly south because it heads east.  </p>
+</li>
+<li><p>due to current graphics limitations, the visible surface appears to be below the <em>actual</em> surface. so, when a spacecraft is landed on the surface, it will appear to be high up over the surface. trust the gps data, not the graphics.  </p>
+</li>
+<li><p>the faster time is simulated, the more unstable and unreaslistic the simulation is. the timestep is limited to ~8 million times, which is about as fast as it can reliably run for without quickly ejecting the fourth planet&#39;s moons, which is an artificial artifact of warping time, not a realistic feature of space.  </p>
+</li>
+<li><p>to test the <strong>nodal precession</strong> effect, get an orbit that has a low periapsis (i.e. 200km-2000km), then switch to earth view, and crank up the time multiplier. you should notice that the orbit does not stay fixed with respect to the stars. this effect is weaker when orbiting the moon because the moon is not as oblate as earth.  </p>
+</li>
+<li><p>hyperbolic trajectories function accurately, however, helper lines are currently NOT rendered. in previous versions that are not online, code was written to visualize <em>any</em> projected trajectory, even lissajous orbits. unfortunately, that code was very processor-intensive, so i have left it out of this version until i get around to it. therefore, transitioning between orbiting one thing and another thing can be very disorienting. use the nav-ball, orbital elements, and gps info to guide you. good luck!  </p>
+</li>
+</ul>
+<h2 id="what-is-simulated">what is simulated</h2>
+<ul>
+<li><p>it uses n-body physics. this means that every celestial object is having a gravitational effect on every other celestial object. this means that strange orbit types such as lagrangian and horseshoe orbits are possible. even the mass of a spacecraft in this program is calculated to affect the movement of distant planets... yet the numerical precision limits simulating that phenomenon here. still, a spacecraft may have a measurable effect on a very lightweight object nearby.  </p>
+</li>
+<li><p>it <em>also</em> solves the keplerian 2-body problem. it does this between each object and its orbital parent. this increases accuracy dramatically, and also allows for nodal precession. this is probably the trickiest and most unique and innovative aspect of this program. the reasons to implement this are two-fold. firstly, simple n-body physics formulas get very inaccurate the closer objects get to each other. this inaccuracy is avoided by making things that are closest use, instead, the keplerian 2-body formula. simple n-body physics is retained for all other bodies further away. secondly, nodal precession needs to be calculated. this depends on the axial tilt of a body. this is important at close distances, and there are known formulas for calculating nodal precession in conjunction with kepler&#39;s equations.  </p>
+</li>
+<li><p>nodal precession is factored in based on J2 zonal harmonics. this means that the equatorial buldge of each oblate sphereoid (planet, moon, etc.) affects the movement of the orbiting body. nodal precession can be used to acheive the type of sun-sychronous orbit where a satellite is always in direct sunlight, never going into the shade behind the object it is orbiting.  </p>
+</li>
+<li><p>the x-y-z axes colors for the rocket conform to space conventions.  </p>
+</li>
+<li><p>all planets are tilted accurately, not just to the correct amount of tilt, but tilted in the correct direction. IAU data was used. these parameters are known as Right Ascension, Declination, and &quot;W&quot;. &quot;W&quot; is the parameter for the exact rotational position at a specific moment in time. this is used to make sure that the time is correct with respect to day and night on the planet/moon/etc.  </p>
+</li>
+<li><p>real NASA Horizons data is used to create starting points for all objects.  </p>
+</li>
+<li><p>the stars are accurately placed. the images are based on a catalog of all available stars. they are not photos - they are better than photos. different source image brightnesses and resolutions are available in the settings.  </p>
+</li>
+<li><p>everything is at real scale, with real masses. however, the rocket&#39;s engine thrust has not be calibrated to be very realistic yet. it can barely manage a lift-off from earth at 70% throttle, which may even be over-powered still.  </p>
+</li>
+<li><p>gps coordinates are accurate, even with oblate spheroid bodies.  </p>
+</li>
+<li><p>surface speed is accurate, even with oblate sphereoid bodies.  </p>
+</li>
+<li><p>atmosphere of earth and aerodynamic drag, up to 202,000 km altitude. that&#39;s more than half-way to the moon. so even gps satellites experience aerodynamic drag.  </p>
+</li>
+</ul>
+<h2 id="what-is-not-simulated">what is not simulated</h2>
+<ul>
+<li><p>atmosphere for other planets  </p>
+</li>
+<li><p>the rings of the 6th planet appear unrealistic in a way: they do not receive the shade of the planet, nor do they cast shade. the three.js JavaScript library does not have a good out-of-the-box solution for this. i have experimented with different possible solutions, but they all look worse than just not simulating shade. eclipse shade is also not simulated.  </p>
+</li>
+<li><p>relativity and/or the speed of gravity are not currently simulated. upon developing this simulation, i did some research on special and general relativity. from what i understand, NASA&#39;s Horizons data is unfortunately muddied with counter-corrections for relativity. it&#39;s complicated, and i don&#39;t remember all the details right now, but basically, i believe it may be possible for me to produce an extremely accurate simulation - better than perhaps most simulations, by using a proper implementation of Gerber&#39;s equation regarding the effect of gravity travelling at the speed of light. this should accurately simulate the anomaly of the precession of the first planet. as far as fifth planet flyby anomalies, that is currently an observed phenomenon that puzzles scientists.  </p>
+</li>
+<li><p>tidal forces, such as water and land tidal forces, are not simulated.  </p>
+</li>
+<li><p>solar forces such as electromagnetic storms and heat radiation forces are not simulated.  </p>
+</li>
+<li><p>tidally locked moons do not gyrate properly. they are simply flagged as &#39;tidally locked&#39; in the code, and behave accordingly.  </p>
+</li>
+<li><p>surface features such as mountains and valleys are not simulated.  </p>
+</li>
+</ul>
+<h2 id="design-choices">design choices</h2>
+<ul>
+<li><p>functional programming. wherever possible and practical, <em>pure</em> (independent)  functions are written and utilized. this keeps the working pieces of the program separate, and therefore makes the program more reliable and more extensible. it is my goal to make it so that advanced users and programmers can easily understand and use the code.  </p>
+</li>
+<li><p>the internal structure of the code uses the x, y, and z of space conventions, not cgi graphics animation conventions which is the de facto standard in the threejs 3D library and many other programs. the benefit of using space conventions is that all formulas, source code, data input/output, etc., will not need to be converted. this helps avoid confusion for the advanced users and programmers.  </p>
+</li>
+<li><p>icrf orientation. the x, y, and z used in the program refer to icrf (international celestial reference frame) orientation. this makes it so the threejs built-in skybox can be used for the stars, as it doesn&#39;t have to be rotated. this is the most efficient way to go, and, imho, makes the most sense.  </p>
+</li>
+<li><p>the surfaces of planets are used as textures instead of with clouds, if i could find surface textures for the object. for example, the 2nd planet surface texture is used. this will aid in attempting to land in the correct location.  </p>
+</li>
+<li><p>hyperbolic trajectories escaping the solar system are caclulated to an extent, and then fail when the transendental equation becomes processor-intensive. in other words, it is limited on purpose. it is possible to remove that limit, or, if travelling away from the sun to great distances is your goal, then i would just switch from an asymptotic trajectory to a linear trajectory or something like that.  </p>
+</li>
+<li><p>this program is designed to allow addition of an unlimited number of celesital objects. the project goal is to include all planets, known moons, dwarf planets, and a good number of asteroids. the program is designed to allow for dynamic transitions where asteroids and moons can be gracefully ejected and become the child of a new planet or celestial object, should the opportunity arise - just like how the rocket can transfer.  </p>
+</li>
+<li><p>orbMech was written so that the code can be used elsewhere. it simply converts from keplerian orbital elements to cartesian state vectors, and of course also from cartesian state vectors to keplerian orbital elements. if i find the time, perhaps i will make part of this program dedicated to being a conversion calculator.  </p>
+</li>
+<li><p>as a side effect of the way this program was developed, it is possible to bore through planets. this program could also be called &quot;boring program&quot;.  </p>
+</li>
+</ul>
+
+	</div>
+
+</div>
+    
+		<script defer="defer">
+"use strict";
+const versionInfo = "v43";
 let dragx = 0;
+
+
+// immediate menu for testing
+//document.getElementById("menuWindow").style.display = "inline-block";
+
+function menu() {
+	if (document.getElementById("menuWindow").style.display ===
+		"inline-block") {
+  	document.getElementById("menuWindow").style.display = "none";
+	} else {
+  	document.getElementById("menuWindow").style.display = "inline-block";
+	}
+}
+
+
+
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // n-body initialization
@@ -90,12 +379,12 @@ let sun = body.push({
   declination: 63.87,
   primeMeridian: 84.176,
 
-	map: "graphics/sun_1k.jpg",
+	//map: "graphics/sun_1k.jpg",
 	color: 0xffffff,
 	emissive: 0xffffff
 }) - 1;
 
-
+/*
 // 199 sun-centric kms frame
 //2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
  X =-1.946172639275932E+07, Y =-5.992796771076561E+07, Z =-2.999277272986019E+07
@@ -146,7 +435,7 @@ body.push({
   color: 0xe4bd7f
 });
 
-
+*/
 ////////////////////////////////////////////////////////////////////////////////
 
 // earth suncentric kms frame
@@ -172,11 +461,11 @@ let earth = body.push({
 
 	map: "graphics/earth1k-FROM-10kPIXEL-POT.jpg",
 	color: 0x419dd9,
-	segments: 128
+	segments: 32
 }) - 1;
 
 
-
+/*
 ////////////////////////////////////////////////////////////////////////////////
 //2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
  X = 2.080481406481886E+08, Y = 2.096192809566167E+05, Z =-5.529162176566044E+06
@@ -370,7 +659,7 @@ body.push({
 });
 
 
-
+*/
 ////////////////////////////////////////////////////////////////////////////////
 
 // moon geocentric kms frame
@@ -405,7 +694,7 @@ let moon = body.push({
 	color: 0x969392,
 	segments: 32,
 }) - 1;
-
+/*
 // 401
 //2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
  X =-1.989463946057447E+03, Y =-8.743034419032687E+03, Z =-3.181949969502783E+03
@@ -455,7 +744,7 @@ body.push({
 	
 	color: 0xb0aa9f
 });
-
+*/
 
 // process natural celestial bodies
 for (let i = body.length - 1; i > -1; i--) {
@@ -487,7 +776,7 @@ for (let i = body.length - 1; i > -1; i--) {
   
   
   if (body[i].segments === undefined) {
-  	body[i].segments = 16;
+  	body[i].segments = 8;
   }
   
   /*
@@ -574,13 +863,14 @@ let rocket = body.push({
 	};
 	*/
 	
+	/*
 	// boca chica, texas
 	body[i].gps = {
 		lat: 25.997354305760496 * Math.PI / 180,
 		lon: -97.15698039306052 * Math.PI / 180,
 		alt: 0
 	};
-	
+	*/
 	
 	/*
 	// baikonur cosmodrome, kazakhstan
@@ -590,6 +880,15 @@ let rocket = body.push({
 		alt: 0  // actually 90 meters, but this program doesn't have terrain yet
 	};
 	*/
+	
+
+	// guiana space center, kourou, french guiana
+	body[i].gps = {
+		lat: 5.236 * Math.PI / 180,
+		lon: -52.775 * Math.PI / 180,
+		alt: 0  // actual unknown
+	};
+
 	
 	// convert to ecef then to cartes
 	body[i].ecef = gpsToEcef(body[i].gps, body[focus].radiusEquator,
@@ -728,10 +1027,8 @@ let navBall;
 	// sphere geometry north pole is always +y
 	const geometry = new THREE.SphereGeometry(50, 32, 32);
 	// the center of image is mapped to +x, with the north pole as +y
-	//const texture = new THREE.TextureLoader().load("graphics/navball.png");
-	const texture = new THREE.TextureLoader().load("graphics/navball_blackgrey.png");
-	//const texture = new THREE.TextureLoader().load("graphics/wb2mpmt.png");
-	//const texture = new THREE.TextureLoader().load("graphics/kbrZiQ2.png");
+	const texture =
+		new THREE.TextureLoader().load("graphics/navball_blackgrey.png");
 	const material = new THREE.MeshPhongMaterial({ map: texture });
 	navBall = new THREE.Mesh(geometry, material);
 	scene2.add(navBall);
@@ -821,47 +1118,125 @@ scene.add(axesHelper);
 */
 
 
-// 1k (1024x1024) Low Resolution (from bright 8k TIFF)
-// skybox: icrf breakout with rotations
-scene.background = new THREE.CubeTextureLoader().load([
-	"graphics/1k-icrf-bright/1k-nzLeft.jpg",
-	"graphics/1k-icrf-bright/1k-pzRight.jpg",
-	"graphics/1k-icrf-bright/1k-nx180.jpg",
-	"graphics/1k-icrf-bright/1k-px.jpg",
-	"graphics/1k-icrf-bright/1k-pyRight.jpg",
-	"graphics/1k-icrf-bright/1k-nyRight.jpg"
-	]);
+// ERROR: going back and forth fails
+function changeStars(value) {
+	if (scene.background) {
+		scene.background.dispose();
+	}
+	switch (value) {
+		case "0":
+			scene.background = null;
+			scene.background.needsUpdate = true;
+			break;
+		case "1":
+			// 1k (1024x1024) Low Resolution (from bright 8k TIFF)
+			// skybox: icrf breakout with rotations
+			scene.background = new THREE.CubeTextureLoader().load([
+				"graphics/1k-icrf-bright/1k-nzLeft.jpg",
+				"graphics/1k-icrf-bright/1k-pzRight.jpg",
+				"graphics/1k-icrf-bright/1k-nx180.jpg",
+				"graphics/1k-icrf-bright/1k-px.jpg",
+				"graphics/1k-icrf-bright/1k-pyRight.jpg",
+				"graphics/1k-icrf-bright/1k-nyRight.jpg"
+				]);
+				
+			// pixelated and more efficient
+			scene.background.magFilter = THREE.NearestFilter;
+			scene.background.minFilter = THREE.NearestFilter;
+			
+			scene.background.needsUpdate = true;
+			break;
+		case "2":
+			// 2k Medium Resolution (from dark 16k TIFF)
+			// skybox: icrf breakout with rotations
+			scene.background = new THREE.CubeTextureLoader().load([
+				"graphics/4k-break-mod-jpg-2k/nzLeft.jpg",
+				"graphics/4k-break-mod-jpg-2k/pzRight.jpg",
+				"graphics/4k-break-mod-jpg-2k/nx180.jpg",
+				"graphics/4k-break-mod-jpg-2k/px.jpg",
+				"graphics/4k-break-mod-jpg-2k/pyRight.jpg",
+				"graphics/4k-break-mod-jpg-2k/nyRight.jpg"
+				]);
+				
+			// pixelated and more efficient
+			scene.background.magFilter = THREE.NearestFilter;
+			scene.background.minFilter = THREE.NearestFilter;
+			
+			scene.background.needsUpdate = true;
+			break;
+		case "3":
+			// TOO LARGE. CRASHES BROWSER ON SMARTPHONE WITH 2GB MEMORY
+			// 4k High Resolution (from dark 16k TIFF)
+			// skybox: icrf breakout with rotations
+			scene.background = new THREE.CubeTextureLoader().load([
+				"graphics/4k-break-mod-jpg-4k/nzLeft.jpg",
+				"graphics/4k-break-mod-jpg-4k/pzRight.jpg",
+				"graphics/4k-break-mod-jpg-4k/nx180.jpg",
+				"graphics/4k-break-mod-jpg-4k/px.jpg",
+				"graphics/4k-break-mod-jpg-4k/pyRight.jpg",
+				"graphics/4k-break-mod-jpg-4k/nyRight.jpg"
+				]);
+				
+			// pixelated and more efficient
+			scene.background.magFilter = THREE.NearestFilter;
+			scene.background.minFilter = THREE.NearestFilter;
+			
+			scene.background.needsUpdate = true;
+			break;
+		default:
+			scene.background = null;
+			scene.background.needsUpdate = true;
+	} 
+}
 
 
-/*
-// WORKS CORRECTLY
-// 2k Medium Resolution (from dark 16k TIFF)
-// skybox: icrf breakout with rotations
-scene.background = new THREE.CubeTextureLoader().load([
-	"graphics/4k-break-mod-jpg-2k/nzLeft.jpg",
-	"graphics/4k-break-mod-jpg-2k/pzRight.jpg",
-	"graphics/4k-break-mod-jpg-2k/nx180.jpg",
-	"graphics/4k-break-mod-jpg-2k/px.jpg",
-	"graphics/4k-break-mod-jpg-2k/pyRight.jpg",
-	"graphics/4k-break-mod-jpg-2k/nyRight.jpg"
-	]);
-*/
-
-
-/* TOO LARGE. CRASHES BROWSER ON SMARTPHONE WITH 2GB MEMORY
-// 4k High Resolution (from dark 16k TIFF)
-// skybox: icrf breakout with rotations
-scene.background = new THREE.CubeTextureLoader().load([
-	"graphics/4k-break-mod-jpg-4k/nzLeft.jpg",
-	"graphics/4k-break-mod-jpg-4k/pzRight.jpg",
-	"graphics/4k-break-mod-jpg-4k/nx180.jpg",
-	"graphics/4k-break-mod-jpg-4k/px.jpg",
-	"graphics/4k-break-mod-jpg-4k/pyRight.jpg",
-	"graphics/4k-break-mod-jpg-4k/nyRight.jpg"
-	]);
-*/
-
-
+function changeEarth(value) {
+	if (body[earth].mesh.material.map) {
+		body[earth].mesh.material.map.dispose();
+		body[earth].mesh.material.map = null;
+	}
+	switch (value) {
+		case "0":
+			body[earth].map = null;
+			//body[earth].mesh.material.map = null;
+			if (body[earth].color) {
+				body[earth].mesh.material.color.setHex(body[earth].color);
+			}
+			body[earth].mesh.material.needsUpdate = true;
+			break;
+		case "1":
+			body[earth].mesh.material.color.setHex(0xffffff);
+			body[earth].map = "graphics/earth1k-FROM-10kPIXEL-POT.jpg";
+			body[earth].mesh.material.map =
+				new THREE.TextureLoader().load(body[earth].map);
+				
+			// pixelated and more efficient
+			body[earth].mesh.material.map.magFilter = THREE.NearestFilter;
+			body[earth].mesh.material.map.minFilter = THREE.NearestFilter;
+			
+			body[earth].mesh.material.needsUpdate = true;
+			break;
+		case "2":
+			body[earth].mesh.material.color.setHex(0xffffff);
+			body[earth].map = "graphics/planet3_4k.jpg";
+			body[earth].mesh.material.map =
+				new THREE.TextureLoader().load(body[earth].map);
+			
+			// pixelated and more efficient
+			body[earth].mesh.material.map.magFilter = THREE.NearestFilter;
+			body[earth].mesh.material.map.minFilter = THREE.NearestFilter;
+			
+			body[earth].mesh.material.needsUpdate = true;
+			break;
+		default:
+			body[earth].map = null;
+			body[earth].mesh.material.map = null;
+			if (body[earth].color) {
+				body[earth].mesh.material.color.setHex(body[earth].color);
+			}
+			body[earth].mesh.material.needsUpdate = true;
+	} 
+}
 
 
 
@@ -876,9 +1251,14 @@ for (let i = body.length - 1; i > -1; i--) {
 	
 	let material;
 	
-	if (body[i].map !== undefined) {
+	if (body[i].map !== undefined && body[i].map !== null) {
 		material = new THREE.MeshLambertMaterial({
 			map: new THREE.TextureLoader().load(body[i].map)});
+		
+		// experimental. hopefully more efficient.
+		material.map.magFilter = THREE.NearestFilter;
+		material.map.minFilter = THREE.NearestFilter;
+
 	} else if (body[i].color !== undefined) {
 			material = new THREE.MeshLambertMaterial({
 				color: body[i].color});
@@ -931,7 +1311,7 @@ for (let i = body.length - 1; i > -1; i--) {
 	
 	scene.add(body[i].mesh);
 	/*
-	// create helper
+	// create planet helper
 	body[i].axesHelper = new THREE.AxesHelper(body[i].radiusEquator * 1.5*scale);
 	// same config as spheroid
 	body[i].axesHelper.rotation.set(Math.PI / 2, 0, -Math.PI / 2 +
@@ -966,7 +1346,7 @@ for (let i = body.length - 1; i > -1; i--) {
 }
 
 	
-// fix shadows
+// disable sun shadow
 //body[sun].mesh.castShadow = false;
 //body[sun].mesh.receiveShadow = false;
 
@@ -1009,6 +1389,8 @@ let view;
 		//3.66 * scale, 3.66 * scale, 70 * scale, 8);  // falcon 9
 		9 * scale, 9 * scale, 50 * scale, 8);  // starship
 	const texture = new THREE.TextureLoader().load("graphics/test.jpg");
+	texture.magFilter = THREE.NearestFilter;
+	texture.minFilter = THREE.NearestFilter;
 	const material = new THREE.MeshLambertMaterial({
 		map: texture
 		});
@@ -1066,6 +1448,7 @@ let view;
 		body[i].axesHelper.rotateX(Math.PI);
 		body[i].axesHelper.rotateZ(-Math.PI / 2);
 		body[i].mesh.attach(body[i].axesHelper);
+		body[i].axesHelper.visible = false;
 		
 		body[i].thrustArrow = new THREE.ArrowHelper(
 			body[i].pointingV3,
@@ -1073,26 +1456,25 @@ let view;
 			1000e3 * scale,
 			0xff0000);
 		body[i].mesh.attach(body[i].thrustArrow);
+		body[i].thrustArrow.visible = false;
 		
 		body[i].sprite = new THREE.Sprite(new THREE.SpriteMaterial({
 			map: new THREE.TextureLoader().load("graphics/triangle-64.png"),
 			color: body[i].color,
 			sizeAttenuation: false}));
-		// model is scaled, and this is being ADDed, so don't scale it down again
+
+		// scale sprite for gltf model
 		//body[i].sprite.scale.set(1000, 1000, 1)
-		// sprite size for test model
-		body[i].sprite.scale.set(0.01, 0.01, 1)
+
+		// scale sprite for cylinder geometry
+		body[i].sprite.scale.set(0.01, 0.01, 1);
+		
 		body[i].mesh.add(body[i].sprite);
 		
 		// post-setup global adjustments
 		view = rocket;
 		controls.target = body[view].mesh.position;
 		controls.minDistance = 30 * scale;
-		
-		// set to hide most orbits
-		// this should NOT be run here because it includes undefined variables
-		//   at this point. it only worked because loading gltf was slow
-		//toggleAllOrbits();
 	
 	// brackets for gltf
 	//});
@@ -1208,12 +1590,16 @@ function cycleView() {
 		view = 0;
 	}
 	
+	// don't look at the sun
+	if (view === 0) view++;
+
+/*
 	if (body[view].type === "Artificial") {
 		document.getElementById("hudGpsInfo").style.visibility = "visible";
 	} else {
 		document.getElementById("hudGpsInfo").style.visibility = "hidden";
 	}
-	
+*/
 	controls.target = body[view].mesh.position;
 	
 	if (body[view].type === "Natural") {
@@ -1244,6 +1630,7 @@ function cycleView() {
 	}
 	
 	//body[view].mesh.attach(camera);
+	document.getElementById("hudView").innerHTML = body[view].name;
 }
 cycleView();
 
@@ -1255,13 +1642,15 @@ cycleView();
 // max loop speed is 100x per second. slower depending on load and cpu speed
 // 8 million times is relatively stable, though wobbly
 // 16 million times will eject moons 401 and 402 in about a minute
-let timestep = 0.16;
+let timestep = 0.01;
 function faster() {
 	if (timestep < 80000) timestep *= 2;
+	document.getElementById("hudStep").innerHTML = Math.round(timestep * 100);
 }
 function slower() {
 	if (timestep > .01) timestep /= 2;
 	if (timestep < .01) timestep = .01;
+	document.getElementById("hudStep").innerHTML = Math.round(timestep * 100);
 }
 
 // start with J2000.0 date to match positions and rotations
@@ -1279,16 +1668,57 @@ let throttle = 0;
 let thrustPower = 0.15;
 
 // onscreen buttons
-function up() { xSpin += spinPower }
-function down() { xSpin -= spinPower }
-function left() { zSpin += spinPower }
-function right() { zSpin -= spinPower }
-function rollLeft() { ySpin -= spinPower }
-function rollRight() { ySpin += spinPower }
-function stopSpin() { xSpin = 0; ySpin = 0;	zSpin = 0; }
-function throttleUp() { if (throttle < 100) { throttle += 10 } }
-function throttleDown() { if (throttle > 0) { throttle -= 10 } }
-function throttleOff() { throttle = 0 }
+function up() {
+	xSpin += spinPower;
+	document.getElementById("hudPitch").innerHTML =
+	  Math.round(xSpin*10) + "<br>pitch";
+}
+function down() {
+	xSpin -= spinPower;
+	document.getElementById("hudPitch").innerHTML =
+	  Math.round(xSpin*10) + "<br>pitch";
+}
+function left() {
+	zSpin += spinPower;
+	document.getElementById("hudYaw").innerHTML =
+		Math.round(-zSpin*10) + "<br>yaw";
+}
+function right() {
+	zSpin -= spinPower;
+	document.getElementById("hudYaw").innerHTML =
+		Math.round(-zSpin*10) + "<br>yaw";
+}
+function rollLeft() {
+	ySpin -= spinPower;
+	document.getElementById("hudRoll").innerHTML =
+	  Math.round(ySpin*10) + "<br>roll";
+}
+function rollRight() {
+	ySpin += spinPower;
+	document.getElementById("hudRoll").innerHTML =
+	  Math.round(ySpin*10) + "<br>roll";
+}
+function stopSpin() {
+	xSpin = 0; ySpin = 0;	zSpin = 0;
+	document.getElementById("hudPitch").innerHTML =
+	  Math.round(xSpin*10) + "<br>pitch";
+	document.getElementById("hudYaw").innerHTML =
+		Math.round(-zSpin*10) + "<br>yaw";
+	document.getElementById("hudRoll").innerHTML =
+	  Math.round(ySpin*10) + "<br>roll";
+}
+function throttleUp() {
+	if (throttle < 100) { throttle += 10 }
+	document.getElementById("hudThrottle").innerHTML = throttle;
+}
+function throttleDown() {
+	if (throttle > 0) { throttle -= 10 }
+	document.getElementById("hudThrottle").innerHTML = throttle;
+}
+function throttleOff() {
+	throttle = 0;
+	document.getElementById("hudThrottle").innerHTML = throttle;
+}
 
 // keys that will be used must be declared first
 const keyState = {
@@ -1846,7 +2276,7 @@ function keplerPosition() {
 // shade: color in hex format (i.e. 0xff0000 for red), only used on first run
 // scale: meters to render scale
 function drawEllipse(draw, shade, scale) {
-	
+
 	// expensive but easy way to get icrf orbit elements
 	let kepler = toKepler(body[draw].cartes, body[draw].mu);
 	
@@ -1898,6 +2328,7 @@ function drawEllipse(draw, shade, scale) {
 		const focus = body[draw].focus;
 
 		body[draw].ellipse.position.copy(body[focus].mesh.position);
+
 }
 
 
@@ -1950,31 +2381,17 @@ function displayText() {
 			"<br>Alt " + (body[view].gps.alt / 1000).toFixed(3) +
 			"<br>kms " + (Math.sqrt(body[view].ecef.vx**2 +
 			body[view].ecef.vy**2 + body[view].ecef.vz**2) / 1000).toFixed(3) +
-		  "<br>drag " + dragx.toExponential(3);
+		  "<br>drag " + dragx.toExponential(2);
 	}
 	
-	/*
-		document.getElementById("hudGpsInfo").style.visibility = "visible";
+
 	else {
-		document.getElementById("hudGpsInfo").style.visibility = "hidden";
 		body[view].name +
 			"<br>Mass " + body[view].mass + " kg" +
-			"<br>Equatorial Radius " + body[view].radiusEquator / 1000 + " km" +
-			"<br>Polar Radius " + body[view].radiusPole / 1000 + " km" +
-			"<br>Sidereal " + body[view].sidereal + " hr";
+			"<br>ERad " + body[view].radiusEquator / 1000 + " km" +
+			"<br>PRad " + body[view].radiusPole / 1000 + " km" +
+			"<br>Sdrl " + body[view].sidereal + " hr";
 	}
-	*/
-
-	document.getElementById("hudThrottle").innerHTML = throttle;
-	document.getElementById("hudStep").innerHTML = Math.round(timestep * 100);
-	document.getElementById("hudView").innerHTML = body[view].name;
-	
-	document.getElementById("hudYaw").innerHTML =
-		Math.round(-zSpin*10) + "<br>yaw";
-	document.getElementById("hudPitch").innerHTML =
-	  Math.round(xSpin*10) + "<br>pitch";
-	document.getElementById("hudRoll").innerHTML =
-	  Math.round(ySpin*10) + "<br>roll";
 
 }
 
@@ -2015,44 +2432,53 @@ function main() {
 	now.setMilliseconds(now.getMilliseconds() + timestep * 1000);
 
 	displayText();
+	
+	preAnimate();
 }
 
 
 
-let drawOrbits = true;
+let drawOrbits = false;
 function toggleAllOrbits() {
-	if (drawOrbits === false) {
-		for (let i = body.length - 1; i > 0; i--) {
-			body[i].ellipse.visible = true;
+	if (drawOrbits) {
+		if (drawLocalOrbits) {
+			let localParent = body[rocket].focus;
+			// skip sun
+			for (let i = body.length - 1; i > 0; i--) {
+				if (body[i].focus !== localParent) {
+					body[i].ellipse.visible = false;
+				}
+			}
+		} else {
+			// skip sun
+			for (let i = body.length - 1; i > 0; i--) {
+				body[i].ellipse.visible = false;
+			}
 		}
-		drawOrbits = true;
-	} else if (drawOrbits === true) {
-		// skip sun
-		for (let i = body.length - 1; i > 0; i--) {
-			body[i].ellipse.visible = false;
-		}
-		drawOrbits = false;
-	} else {
-		// started without orbits, ellipse object doesn't exist yet
-		drawOrbits = true;
 	}
+	drawOrbits = !drawOrbits;
 }
 
 // still needs fix for when focus changes
-let drawLocalOrbits = true;
+let drawLocalOrbits = false;
 function toggleLocalOrbits() {
-	if (drawLocalOrbits === true) {
-		drawLocalOrbits = false;
-	} else {
-		drawLocalOrbits = true;
+	drawLocalOrbits = !drawLocalOrbits;
+	if (!drawOrbits) {
+		for (let i = body.length - 1; i > 0; i--) {
+			if (body[i].ellipse) {
+				body[i].ellipse.visible = false;
+			}
+		}
 	}
+/*
 	// lazy coding.. cycling this updates what is visible
 	toggleAllOrbits();
 	toggleAllOrbits();
+*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// animate
+// preAnimate
 
 let running = true;
 let skipDraw = 0;
@@ -2060,19 +2486,16 @@ let navQ = new THREE.Quaternion();
 let oldViewX = 0;
 let oldViewY = 0;
 let oldViewZ = 0;
-function animate() {
-	if (running) {
-		requestAnimationFrame(animate);
-	}
+function preAnimate() {
 	
-	// skip the sun
 	if (drawOrbits === true) {
+		// skip the sun because it doesn't have orbital parameters
 		for (let i = body.length - 1; i > 0; i--) {
-		// due to nbody physics (not just thrust), a new trajectory is always needed
 		
 			//if (body[i].type === "Artificial") {
-				drawEllipse(i, body[i].color, scale);
-				/*
+			drawEllipse(i, body[i].color, scale);
+			body[i].ellipse.visible = true;
+/*
 			} else {
 				if (skipDraw === 0) {
 					drawEllipse(i, body[i].color, scale);
@@ -2081,23 +2504,19 @@ function animate() {
 					skipDraw--;
 				}
 			}
-			*/
+*/
 		}
 	}
-	
+
 	if (drawLocalOrbits === true) {
-		let localOrbits = body[rocket].focus;
+		let localParent = body[rocket].focus;
 		for (let i = body.length - 1; i > 0; i--) {
-			if (body[i].focus === localOrbits) {
+			if (body[i].focus === localParent) {
 				drawEllipse(i, body[i].color, scale);
 				body[i].ellipse.visible = true;
 			}
 		}
 	}
-	/*
-	drawEllipse(earth, 0x00ffff, scale);
-	drawEllipse(planet4, 0xff0000, scale);
-	*/
 	
 ////////////////////////////////////////////////////////////////////////////////
 // NAVBALL
@@ -2153,20 +2572,22 @@ function animate() {
   oldViewX = body[view].mesh.position.x;
   oldViewY = body[view].mesh.position.y;
   oldViewZ = body[view].mesh.position.z;
-	
+}
+
+function animate() {
+	requestAnimationFrame(animate);
+
 	controls.update();
-	
+
 	renderer.clear();
 	renderer.render(scene, camera);
 	renderer.clearDepth();
 	renderer.render(scene2, camera2);
-	
 }
-
+animate();
 
 
 let loop = setInterval(main, 10);
-animate();
 
 function playPause() {
 	if (running === true) {
@@ -2174,12 +2595,10 @@ function playPause() {
 		running = false;
 	}
 	else {
-		requestAnimationFrame(animate);
 		loop = setInterval(main, 10);
 		running = true;
 	}
 }
-
 		</script>
 	</body>
 </html>
