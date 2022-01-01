@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0,
 			maximum-scale=1.0, user-scalable=no"/>
 		<link rel="icon" href="favicon.ico" type="image/x-icon"/>
-    <link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
+		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
@@ -325,9 +325,9 @@
 
 </div>
     
-		<script defer="defer">
+		<script>
 "use strict";
-const versionInfo = "v43";
+const versionInfo = "v44";
 let dragx = 0;
 
 
@@ -465,7 +465,7 @@ let earth = body.push({
 }) - 1;
 
 
-/*
+
 ////////////////////////////////////////////////////////////////////////////////
 //2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
  X = 2.080481406481886E+08, Y = 2.096192809566167E+05, Z =-5.529162176566044E+06
@@ -492,7 +492,7 @@ let planet4 = body.push({
 	//segments: 48,
 }) - 1;
 
-
+/*
 //2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
  X = 5.985676246570733E+08, Y = 4.093863059842168E+08, Z = 1.608943268775537E+08
  VX=-7.909860298437398E+00, VY= 1.018357408916719E+01, VZ= 4.557755398163733E+00
@@ -690,17 +690,17 @@ let moon = body.push({
 	primeMeridian: 38.3213,
 	
 	//map: "graphics/moon301_2k.jpg",
-	map: "graphics/1k_moon-FROM-2k.jpg",
+	map: "graphics/moon301_1k.jpg",
 	color: 0x969392,
 	segments: 32,
 }) - 1;
-/*
+
 // 401
 //2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
  X =-1.989463946057447E+03, Y =-8.743034419032687E+03, Z =-3.181949969502783E+03
  VX= 1.843207370506235E+00, VY=-4.310475264969203E-02, VZ=-1.018331998843603E+00
 
-body.push({
+let moon401 = body.push({
 	name: "401",
 	focus: planet4,
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
@@ -718,7 +718,7 @@ body.push({
 	primeMeridian: 35.06,
 	
 	color: 0x9a8d84
-});
+}) - 1;
 
 // 402
 //2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
@@ -744,7 +744,7 @@ body.push({
 	
 	color: 0xb0aa9f
 });
-*/
+
 
 // process natural celestial bodies
 for (let i = body.length - 1; i > -1; i--) {
@@ -832,7 +832,7 @@ for (let i = body.length - 1; i > -1; i--) {
  
 let rocket = body.push({
 	name: "rocket",
-	focus: earth,
+	focus: 401,
 	mass: 549054,
 	
 	sidereal: null,
@@ -881,15 +881,15 @@ let rocket = body.push({
 	};
 	*/
 	
-
+	/*
 	// guiana space center, kourou, french guiana
 	body[i].gps = {
 		lat: 5.236 * Math.PI / 180,
 		lon: -52.775 * Math.PI / 180,
 		alt: 0  // actual unknown
 	};
-
-	
+	*/
+/*	
 	// convert to ecef then to cartes
 	body[i].ecef = gpsToEcef(body[i].gps, body[focus].radiusEquator,
 		body[focus].e2);
@@ -902,8 +902,8 @@ let rocket = body.push({
 	// not necessary for earth, but should be standard practice
 	body[i].cartes = eciToIcrf(body[i].cartes,
 		body[focus].rightAscension, body[focus].declination);
-		
-	/*
+*/
+	
 	// OVERWRITE PREVIOUS... do this instead.. sputnik 1 orbit
 	let aTemp = getAxis(947000, 228000, body[earth].radiusEquator);
 	let eTemp = getEcc(947000, 228000, body[earth].radiusEquator);
@@ -919,7 +919,7 @@ let rocket = body.push({
 
 	body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
 	body[i].cartes = toCartes(body[i].kepler, body[i].mu);
-	*/
+	
 }
 
 
@@ -1244,6 +1244,10 @@ function changeEarth(value) {
 // ambient light (stars, etc)
 const starlight = new THREE.AmbientLight (0xffffff);
 scene.add(starlight);
+
+function setStarlight(value) {
+	
+}
 
 // planets, moons, etc: oblate spheroids (with helpers)
 for (let i = body.length - 1; i > -1; i--) {
