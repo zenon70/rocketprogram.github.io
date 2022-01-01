@@ -1,182 +1,123 @@
 
 
-PLANNED FEATURES (ABSOLUTE NECESSITY):
+IN-PROGRESS:
 
-low-res startup
-air, drag, thrust, deltaV, etc.
+
+
+
+
+
+
+ISSUES:
+
+crash at center of planet
+    couldn't launch from 401, went down instead
+        perhaps due to low thrust
+
+KNOWN & INTENDED HYPERBOLIC "SAFE CRASH"
+    when iterations > 9999 to solve, forgetaboutit...
+    need safe failout
+
+bounce off atmosphere at high warp
+
+
+
+livestream crashes, need super low-res startup, select hq maps
+
+earth's inclination.. to sun axes (equator) or ecliptic?
+
+
+
+MAJOR AWKWARDITIES:
+
+not appearing on surface
+    rotate earth mesh so rocket is at peak point?
+    collision with surface graphics, with accurate gps
+    surface graphics and gps ARE accurate, if using
+    1024 segments... so it just depends on segment
+    heights.
+
 rotate with surface while landed
-major moons, asteroids, comets for sure
-nicer user interface (menus, info, more options)
+  rotate with parent
+  attach independent child object at location of landing.
+  set with rotation of rocket. copy that rotation.
+  if the rocket is rotated manually then rotate the clone.
 
 
-RE-IMPLEMENTING DROPPED FEATURES:
+
+MINOR AWKWARDNESSESS:
+
+camera should start UP
+
+restore camera zoom level on view change?
+
+make menu look nice, nicer user interface (menus, info, more options)
+  show/hide axes (planets, etc)
+  show/hide individual orbit lines
+  gui buttons sizes mobile (normal) vs desktop etc
+
+make menu larger for big screens, ok for smaller screens?
+
+
+
+COOL FEATURES TO IMPLEMENT:
+
+brighten/dim ambient light
+
+select launch location
+
 constellation map
-  this was dropped because it was based on a weird (bad) spherical projection,
-  whereas now the best-practices skybox background is being used.
-dynamic trajectory projection (not just an ellipse)
-  (especially needed for hyperbolic trajectories)
-  this was dropped because it was sloppy (weird catmull rom curve implementation)
 
+air density on other planets
+  re-entry heat
 
-MORE PLANNED FEATURES
+terrain: bump/relief map w/collision detection
+  
+GRAPHICS
+  cloud layer
+  sky color during daytime or in thick atmosphere, from camera location
+  shadows, especially for planet 6 rings
+    use DirectionalLight or SpotLight near planet
+
+loading screen
+ascii text "rocket" fades from screen on startup
+"maxq" appears on screen when passed
+
+first person camera
+
+fuel, weight, thrust, deltaV ratios
+
+major moons, asteroids, comets for sure, all ~200 moons hopefully
 
 assorted rocket models, using stats
 multiple satellites
-all ~200 moons hopefully
 track any asteroid or object
-
-
-
-POSSIBLE EXTRA FEATURES
 
 adjustable scale
 
 
 
-
-
-
-
-
-
-PROGRAM FLOW (simplified)
-
-
-populate body array, conversions, mostMassiveBody
-  cartes (local icrf)
-threejs setup & objects, resize(), fullscreen()
-
-systemPosition() LOOP BODY
-viewControl
-time
-
-
-
---- main loop ---
-
-rocketControl()
-
-nBodyVelocity() LOOP BODY
-  spin planets
-    define focus
-    accelerate
-
-keplerPosition() LOOP BODY
-  cartes.xyz = -focusDistanceXYZ
-  cartes.vxyz = vxyx - focus.vxyz
-  cartes.vxyz -= focus acceleration
-    icrfToEci()
-      toKepler()
-        if (!onSurface)
-          meanAnom++
-          j2++
-      toCartes()
-      if (Artificial)
-        if (!onSurface)
-          eciToEcef()
-          ecefToGps()
-          if (alt == 0)
-            v 0,0,0 and onSurface = true
-        if (onSurface)
-          ecefToEci()
-    eciToIcrf()
-
-systemPosition() LOOP BODY
-time++
-displayText()
-
---- main loop ---
-
-animate()
-  drawEllipse
-    toKepler()
-      draw, position, and rotate ellipse
-  navBall getDirections()
-  camera
-  render
-
-
-
-VARIABLE          POSITION
-body[i].x         universal icrf (solar system barycenter)
-body[i].cartes.x  local icrf (when finished)
-body[i].eci.x     local eci (if not commented out)
-body[i].ecef.x    local ecef
-
-
-
-
-BROWSER RENDERING
-
-firefox mobile 68.11 setting that changes resolution:
-layout.css.devPixelsPerPx
-preferred resolution: 1.6
-
-JavaScript
-window.devicePixelRatio
-
-
-
-ALTITUDE
-
-gps tells you MSL: Mean Sea Level.
-  it's accurate, even with oblate spheroids.
-
-but it does NOT tell you the height of actual physical surface features, like mountains and valleys (which are not implemented)...
-
-
-
-
-
-
-
-
-
-
-
-// shadow setup
-if (focus === 0) {
-// setup a DirectionalLight
-// positioned outside if the furthest child
-// in the direction of the sun, facing back
-
-
-// rotate with parent
-// attach independent child object at location of
-// landing. set with rotation of rocket.
-// copy that rotation. if the rocket is rotated
-// manually then rotate the clone.
-
-
-
-
-
-
-
-
-
-
-
+EFFICIENCY:
 
 why the slowness:
 
-  polygons, especially a 3d rocket model
+- loading all planets & moons with textures at the same time
 
-  high res textures (and probably ~90% jpg quality) 
-  
-  loading all planets & moons with textures at the same time
-  
-  two scenes.. one just for the navball, with nice lighting
+- polygons, gtlf models
+
+- high res textures
+
+- two scenes
   
   orbit lines
     recalculating kepler and redrawing on every frame
     ellipse with 500 points
-    
 
+  processing space data (instead of it being pre-processed)
+  
   loading the whole threejs instead of just modules?
     it may not make a difference
-
-  processing data (instead of it being pre-processed)
+    i prefer console use (n/a in modules)
 
   rockets are part of n-body physics
 
@@ -187,75 +128,27 @@ why the slowness:
 
 
 
-ISSUES
-
-* couldn't launch from 401, went down instead
-    need research
-
-  earth's inclination.. to sun axes (equator) or ecliptic?
-
-
-PHYSICS
-
-* collision with surface graphics, with accurate gps
-    bump/relief map w/collision detection.
-    surface graphics and gps ARE accurate, if using
-    1024 segments... so it just depends on segment
-    heights.
-
-  rotate with parent while landed
-
-  fuel, weight, thrust, deltaV ratios
-
-  atmosphere
-    drag
-    re-entry heat
-
-  KNOWN & INTENDED HYPERBOLIC "SAFE CRASH"
-    when iterations > 9999 to solve, forgetaboutit...
-    need safe failout
-
-
-
-GRAPHICS
-  3d rocket model
-  cloud layer
-  sky color during daytime or in thick atmosphere
-  shadows, especially for planet 6 rings
-    use DirectionalLight or SpotLight near planet
 
 
 USER INTERFACE
-  load low-res, select hq maps
 
-  gui buttons sizes mobile (normal) vs desktop etc
-
-  loading screen
-  show/hide axes (ship, planets, etc)
-  show/hide sprites
-  show/hide individual orbit lines
-  brighten/dim ambient light
-
-  navball
-    prograde, radial, normal markers
-      for eci
-      for ecef
+  navball prograde, radial, normal markers for eci & ecef
     target anti-target marker
     maneuver marker
 
   orbit line
-    apo/peri/incl markers on orbit line
-    draw nbody trajectory
     draw pure hyperbolic line (vs ellipse)
+    draw nbody trajectory
+    apo/peri/incl markers on orbit line
     make truAnom as starting point for ellipse
       so that the rocket always appears on the line?
       but then peri/apo points are not shown
 
-  orbitcontrols option large bodies, min zoom, angle
+  orbitcontrols option for large bodies, with min zoom, *angle*
     solve zoom difficulty issue
     solve pole angle issue
 
-  real-time sync
+  real-time sync (already coded in an old version)
 
 
 MULTI
@@ -339,6 +232,118 @@ ONBOARD COMPUTER: ANDROID
 LAUNCH NAVIGATION: FIREFOX
 IP ADDRESS
 BROWSER INFO
+
+
+
+
+
+
+
+
+
+PROGRAM FLOW (simplified)
+
+
+populate body array, conversions, mostMassiveBody
+  cartes (local icrf)
+threejs setup & objects, resize(), fullscreen()
+
+systemPosition() LOOP BODY
+viewControl
+time
+
+
+
+--- main loop ---
+
+rocketControl()
+
+nBodyVelocity() LOOP BODY
+  spin planets
+    define focus
+    accelerate
+
+keplerPosition() LOOP BODY
+  cartes.xyz = -focusDistanceXYZ
+  cartes.vxyz = vxyx - focus.vxyz
+  cartes.vxyz -= focus acceleration
+    icrfToEci()
+      toKepler()
+        if (!onSurface)
+          meanAnom++
+          j2++
+      toCartes()
+      if (Artificial)
+        if (!onSurface)
+          eciToEcef()
+          ecefToGps()
+          if (alt == 0)
+            v 0,0,0 and onSurface = true
+        if (onSurface)
+          ecefToEci()
+    eciToIcrf()
+
+systemPosition() LOOP BODY
+time++
+displayText()
+
+--- main loop ---
+
+preAnimate()
+  drawEllipse
+    toKepler()
+      draw, position, and rotate ellipse
+  navBall getDirections()
+  camera
+  render
+
+
+
+VARIABLE          POSITION
+body[i].x         universal icrf (solar system barycenter)
+body[i].cartes.x  local icrf (when finished)
+body[i].ecef.x    local ecef
+
+body[i].eci.x     local eci (if not commented out)
+
+
+
+BROWSER RENDERING
+
+firefox mobile setting that changes resolution:
+layout.css.devPixelsPerPx
+preferred resolution: 1.6
+
+JavaScript
+window.devicePixelRatio
+
+
+
+ALTITUDE
+
+- gps tells you MSL: Mean Sea Level at specific location. it's accurate, even with oblate spheroids, but it does NOT tell you the height of actual physical surface features, like mountains and valleys (which are not implemented)...
+- Ap shows MSL of equatorial.
+
+
+
+
+// shadow setup
+if (focus === 0) {
+// setup a DirectionalLight
+// positioned outside if the furthest child
+// in the direction of the sun, facing back
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
