@@ -459,7 +459,7 @@ let earth = body.push({
 	declination: 90,
 	primeMeridian: 190.147,
 
-	map: "graphics/earth1k-FROM-10kPIXEL-POT.jpg",
+	map: "graphics/planet3_1k.jpg",
 	color: 0x419dd9,
 	segments: 32
 }) - 1;
@@ -716,7 +716,8 @@ let moon401 = body.push({
 	rightAscension: 317.68,
 	declination: 52.90,
 	primeMeridian: 35.06,
-	
+
+	map: "graphics/moon401bump1200x600.jpg"
 	color: 0x9a8d84
 }) - 1;
 
@@ -742,6 +743,7 @@ body.push({
 	declination: 53.52,
 	primeMeridian: 79.41,
 	
+	map: "graphics/moon402bump1200x600.jpg"
 	color: 0xb0aa9f
 });
 
@@ -1206,7 +1208,7 @@ function changeEarth(value) {
 			break;
 		case "1":
 			body[earth].mesh.material.color.setHex(0xffffff);
-			body[earth].map = "graphics/earth1k-FROM-10kPIXEL-POT.jpg";
+			body[earth].map = "graphics/planet3_1k.jpg";
 			body[earth].mesh.material.map =
 				new THREE.TextureLoader().load(body[earth].map);
 				
