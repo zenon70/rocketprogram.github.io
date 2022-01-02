@@ -11,7 +11,7 @@
 |_|             |___/
 ```
 
-# rocket program  
+# this is a rocket program  
   
 this program simulates rocket launches, orbits, and interplanetary spaceflight.  
   
