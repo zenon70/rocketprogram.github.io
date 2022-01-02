@@ -2,7 +2,7 @@
 
 IN-PROGRESS:
 
-
+close menu by outside tap
 
 
 
@@ -10,32 +10,36 @@ IN-PROGRESS:
 
 ISSUES:
 
-crash at center of planet
-    couldn't launch from 401, went down instead
-        perhaps due to low thrust
-
-KNOWN & INTENDED HYPERBOLIC "SAFE CRASH"
-    when iterations > 9999 to solve, forgetaboutit...
-    need safe failout
-
-bounce off atmosphere at high warp
-
-
-
-livestream crashes, need super low-res startup, select hq maps
-
-earth's inclination.. to sun axes (equator) or ecliptic?
-
-
-
-MAJOR AWKWARDITIES:
-
+401 surface and graphics are WAY off
+  more than just the dips in polygons
+  is it really oblate? landing on 401 makes me think no.
 not appearing on surface
     rotate earth mesh so rocket is at peak point?
     collision with surface graphics, with accurate gps
-    surface graphics and gps ARE accurate, if using
+    surface graphics and gps ARE accurate??, if using
     1024 segments... so it just depends on segment
-    heights.
+    heights.?? not true for 401!!
+
+known & intended hyperbolic "safe crash" needs proper exit
+    when iterations > 9999 to solve, NaN occurs
+    need proper exit / catch
+
+rocket insanely bounces off atmosphere at high warp
+
+orbit lines float away after changing focus
+
+livestream crashes, need super low-res startup, set hq maps
+
+firefox mobile 96.0.0-beta.5 scrolling to hide address bar
+  causes screen to resize wrong
+
+crash at center of planet
+
+rocket goes down when low thrust on surface
+
+
+
+HIGH PRIORITY FEATURE REQUESTS:
 
 rotate with surface while landed
   rotate with parent
@@ -45,7 +49,7 @@ rotate with surface while landed
 
 
 
-MINOR AWKWARDNESSESS:
+MEDIUM PRIORITY FEATURE REQUESTS:
 
 camera should start UP
 
@@ -60,9 +64,9 @@ make menu larger for big screens, ok for smaller screens?
 
 
 
-COOL FEATURES TO IMPLEMENT:
+LOW PRIORITY FEATURE REQUESTS:
 
-brighten/dim ambient light
+brighten/dim ambient light starlight
 
 select launch location
 
@@ -72,6 +76,7 @@ air density on other planets
   re-entry heat
 
 terrain: bump/relief map w/collision detection
+  aerodynamics and negative altitude loss of momentum will need to be revised
   
 GRAPHICS
   cloud layer
