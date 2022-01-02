@@ -2373,8 +2373,7 @@ function displayText() {
 			"<br>kms " +
 			(Math.sqrt(body[view].vx**2 + body[view].vy**2 + body[view].vz**2) /
 			1000).toFixed(3);
-	}
-	else {
+	} else {
 		let vFocus = body[view].focus;
 		document.getElementById("hudDateOrbit").innerHTML = now.toISOString() +
 			"<br>a " + (body[view].kepler.a / 1000).toFixed(3) +
@@ -2392,8 +2391,6 @@ function displayText() {
 			"<br>kms " + (body[view].kepler.v / 1000).toFixed(3) +
 			"<br>" + versionInfo;
 	}
-	
-	
 
 	if (body[view].type === "Artificial") {
 		document.getElementById("hudGpsInfo").innerHTML =
@@ -2402,18 +2399,14 @@ function displayText() {
 			"<br>Alt " + (body[view].gps.alt / 1000).toFixed(6) +
 			"<br>kms " + (Math.sqrt(body[view].ecef.vx**2 +
 			body[view].ecef.vy**2 + body[view].ecef.vz**2) / 1000).toFixed(6) +
-		  "<br>drag " + dragx.toExponential(2);
+			"<br>drag " + dragx.toExponential(2);
+	} else {
+		document.getElementById("hudGpsInfo").innerHTML =
+			"Mass " + body[view].mass.toExponential(0) + " kg" +
+			"<br>EqRad " + (body[view].radiusEquator / 1000).toFixed(0) + " km" +
+			"<br>PoRad " + (body[view].radiusPole / 1000).toFixed(0) + " km" +
+			"<br>Sdrl " + body[view].sidereal.toFixed(2) + " hr";
 	}
-	
-
-	else {
-		body[view].name +
-			"<br>Mass " + body[view].mass + " kg" +
-			"<br>ERad " + body[view].radiusEquator / 1000 + " km" +
-			"<br>PRad " + body[view].radiusPole / 1000 + " km" +
-			"<br>Sdrl " + body[view].sidereal + " hr";
-	}
-
 }
 
 
