@@ -324,7 +324,7 @@
     
 		<script>
 "use strict";
-const versionInfo = "v44";
+const versionInfo = "v45";
 let dragx = 0;
 
 
@@ -484,9 +484,9 @@ let planet4 = body.push({
   declination: 52.88650,
   primeMeridian: 176.630,
   
-	map: "graphics/planet4_2k.jpg",
-	color: 0xb76247,
 	//segments: 48,
+	map: "graphics/planet4_2k.jpg",
+	color: 0xb76247
 }) - 1;
 
 /*
@@ -719,7 +719,7 @@ let moon401 = body.push({
 
 	map: "graphics/moon401bump1200x600.jpg",
 	color: 0x9a8d84,
-	segments: 64
+	segments: 32
 }) - 1;
 
 // 402
@@ -782,7 +782,7 @@ for (let i = body.length - 1; i > -1; i--) {
   
   
   if (body[i].segments === undefined) {
-  	body[i].segments = 8;
+  	body[i].segments = 16;
   }
   
   /*
