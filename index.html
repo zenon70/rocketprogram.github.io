@@ -396,7 +396,7 @@ let sun = body.push({
 	emissive: 0xffffff
 }) - 1;
 
-/*
+
 // 199 sun-centric kms frame
 //2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
  X =-1.946172639275932E+07, Y =-5.992796771076561E+07, Z =-2.999277272986019E+07
@@ -418,7 +418,7 @@ body.push({
   declination: 61.4143,
   primeMeridian: 329.5469,
   
-  map: "graphics/planet1_2k.jpg",
+  //map: "graphics/planet1_2k.jpg",
   color: 0x848383
 });
 
@@ -443,11 +443,11 @@ body.push({
   declination: -67.16,
   primeMeridian: 160.20 + 180, // iau defines neg as north. adding 180
 
-  map: "graphics/planet2_2k.jpg",
+  //map: "graphics/planet2_2k.jpg",
   color: 0xe4bd7f
 });
 
-*/
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // earth suncentric kms frame
@@ -500,11 +500,11 @@ let planet4 = body.push({
   primeMeridian: 176.630,
   
 	//segments: 48,
-	map: "graphics/planet4_2k.jpg",
+	//map: "graphics/planet4_2k.jpg",
 	color: 0xb76247
 }) - 1;
 
-/*
+
 //2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
  X = 5.985676246570733E+08, Y = 4.093863059842168E+08, Z = 1.608943268775537E+08
  VX=-7.909860298437398E+00, VY= 1.018357408916719E+01, VZ= 4.557755398163733E+00
@@ -533,7 +533,7 @@ body.push({
   declination: 64.495393,
   primeMeridian: 284.95,
   
-  map: "graphics/planet5_2k.jpg",
+  //map: "graphics/planet5_2k.jpg",
   color: 0xada396,
 });
 
@@ -567,11 +567,10 @@ body.push({
   declination: 83.537,
   primeMeridian: 38.90,
   
-  map: "graphics/planet6_2k.jpg",
-  color: 0xcfc0a2,
-  
+  //map: "graphics/planet6_2k.jpg",
+  //ringsMap: "graphics/planet6rings_1k.png",
   ringsRadius: 140415 * 1000,
-  ringsMap: "graphics/planet6rings_1k.png"
+  color: 0xcfc0a2
 });
 
 
@@ -603,7 +602,7 @@ body.push(
   declination: -15.175,
   primeMeridian: 203.81,
   
-  map: "graphics/planet7_1k.jpg",
+  //map: "graphics/planet7_1k.jpg",
   color: 0x98afb7,
 });
 
@@ -634,7 +633,7 @@ body.push({
   declination: 43.46,
   primeMeridian: 253.18,
   
-	map: "graphics/planet8_2k.jpg",
+	//map: "graphics/planet8_2k.jpg",
   color: 0x364fa7,
 });
 
@@ -666,12 +665,12 @@ body.push({
   // 0 longitude on the map is the left edge, so add 180
   primeMeridian: 237.305 + 180,
 
-  map: "graphics/planet9_2k.jpg",
+  //map: "graphics/planet9_2k.jpg",
   color: 0x967a63,
 });
 
 
-*/
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // moon geocentric kms frame
@@ -732,7 +731,7 @@ let moon401 = body.push({
 	declination: 52.90,
 	primeMeridian: 35.06,
 
-	map: "graphics/moon401bump1200x600.jpg",
+	map: "graphics/moon401_720x360.jpg",
 	color: 0x9a8d84,
 	segments: 32
 }) - 1;
@@ -762,7 +761,7 @@ let moon402 = body.push({
 	declination: 53.52,
 	primeMeridian: 79.41,
 	
-	map: "graphics/moon402bump1200x600.jpg",
+	map: "graphics/moon402_720x360.jpg",
 	color: 0xb0aa9f
 }) - 1;
 
