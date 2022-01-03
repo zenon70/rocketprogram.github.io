@@ -18,53 +18,53 @@
 
 
 #hudDateOrbit {
-  top: 1px;
-  left: 1px;
-  width: 160px;
-  height: 130px;
+	top: 1px;
+	left: 1px;
+	width: 160px;
+	height: 130px;
 }
 #hudGpsInfo {
-  top: 1px;
-  left: 200px;
-  width: 85px;
-  height: 60px;
+	top: 1px;
+	left: 200px;
+	width: 85px;
+	height: 60px;
 }
 
 
 #hudThrottle {
-  left: 1px;
-  bottom: 181px;
+	left: 1px;
+	bottom: 181px;
 }
 #hudStep {
-  left: 61px;
-  bottom: 181px;
+	left: 61px;
+	bottom: 181px;
 }
 #hudView {
-  left: 121px;
-  bottom: 181px;
+	left: 121px;
+	bottom: 181px;
 }
 
 
 #hudYaw {
 	width:46px;
 	height: 30px;
-  right: 121px;
-  bottom: 181px;
-  text-align: center;
+	right: 121px;
+	bottom: 181px;
+	text-align: center;
 }
 #hudPitch {
 	width: 46px;
 	height: 30px;
-  right: 61px;
-  bottom: 181px;
-  text-align: center;
+	right: 61px;
+	bottom: 181px;
+	text-align: center;
 }
 #hudRoll {
 	width: 46px;
 	height: 30px;
-  right: 1px;
-  bottom: 181px;
-  text-align: center;
+	right: 1px;
+	bottom: 181px;
+	text-align: center;
 }
 
 
@@ -78,24 +78,24 @@ button {
 	border-radius: 20%;
 	/*font-weight: bold;*/
 	bottom: 1px;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 #throttleUp {
-  left: 1px;
-  bottom: 121px;
+	left: 1px;
+	bottom: 121px;
 }
 #throttleDown {
-  left: 1px;
-  bottom: 61px;
+	left: 1px;
+	bottom: 61px;
 }
 #throttleOff {
-  left: 1px;
-  bottom: 1px;
+	left: 1px;
+	bottom: 1px;
 }
 
 #faster {
@@ -126,28 +126,28 @@ button {
 
 
 #up {
-  right: 61px;
-  bottom: 121px;
+	right: 61px;
+	bottom: 121px;
 }
 #down {
-  right: 61px;
-  bottom: 1px;
+	right: 61px;
+	bottom: 1px;
 }
 #left {
-  right: 121px;
-  bottom: 61px;
+	right: 121px;
+	bottom: 61px;
 }
 #right {
-  right: 1px;
-  bottom: 61px;
+	right: 1px;
+	bottom: 61px;
 }
 #rollLeft {
-  right: 121px;
-  bottom: 121px;
+	right: 121px;
+	bottom: 121px;
 }
 #rollRight {
-  right: 1px;
-  bottom: 121px;
+	right: 1px;
+	bottom: 121px;
 }
 #stopSpin {
 	right: 61px;
@@ -189,7 +189,7 @@ button {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-	
+
 	overflow-y: scroll;
 }
 
@@ -230,16 +230,16 @@ h3 {
 }
 
 a:link {
-  color: skyblue;
+	color: skyblue;
 }
 a:visited {
-  color: skyblue;
+	color: skyblue;
 }
 a:hover {
-  color: skyblue;
+	color: skyblue;
 }
 a:active {
-  color: skyblue;
+	color: skyblue;
 }
 
 pre, code, span, em, ul, li, p, table, thead, tr, th, tbody, td, warn,

@@ -9,20 +9,22 @@ IN-PROGRESS:
 
 ISSUES:
 
+spacecraft rotation during and resulting from warp is wrong.. requires
+  complicated formula.
 
 401 surface and graphics are WAY off
   more than just the dips in polygons
   is it really oblate? landing on 401 makes me think no.
 not appearing on surface
-    rotate earth mesh so rocket is at peak point?
-    collision with surface graphics, with accurate gps
-    surface graphics and gps ARE accurate??, if using
-    1024 segments... so it just depends on segment
-    heights.?? not true for 401!!
+  rotate earth mesh so rocket is at peak point?
+  collision with surface graphics, with accurate gps
+  surface graphics and gps ARE accurate??, if using
+  1024 segments... so it just depends on segment
+  heights.?? not true for 401!!
 
 known & intended hyperbolic "safe crash" needs proper exit
-    when iterations > 9999 to solve, NaN occurs
-    need proper exit / catch
+  when iterations > 9999 to solve, NaN occurs
+  need proper exit / catch
 
 livestream crashes, need super low-res startup, set hq maps
 
@@ -43,9 +45,6 @@ this will get resolved when hyperbolic trajectories etc are drawn
     draw pure hyperbolic line (vs ellipse)
     draw nbody trajectory
     apo/peri/incl markers on orbit line
-    make truAnom as starting point for ellipse
-      so that the rocket always appears on the line?
-      but then peri/apo points are not shown
 
 
 
@@ -121,13 +120,13 @@ why the slowness:
 - high res textures
 
 - two scenes
-  
-  orbit lines
+
+- orbit lines
     recalculating kepler and redrawing on every frame
     ellipse with 500 points
 
   processing space data (instead of it being pre-processed)
-  
+
   loading the whole threejs instead of just modules?
     it may not make a difference
     i prefer console use (n/a in modules)

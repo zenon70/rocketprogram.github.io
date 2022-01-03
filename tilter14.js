@@ -10,11 +10,11 @@
 	// for reference, this is how bodies are oriented:
 	// setup (threejs creates objects y-up even if defaultUp is z)
 	body[moon].mesh.rotation.set(Math.PI / 2, 0, 0);
-	
+
 	// apply dec, then ra, then W eastward
-  body[moon].mesh.rotateOnWorldAxis(
-  	yAxis, (Math.PI / 2) - body[moon].declination);
-  body[moon].mesh.rotateOnWorldAxis(zAxis, body[moon].rightAscension);
+	body[moon].mesh.rotateOnWorldAxis(
+		yAxis, (Math.PI / 2) - body[moon].declination);
+	body[moon].mesh.rotateOnWorldAxis(zAxis, body[moon].rightAscension);
 	body[moon].mesh.rotation.y += (Math.PI / 2) + body[moon].primeMeridian;
 
 // in three.js, tilting could be done like this:
@@ -42,41 +42,41 @@ function icrfToEci(icrf, ra, dec) {
 	let vx2 = vx * Math.cos(-ra) - vy * Math.sin(-ra);
 	let y2 = y * Math.cos(-ra) + x * Math.sin(-ra);
 	let vy2 = vy * Math.cos(-ra) + vx * Math.sin(-ra);
-	
+
 	// rotate on y axis (dec - Math.PI / 2) must swap signs
 	let angle = -dec + Math.PI / 2;
 	let x3 = x2 * Math.cos(angle) - z * Math.sin(angle);
 	let vx3 = vx2 * Math.cos(angle) - vz * Math.sin(angle);
 	let z2 = z * Math.cos(angle) + x2 * Math.sin(angle);
 	let vz2 = vz * Math.cos(angle) + vx2 * Math.sin(angle);
-	
+
 	x = x3;
 	vx = vx3;
 	y = y2;
 	vy = vy2;
 	z = z2;
 	vz = vz2;
-	
+
 	return {x, y, z, vx, vy, vz};
 }
 
 // transform vectors from local body frame to icrf (all z-up)
 function eciToIcrf(eci, ra, dec) {
 	let {x, y, z, vx, vy, vz} = eci;
-	
+
 	// rotate on y axis (Math.PI / 2 - dec) must swap signs
 	let angle = -Math.PI / 2 + dec;
 	let x2 = x * Math.cos(angle) - z * Math.sin(angle);
 	let vx2 = vx * Math.cos(angle) - vz * Math.sin(angle);
 	let z2 = z * Math.cos(angle) + x * Math.sin(angle);
 	let vz2 = vz * Math.cos(angle) + vx * Math.sin(angle);
-	
+
 	// rotate on z axis, ra
 	let x3 = x2 * Math.cos(ra) - y * Math.sin(ra);
 	let vx3 = vx2 * Math.cos(ra) - vy * Math.sin(ra);
 	let y2 = y * Math.cos(ra) + x2 * Math.sin(ra);
 	let vy2 = vy * Math.cos(ra) + vx2 * Math.sin(ra);
-	
+
 	x = x3;
 	vx = vx3;
 	y = y2;
@@ -94,7 +94,7 @@ function eciToIcrf(eci, ra, dec) {
 // Returned array contains lat and lon in radians, and altitude in meters
 function ecefToGps(ecef, radiusEquator, e2) {
 	let {x, y, z} = ecef;
-	
+
 	const a = radiusEquator;
 	const a1 = a*e2;
 	const a2 = a1*a1;
@@ -102,10 +102,10 @@ function ecefToGps(ecef, radiusEquator, e2) {
 	const a4 = 2.5*a2;
 	const a5 = a1+a3;
 	const a6 = 1-e2;
-	
+
 	let s,c,ss;
 	let lat;
-	
+
 	let zp = Math.abs( z );
 	let w2 = x*x + y*y;
 	let w = Math.sqrt( w2 );
@@ -117,16 +117,16 @@ function ecefToGps(ecef, radiusEquator, e2) {
 	let u = a2/r;
 	let v = a3 - a4/r;
 	if ( c2 > 0.3 ) {
-	  s = ( zp/r )*( 1.0 + c2*( a1 + u + s2*v )/r );
-	  lat = Math.asin( s );      //Lat
-	  ss = s*s;
-	  c = Math.sqrt( 1.0 - ss );
+		s = ( zp/r )*( 1.0 + c2*( a1 + u + s2*v )/r );
+		lat = Math.asin( s );      //Lat
+		ss = s*s;
+		c = Math.sqrt( 1.0 - ss );
 	}
 	else {
-	  c = ( w/r )*( 1.0 - s2*( a5 - u - c2*v )/r );
-	  lat = Math.acos( c );      //Lat
-	  ss = 1.0 - c*c;
-	  s = Math.sqrt( ss );
+		c = ( w/r )*( 1.0 - s2*( a5 - u - c2*v )/r );
+		lat = Math.acos( c );      //Lat
+		ss = 1.0 - c*c;
+		s = Math.sqrt( ss );
 	}
 	let g = 1.0 - e2*ss;
 	let rg = a/Math.sqrt( g );
@@ -166,15 +166,15 @@ function gpsToEcef(gps, radiusEquator, e2) {
 ////////////////////////////////////////////////////////////////////////////////
 // COMPASS
 /*
-  depends:
-  	three.js r124 (NOT as modules)
+	depends:
+		three.js r124 (NOT as modules)
 	requires:
 		position vector (icrf frame, or unspecified) of satellite
 	optional:
 		celestial body quaternion
 	returns:
 		ENU unit vectors: East, North, and Up in z-up or y-up
-	
+
 	NOTE: the "up" produced here is "away from the center of mass",
 		but not necessarily perpendicular to the surface on an ellipsoid
 */
@@ -186,7 +186,7 @@ let northAxisV3 = new THREE.Vector3();
 let navAxesFailsafe = false;
 // passing a quaternion argument is OPTIONAL, and changes y-up/z-up
 function getDirections(x, y, z, quaternion) {
-	
+
 	// uses ICRF (non-tilted), and tilts if specified
 	// use local position for nearby object, not system position
 	localPosition.set(x, y, z);
@@ -252,24 +252,24 @@ function eciToEcef(eci, angle, angularVelocity, radiusEquator, e2) {
 	vx = vx2;
 	y = y2;
 	vy = vy2;
-	
+
 	// to modify speed according to planet rotation, first find
 	// the surface below the spacecraft
 	let gpsNow = ecefToGps({x, y, z}, radiusEquator, e2);
 	gpsNow.alt = 0;
 	let centerToSurface = gpsToEcef(gpsNow, radiusEquator, e2);
-	
+
 	// surface speed is xy (not xyz) distance from origin to surface
 	let distance = Math.sqrt(centerToSurface.x**2 + centerToSurface.y**2);
 	let tangentVelocity = angularVelocity * distance;
-	
+
 	// get eastAxisV3 (don't use quaternion!)
 	const enu = getDirections(x, y, z);
-	
+
 	// negate planetary spin velocity
 	vx -= tangentVelocity * enu.eastAxisV3.x;
 	vy -= tangentVelocity * enu.eastAxisV3.y;
-	
+
 	// z and vz pass through unchanged
 	return {x, y, z, vx, vy, vz};
 }
@@ -289,24 +289,24 @@ function ecefToEci(ecef, angle, angularVelocity, radiusEquator, e2) {
 	vx = vx2;
 	y = y2;
 	vy = vy2;
-	
+
 	// to modify speed according to planet rotation, first find
 	// the surface below the spacecraft
 	let gpsNow = ecefToGps({x, y, z}, radiusEquator, e2);
 	gpsNow.alt = 0;
 	let centerToSurface = gpsToEcef(gpsNow, radiusEquator, e2);
-	
+
 	// surface speed is xy (not xyz) distance from origin to surface
 	let distance = Math.sqrt(centerToSurface.x**2 + centerToSurface.y**2);
 	let tangentVelocity = angularVelocity * distance;
-	
+
 	// get eastAxisV3 (don't use a quaternion!)
 	const enu = getDirections(x, y, z);
-	
+
 	// add planetary spin velocity
 	vx += tangentVelocity * enu.eastAxisV3.x;
 	vy += tangentVelocity * enu.eastAxisV3.y;
-	
+
 	// z and vz pass through unchanged
 	return {x, y, z, vx, vy, vz};
 }
@@ -371,62 +371,62 @@ let dragy = true;
 // but still provides value if (altitude < 178325)
 // input altitude in meters
 function earthAirData(altitude) {
-  
-  // https://physics.nist.gov/cgi-bin/cuu/Value?r
-  const UNIVERSAL_GAS = 8.314462618; // J
 
-  // https://physics.nist.gov/cgi-bin/cuu/Value?gn
-  const EARTH_GRAVITY_SEA = 9.80665; // m/s^2
+	// https://physics.nist.gov/cgi-bin/cuu/Value?r
+	const UNIVERSAL_GAS = 8.314462618; // J
 
-  // https://www.engineeringtoolbox.com/air-composition-d_212.html
-  const EARTH_MOLAR_MASS = 0.0289647; // kg/mol
+	// https://physics.nist.gov/cgi-bin/cuu/Value?gn
+	const EARTH_GRAVITY_SEA = 9.80665; // m/s^2
 
-  let airPressure = 0;  // 101325 Pa at sea level
-  let airDensity = 0;  // 1.225 kg/m^3 at sea level
-  let airAccurate = true;
-  let airFormula = "nonzero";
+	// https://www.engineeringtoolbox.com/air-composition-d_212.html
+	const EARTH_MOLAR_MASS = 0.0289647; // kg/mol
 
-  if (altitude < 86000) {
-    airAccurate = true;
-  }
-  else {
-    airAccurate = false;
-  }
-  
-  if (altitude >= 178325) {
-    airFormula = "out of range";
-    return {airPressure, airDensity, airAccurate, airFormula};
-  }
-  else {
-    let base;
-    let staticPressure;
-    let massDensity;
-    let standardTemperature;
-    let lapse;
-    
-         if (altitude < 11000) { base = 0;     staticPressure = 101325;   massDensity = 1.2250;   standardTemperature = 288.15; lapse = -0.0065 }
-    else if (altitude < 20000) { base = 11000; staticPressure = 22632.10; massDensity = 0.36391;  standardTemperature = 216.65; lapse = 0 }
-    else if (altitude < 32000) { base = 20000; staticPressure = 5474.89;  massDensity = 0.08803;  standardTemperature = 216.65; lapse = 0.001 }
-    else if (altitude < 47000) { base = 32000; staticPressure = 868.02;   massDensity = 0.01322;  standardTemperature = 228.65; lapse = 0.0028 }
-    else if (altitude < 51000) { base = 47000; staticPressure = 110.91;   massDensity = 0.00143;  standardTemperature = 270.65; lapse = 0 }
-    else if (altitude < 71000) { base = 51000; staticPressure = 66.94;    massDensity = 0.00086;  standardTemperature = 270.65; lapse = -0.0028 }
-    else                       { base = 71000; staticPressure = 3.96;     massDensity = 0.000064; standardTemperature = 214.65; lapse = -0.002 }
-    
-    if (lapse != 0) {
-      airFormula = "nonzero";
-      airPressure = staticPressure * Math.pow((standardTemperature / (standardTemperature + (lapse * (altitude - base)))),
-          ((EARTH_GRAVITY_SEA * EARTH_MOLAR_MASS) / (UNIVERSAL_GAS * lapse)));
-      airDensity = massDensity * Math.pow((standardTemperature / (standardTemperature + (lapse * (altitude - base)))),
-          (1 + ((EARTH_GRAVITY_SEA * EARTH_MOLAR_MASS) / (UNIVERSAL_GAS * lapse))));
-      return {airPressure, airDensity, airAccurate, airFormula};
-    }
-    else {
-      airFormula = "zero";
-      airPressure = staticPressure * Math.exp((-EARTH_GRAVITY_SEA * EARTH_MOLAR_MASS * (altitude - base)) / (UNIVERSAL_GAS * standardTemperature));
-      airDensity = massDensity * Math.exp((-EARTH_GRAVITY_SEA * EARTH_MOLAR_MASS * (altitude - base)) / (UNIVERSAL_GAS * standardTemperature));
-      return {airPressure, airDensity, airAccurate, airFormula};
-    }
-  }
+	let airPressure = 0;  // 101325 Pa at sea level
+	let airDensity = 0;  // 1.225 kg/m^3 at sea level
+	let airAccurate = true;
+	let airFormula = "nonzero";
+
+	if (altitude < 86000) {
+		airAccurate = true;
+	}
+	else {
+		airAccurate = false;
+	}
+
+	if (altitude >= 178325) {
+		airFormula = "out of range";
+		return {airPressure, airDensity, airAccurate, airFormula};
+	}
+	else {
+		let base;
+		let staticPressure;
+		let massDensity;
+		let standardTemperature;
+		let lapse;
+
+				 if (altitude < 11000) { base = 0;     staticPressure = 101325;   massDensity = 1.2250;   standardTemperature = 288.15; lapse = -0.0065 }
+		else if (altitude < 20000) { base = 11000; staticPressure = 22632.10; massDensity = 0.36391;  standardTemperature = 216.65; lapse = 0 }
+		else if (altitude < 32000) { base = 20000; staticPressure = 5474.89;  massDensity = 0.08803;  standardTemperature = 216.65; lapse = 0.001 }
+		else if (altitude < 47000) { base = 32000; staticPressure = 868.02;   massDensity = 0.01322;  standardTemperature = 228.65; lapse = 0.0028 }
+		else if (altitude < 51000) { base = 47000; staticPressure = 110.91;   massDensity = 0.00143;  standardTemperature = 270.65; lapse = 0 }
+		else if (altitude < 71000) { base = 51000; staticPressure = 66.94;    massDensity = 0.00086;  standardTemperature = 270.65; lapse = -0.0028 }
+		else                       { base = 71000; staticPressure = 3.96;     massDensity = 0.000064; standardTemperature = 214.65; lapse = -0.002 }
+
+		if (lapse != 0) {
+			airFormula = "nonzero";
+			airPressure = staticPressure * Math.pow((standardTemperature / (standardTemperature + (lapse * (altitude - base)))),
+					((EARTH_GRAVITY_SEA * EARTH_MOLAR_MASS) / (UNIVERSAL_GAS * lapse)));
+			airDensity = massDensity * Math.pow((standardTemperature / (standardTemperature + (lapse * (altitude - base)))),
+					(1 + ((EARTH_GRAVITY_SEA * EARTH_MOLAR_MASS) / (UNIVERSAL_GAS * lapse))));
+			return {airPressure, airDensity, airAccurate, airFormula};
+		}
+		else {
+			airFormula = "zero";
+			airPressure = staticPressure * Math.exp((-EARTH_GRAVITY_SEA * EARTH_MOLAR_MASS * (altitude - base)) / (UNIVERSAL_GAS * standardTemperature));
+			airDensity = massDensity * Math.exp((-EARTH_GRAVITY_SEA * EARTH_MOLAR_MASS * (altitude - base)) / (UNIVERSAL_GAS * standardTemperature));
+			return {airPressure, airDensity, airAccurate, airFormula};
+		}
+	}
 }
 
 
@@ -438,34 +438,34 @@ function earthAirData(altitude) {
 // No attempt to address sound barrier resistance
 //let drag_now = 0; // N
 function dragEquation(airDensity, velocity, mass, dragCoefficient) {
-  //const dragCoefficient = 0.342; // nosecone. avg of 0.237 and 0.447
-  //const dragCoefficient = 2.2; // cube sat
-  if (!dragCoefficient) { dragCoefficient = 2.2 }
-  //const payloadDiameter = 5.2; // meters. falcon 9 with payload fairing
-  //const payloadDiameter = 9; // meters. starship
-  const payloadDiameter = 1.5; // meters. sputnik 1 is 58cm with whiskers
-  const dragArea = (payloadDiameter / 2)**2 * Math.PI; // m^2
+	//const dragCoefficient = 0.342; // nosecone. avg of 0.237 and 0.447
+	//const dragCoefficient = 2.2; // cube sat
+	if (!dragCoefficient) { dragCoefficient = 2.2 }
+	//const payloadDiameter = 5.2; // meters. falcon 9 with payload fairing
+	//const payloadDiameter = 9; // meters. starship
+	const payloadDiameter = 1.5; // meters. sputnik 1 is 58cm with whiskers
+	const dragArea = (payloadDiameter / 2)**2 * Math.PI; // m^2
 
-  return (airDensity * velocity**2 * (dragCoefficient * dragArea/mass)) / 2;
+	return (airDensity * velocity**2 * (dragCoefficient * dragArea/mass)) / 2;
 }
 
 // https://www.spaceacademy.net.au/watch/debris/atmosmod.htm
 // https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
 function isothermalAirDensity(altitude) {
-  // 1.225 is kg/m^3 air density at sea level of earth
+	// 1.225 is kg/m^3 air density at sea level of earth
 
-  //const k = 1.38e-23; // boltz
-  //const g = 9.80665;
-  // m is mean molecular mass. T is temperature Kelvin
-  //const H = ( k * T ) / ( m * g );
-  
-  // H is scale height. nasa says 8.5km
-  
-  return 1.225 * Math.exp( - altitude / 8500);
-  
-  // easily a function for any planet if 3 arguments are used
-  
-  // way too weak for high LEO orbits
+	//const k = 1.38e-23; // boltz
+	//const g = 9.80665;
+	// m is mean molecular mass. T is temperature Kelvin
+	//const H = ( k * T ) / ( m * g );
+
+	// H is scale height. nasa says 8.5km
+
+	return 1.225 * Math.exp( - altitude / 8500);
+
+	// easily a function for any planet if 3 arguments are used
+
+	// way too weak for high LEO orbits
 }
 
 
@@ -503,11 +503,11 @@ function earthAtmosphere(altitude) {
 	} else if (altitude < 0) {
 		i = 0;
 	}
-	
+
 	// outputs air density in kg/m**3
 	return density[i] * Math.exp( - (altitude - height[i]) / scaleHeight[i]);
 }
 
 
-const ver = "v36";
+const ver = null;
 
