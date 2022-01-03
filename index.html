@@ -331,7 +331,7 @@
 		</div><!-- end popup -->
 		<script>"use strict";
 
-const versionInfo = "v48";
+const versionInfo = "v49";
 let dragx = 0;
 
 
@@ -901,15 +901,15 @@ let rocket = body.push({
 	};
 	*/
 	
-	/*
+	
 	// guiana space center, kourou, french guiana
 	body[i].gps = {
 		lat: 5.236 * Math.PI / 180,
 		lon: -52.775 * Math.PI / 180,
 		alt: 0  // actual unknown
 	};
-	*/
-/*	
+	
+	
 	// convert to ecef then to cartes
 	body[i].ecef = gpsToEcef(body[i].gps, body[focus].radiusEquator,
 		body[focus].e2);
@@ -922,7 +922,7 @@ let rocket = body.push({
 	// not necessary for earth, but should be standard practice
 	body[i].cartes = eciToIcrf(body[i].cartes,
 		body[focus].rightAscension, body[focus].declination);
-*/
+
 /*
 	// OVERWRITE PREVIOUS... do this instead.. sputnik 1 orbit
 	let aTemp = getAxis(947000, 228000, body[focus].radiusEquator);
@@ -936,7 +936,7 @@ let rocket = body.push({
 		meanAnom: 5
 	}
 */
-	
+	/*
 	let aTemp = getAxis(133422000, 4180, body[focus].radiusEquator);
 	let eTemp = getEcc(133422000, 4180, body[focus].radiusEquator);
 	body[i].kepler = {
@@ -950,7 +950,7 @@ let rocket = body.push({
 
 	body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
 	body[i].cartes = toCartes(body[i].kepler, body[i].mu);
-	
+	*/
 }
 
 
