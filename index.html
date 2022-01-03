@@ -2380,8 +2380,12 @@ function drawEllipse(draw, shade, scale) {
 		scene.add(body[draw].ellipse);
 
 	}
-
-		body[draw].ellipse.geometry.setFromPoints(points);
+	
+    body[draw].ellipse.geometry.dispose();
+    body[draw].ellipse.geometry = new
+    	THREE.BufferGeometry().setFromPoints(points);
+    	
+		//body[draw].ellipse.geometry.setFromPoints(points);
 
 		body[draw].ellipse.rotation.set(0, 0, 0);
 
