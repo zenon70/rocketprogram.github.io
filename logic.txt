@@ -2,13 +2,13 @@
 
 IN-PROGRESS:
 
-close menu by outside tap
 
 
 
 
 
 ISSUES:
+
 
 401 surface and graphics are WAY off
   more than just the dips in polygons
@@ -24,10 +24,6 @@ known & intended hyperbolic "safe crash" needs proper exit
     when iterations > 9999 to solve, NaN occurs
     need proper exit / catch
 
-rocket insanely bounces off atmosphere at high warp
-
-orbit lines float away after changing focus
-
 livestream crashes, need super low-res startup, set hq maps
 
 firefox mobile 96.0.0-beta.5 scrolling to hide address bar
@@ -36,6 +32,20 @@ firefox mobile 96.0.0-beta.5 scrolling to hide address bar
 crash at center of planet
 
 rocket goes down when low thrust on surface
+
+
+
+orbit lines float away after changing focus
+occurs when changing from orbit to hyperbolic on focus change...
+like earth orbit -> moon hyperbolic
+this will get resolved when hyperbolic trajectories etc are drawn
+  orbit line
+    draw pure hyperbolic line (vs ellipse)
+    draw nbody trajectory
+    apo/peri/incl markers on orbit line
+    make truAnom as starting point for ellipse
+      so that the rocket always appears on the line?
+      but then peri/apo points are not shown
 
 
 
@@ -84,8 +94,6 @@ GRAPHICS
   shadows, especially for planet 6 rings
     use DirectionalLight or SpotLight near planet
 
-loading screen
-ascii text "rocket" fades from screen on startup
 "maxq" appears on screen when passed
 
 first person camera
@@ -141,13 +149,7 @@ USER INTERFACE
     target anti-target marker
     maneuver marker
 
-  orbit line
-    draw pure hyperbolic line (vs ellipse)
-    draw nbody trajectory
-    apo/peri/incl markers on orbit line
-    make truAnom as starting point for ellipse
-      so that the rocket always appears on the line?
-      but then peri/apo points are not shown
+
 
   orbitcontrols option for large bodies, with min zoom, *angle*
     solve zoom difficulty issue

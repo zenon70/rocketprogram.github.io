@@ -534,7 +534,7 @@ body.push({
   primeMeridian: 284.95,
   
   //map: "graphics/planet5_2k.jpg",
-  color: 0xada396,
+  color: 0xada396
 });
 
 
@@ -603,7 +603,7 @@ body.push(
   primeMeridian: 203.81,
   
   //map: "graphics/planet7_1k.jpg",
-  color: 0x98afb7,
+  color: 0x98afb7
 });
 
 //2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
@@ -634,7 +634,7 @@ body.push({
   primeMeridian: 253.18,
   
 	//map: "graphics/planet8_2k.jpg",
-  color: 0x364fa7,
+  color: 0x364fa7
 });
 
 //2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
@@ -666,7 +666,7 @@ body.push({
   primeMeridian: 237.305 + 180,
 
   //map: "graphics/planet9_2k.jpg",
-  color: 0x967a63,
+  color: 0x967a63
 });
 
 
@@ -702,8 +702,8 @@ let moon = body.push({
 	
 	//map: "graphics/moon301_2k.jpg",
 	map: "graphics/moon301_1k.jpg",
-	color: 0x969392,
-	segments: 32,
+	//segments: 32,
+	color: 0x969392
 }) - 1;
 
 // 401
@@ -731,9 +731,9 @@ let moon401 = body.push({
 	declination: 52.90,
 	primeMeridian: 35.06,
 
-	map: "graphics/moon401_720x360.jpg",
-	color: 0x9a8d84,
-	segments: 32
+	//map: "graphics/moon401_720x360.jpg",
+	//segments: 32,
+	color: 0x9a8d84
 }) - 1;
 
 // 402
@@ -761,7 +761,7 @@ let moon402 = body.push({
 	declination: 53.52,
 	primeMeridian: 79.41,
 	
-	map: "graphics/moon402_720x360.jpg",
+	//map: "graphics/moon402_720x360.jpg",
 	color: 0xb0aa9f
 }) - 1;
 
@@ -796,7 +796,7 @@ for (let i = body.length - 1; i > -1; i--) {
   
   
   if (body[i].segments === undefined) {
-  	body[i].segments = 16;
+  	body[i].segments = 6;
   }
   
   /*
@@ -852,7 +852,7 @@ for (let i = body.length - 1; i > -1; i--) {
  
 let rocket = body.push({
 	name: "rocket",
-	focus: moon401,
+	focus: earth,
 	mass: 549054,
 	
 	sidereal: null,
@@ -937,15 +937,15 @@ let rocket = body.push({
 	}
 */
 	
-	let aTemp = getAxis(7000, 5000, body[focus].radiusEquator);
-	let eTemp = getEcc(7000, 5000, body[focus].radiusEquator);
+	let aTemp = getAxis(133422000, 4180, body[focus].radiusEquator);
+	let eTemp = getEcc(133422000, 4180, body[focus].radiusEquator);
 	body[i].kepler = {
 		a: aTemp,
 		e: eTemp,
-		i: 5,
-		lan: 5,
-		w: 5,
-		meanAnom: 5
+		i: 51.64,
+		lan: 0,
+		w: 0,
+		meanAnom: 180
 	}
 
 	body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
@@ -2271,17 +2271,48 @@ function keplerPosition() {
       		let drag = dragEquation(density, velocity, body[i].mass,
       			dragCoefficient); 
       		
-      		// debug
+      		// was just debug.. actually part of normal display now
       		dragx = drag;
       		
-      		// apply drag. negative prograde is retrograde.
-      		body[i].ecef.vx +=
+      		// prepare for safety checks (could be optimized)
+      		let vxSign = Math.sign(body[i].ecef.vx);
+      		let vySign = Math.sign(body[i].ecef.vy);
+      		let vzSign = Math.sign(body[i].ecef.vz);
+      		let vxDrag = 
       			-body[i].ecef.prograde.x * drag * timestep;
-      		body[i].ecef.vy +=
+      		let vyDrag = 
       			-body[i].ecef.prograde.y * drag * timestep;
-      		body[i].ecef.vz +=
+      		let vzDrag = 
       			-body[i].ecef.prograde.z * drag * timestep;
-      			
+      		
+      		// if adding drag results in the same direction, apply it
+      		if (Math.sign(body[i].ecef.vx + vxDrag) === vxSign) {
+      			// apply drag. negative prograde is retrograde.
+      			body[i].ecef.vx +=
+      				-body[i].ecef.prograde.x * drag * timestep;
+      			// if it results in going backwards (an issue with timestepping
+      			//   and/or super fast drag calculated on a 0 or negative altitude),
+      			//   then just zero the velocity instead
+      		} else {
+      			body[i].ecef.vx = 0;
+      		}
+      		
+      		// repeat for y and z
+      		if (Math.sign(body[i].ecef.vy + vyDrag) === vySign) {
+      			body[i].ecef.vy +=
+      				-body[i].ecef.prograde.y * drag * timestep;
+      		} else {
+      			body[i].ecef.vy = 0;
+      		}
+      		if (Math.sign(body[i].ecef.vz + vzDrag) === vzSign) {
+      			body[i].ecef.vz +=
+      				-body[i].ecef.prograde.z * drag * timestep;
+      		} else {
+      			body[i].ecef.vz = 0;
+      		}
+      		// independent safety checks on all 3 vectors, instead of checking
+      		//   final prograde direction, may have an issue, or may be better
+      		
       		// send info back up the chain
 			  	body[i].cartes = ecefToEci(body[i].ecef,
 					body[focus].spun,
@@ -2498,18 +2529,13 @@ function toggleLocalOrbits() {
 			}
 		}
 	}
-/*
-	// lazy coding.. cycling this updates what is visible
-	toggleAllOrbits();
-	toggleAllOrbits();
-*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // preAnimate
 
 let running = true;
-let skipDraw = 0;
+//let skipDraw = 0;
 let navQ = new THREE.Quaternion();
 let oldViewX = 0;
 let oldViewY = 0;
