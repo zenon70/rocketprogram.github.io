@@ -27,14 +27,6 @@ initialization-only
 
 ISSUES:
 
-orbital parameters for everything orbiting the sun are wrong, because the
-  program determines parameters in the frame of the sun's equator, NOT the
-  normal ecliptic (icrf) frame.
-  everything should still be in the right PLACE, it's just that the orbital
-  parameters displayed are not using the normal convention (ecliptic).
-  easy solution? perhaps just don't tilt the sun, or.. create a virtual sun
-  that's not tilted to draw parameters from...
-
 spacecraft rotation during and resulting from warp is wrong.. requires
   complicated formula.
 
@@ -68,6 +60,8 @@ this will get resolved when hyperbolic trajectories etc are drawn
     draw nbody trajectory
     apo/peri/incl markers on orbit line
 
+ecliptic lan parameter is off by almost precisely 90 deg, not sure why
+  (ecliptic notes below)
 
 
 HIGH PRIORITY FEATURE REQUESTS:
@@ -399,6 +393,64 @@ https://sketchfab.com/3d-models/spacex-starship-a8a0b69f776841a1a465cd9fb3762fd2
 
 nice model, basically centered, wrong roll
 https://sketchfab.com/3d-models/starship-mk1-5a708af84ef440c6a91f96c2b8284cc4
+
+
+
+ECLIPTIC NOTES
+
+to convert from icrf to ecliptic, use icrfToEci() with:
+ra = 270
+dec = 66.56071
+(but in radians)
+
+
+ORBIT REFERENCE CONVENTIONS BY POPULARITY
+the reference plane used to define the orbit...
+
+1. for all non-sun-orbiters, is the...
+  a) equatorial plane of object orbited
+  ...
+  b) laplace plane
+  c) invariable plane
+  ...
+  d) others
+
+2. for sun orbiters, is the...
+  a) ecliptic iau76/80 from icrf J2000
+  b) icrf J2000 frame plane
+  c) equatorial plane of object orbited (sun)
+  ...
+  d) invariable plane
+  e) la place plane
+  f) galactic plane
+  ...
+  g) any other plane described by ra and dec
+
+real
+a 149665014.5
+e 0.017118629067
+i 0.0004181086
+Ω 135.0807
+ω 326.728218
+M 358.617
+
+simulated
+2000-01-01T12:00:01.730Z
+a 149657995.5553969
+e 0.01707254539869325
+i 0.0004173390204885836
+Ω 224.97454174732968
+ω 326.83819734893564
+M 358.61347359311605
+Ap 151517038.479
+Pe 146406952.632
+kms 30.292
+v51
+
+that's pretty good!  (but why is lan off?)
+
+
+
 
 
 

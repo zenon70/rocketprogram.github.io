@@ -1969,8 +1969,6 @@ function nBodyVelocity(body, GRAVITY, timestep) {
 }
 
 
-let reportEcliptic = true;
-let keplerEcliptic; // object for reportEcliptic
 
 ////////////////////////////////////////////////////////////////////////////////
 // keplerian physics
@@ -2001,6 +1999,7 @@ let keplerEcliptic; // object for reportEcliptic
 		surfacePeriapsis
 
 */
+
 
 // calculate keplerian orbit, update local positions
 function keplerPosition() {
@@ -2302,18 +2301,7 @@ function keplerPosition() {
 		// tilt back, to match icrf frame
 		body[i].cartes = eciToIcrf(body[i].cartes,
 			body[focus].rightAscension, body[focus].declination);
-
-		// get elements in ecliptic frame, just for reporting data to user
-		if (reportEcliptic && i < 10) {
-			if (i === view) {
-				// RA 270 * Math.PI / 180 = 4.71238898038469
-				// DEC 90 - 23.43929 = 66.56071, * Math.PI / 180 = 1.161703541965115
-				const cartesEcliptic = icrfToEci(body[i].cartes, 4.71238898038469,
-					1.161703541965115);
-				keplerEcliptic = toKepler(cartesEcliptic, body[i].mu);
-			}
-		}
-	} // close for loop
+	}
 }
 
 
@@ -2406,40 +2394,21 @@ function displayText() {
 			1000).toFixed(3);
 	} else {
 		let vFocus = body[view].focus;
-		
-		if (reportEcliptic && i < 10) {
-			document.getElementById("hudDateOrbit").innerHTML = now.toISOString() +
-				"<br>a " + (keplerEcliptic.a / 1000)/*.toFixed(3)*/ +
-				"<br>e " + (keplerEcliptic.e)/*.toFixed(3)*/ +
-				"<br>i " + (keplerEcliptic.i * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>Ω " + (keplerEcliptic.lan * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>ω " + (keplerEcliptic.w * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>M " + (keplerEcliptic.meanAnom * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>Ap " +
-				((keplerEcliptic.apoapsis - body[vFocus].radiusEquator) / 1000).
-				toFixed(3) +
-				"<br>Pe " +
-				((keplerEcliptic.periapsis - body[vFocus].radiusEquator) / 1000).
-				toFixed(3) +
-				"<br>kms " + (keplerEcliptic.v / 1000).toFixed(3) +
-				"<br>" + versionInfo;
-		} else {
-			document.getElementById("hudDateOrbit").innerHTML = now.toISOString() +
-				"<br>a " + (body[view].kepler.a / 1000)/*.toFixed(3)*/ +
-				"<br>e " + (body[view].kepler.e)/*.toFixed(3)*/ +
-				"<br>i " + (body[view].kepler.i * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>Ω " + (body[view].kepler.lan * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>ω " + (body[view].kepler.w * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>M " + (body[view].kepler.meanAnom * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>Ap " +
-				((body[view].kepler.apoapsis - body[vFocus].radiusEquator) / 1000).
-				toFixed(3) +
-				"<br>Pe " +
-				((body[view].kepler.periapsis - body[vFocus].radiusEquator) / 1000).
-				toFixed(3) +
-				"<br>kms " + (body[view].kepler.v / 1000).toFixed(3) +
-				"<br>" + versionInfo;
-		}
+		document.getElementById("hudDateOrbit").innerHTML = now.toISOString() +
+			"<br>a " + (body[view].kepler.a / 1000).toFixed(3) +
+			"<br>e " + (body[view].kepler.e).toFixed(3) +
+			"<br>i " + (body[view].kepler.i * 180 / Math.PI).toFixed(3) +
+			"<br>Ω " + (body[view].kepler.lan * 180 / Math.PI).toFixed(3) +
+			"<br>ω " + (body[view].kepler.w * 180 / Math.PI).toFixed(3) +
+			"<br>M " + (body[view].kepler.meanAnom * 180 / Math.PI).toFixed(3) +
+			"<br>Ap " +
+			((body[view].kepler.apoapsis - body[vFocus].radiusEquator) / 1000).
+			toFixed(3) +
+			"<br>Pe " +
+			((body[view].kepler.periapsis - body[vFocus].radiusEquator) / 1000).
+			toFixed(3) +
+			"<br>kms " + (body[view].kepler.v / 1000).toFixed(3) +
+			"<br>" + versionInfo;
 	}
 
 	if (body[view].type === "Artificial") {
