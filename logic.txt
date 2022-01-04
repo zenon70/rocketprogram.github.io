@@ -2,12 +2,38 @@
 
 IN-PROGRESS:
 
-
+livestream crashes, need super low-res startup, set hi-resolution maps
+  running 9 planets and 3 moons and a sun and rocket.. is slow.. especially
+  with orbit lines... so efficiency needs to be improved.
+why slow?
+- loading all planets & moons with textures at the same time
+- polygons, gtlf models
+- high res textures
+- two scenes
+- orbit lines
+    recalculating some elements (i, lan, w) and redrawing on every frame
+    ellipse with 500 points
+- rockets are part of n-body physics
+- gps velocity unnecessary?
+- general efficiency can probably be drastically improved
+- orbMech settings for transcendental equation
+initialization-only
+- loading the whole threejs instead of just modules
+    but i prefer console use (n/a with modules)
+- processing space data (instead of it being pre-processed)
 
 
 
 
 ISSUES:
+
+orbital parameters for everything orbiting the sun are wrong, because the
+  program determines parameters in the frame of the sun's equator, NOT the
+  normal ecliptic (icrf) frame.
+  everything should still be in the right PLACE, it's just that the orbital
+  parameters displayed are not using the normal convention (ecliptic).
+  easy solution? perhaps just don't tilt the sun, or.. create a virtual sun
+  that's not tilted to draw parameters from...
 
 spacecraft rotation during and resulting from warp is wrong.. requires
   complicated formula.
@@ -26,16 +52,12 @@ known & intended hyperbolic "safe crash" needs proper exit
   when iterations > 9999 to solve, NaN occurs
   need proper exit / catch
 
-livestream crashes, need super low-res startup, set hq maps
-
 firefox mobile 96.0.0-beta.5 scrolling to hide address bar
   causes screen to resize wrong
 
 crash at center of planet
 
 rocket goes down when low thrust on surface
-
-
 
 orbit lines float away after changing focus
 occurs when changing from orbit to hyperbolic on focus change...
@@ -109,35 +131,6 @@ adjustable scale
 
 
 
-EFFICIENCY:
-
-why the slowness:
-
-- loading all planets & moons with textures at the same time
-
-- polygons, gtlf models
-
-- high res textures
-
-- two scenes
-
-- orbit lines
-    recalculating kepler and redrawing on every frame
-    ellipse with 500 points
-
-  processing space data (instead of it being pre-processed)
-
-  loading the whole threejs instead of just modules?
-    it may not make a difference
-    i prefer console use (n/a in modules)
-
-  rockets are part of n-body physics
-
-  gps velocity unnecessary
-
-  general efficiency can probably be drastically improved
-
-
 
 
 
@@ -147,7 +140,6 @@ USER INTERFACE
   navball prograde, radial, normal markers for eci & ecef
     target anti-target marker
     maneuver marker
-
 
 
   orbitcontrols option for large bodies, with min zoom, *angle*
@@ -271,23 +263,24 @@ nBodyVelocity() LOOP BODY
 
 keplerPosition() LOOP BODY
   cartes.xyz = -focusDistanceXYZ
-  cartes.vxyz = vxyx - focus.vxyz
+  cartes.vxyz = vxyx - focus.vxyz           ALL/ROCKETS-ONLY
   cartes.vxyz -= focus acceleration
-    icrfToEci()
-      toKepler()
+    icrfToEci()                             icrfToEci
+      toKepler()                            toKepler
         if (!onSurface)
           meanAnom++
-          j2++
-      toCartes()
+          j2++                              j2
+      toCartes()                            toCartes
       if (Artificial)
         if (!onSurface)
-          eciToEcef()
-          ecefToGps()
+          eciToEcef()                           eciToEcef ecefToGps gpsToEcef getDir
+          ecefToGps()                           ecefToGps
           if (alt == 0)
             v 0,0,0 and onSurface = true
         if (onSurface)
-          ecefToEci()
-    eciToIcrf()
+          ecefToEci()                           ecefToEci ecefToGps gpsToEcef getDir
+          drag equations...                     drag?
+    eciToIcrf()                             eciToIcrf
 
 systemPosition() LOOP BODY
 time++
@@ -297,8 +290,8 @@ displayText()
 
 preAnimate()
   drawEllipse
-    toKepler()
-      draw, position, and rotate ellipse
+    toKepler()                              toKepler
+      draw, position, and rotate ellipse    new ellipse
   navBall getDirections()
   camera
   render

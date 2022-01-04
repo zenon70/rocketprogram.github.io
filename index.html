@@ -21,7 +21,7 @@
 		<script src="threejs/three129.min.js"></script>
 		<script src="threejs/TrackballControls129.js"></script>
 		<!--<script src="threejs/GLTFLoader129.js"></script>-->
-		<script src="orbMech60.js"></script>
+		<script src="orbMech61.js"></script>
 		<script src="tilter14.js"></script>
 
 		<button id="throttleUp" onclick="throttleUp()">throttle up (a)</button>
@@ -333,7 +333,7 @@
 		</div><!-- end popup -->
 		<script>"use strict";
 
-const versionInfo = "v50";
+const versionInfo = "v51";
 let dragx = 0;
 
 
@@ -2317,17 +2317,15 @@ function keplerPosition() {
 // scale: meters to render scale
 function drawEllipse(draw, shade, scale) {
 
-	// expensive but easy way to get icrf orbit elements
-	let kepler = toKepler(body[draw].cartes, body[draw].mu);
+	// just get i, lan, and w from icrf. a and e are the same as eci.
+	let kepi = toKepi(body[draw].cartes, body[draw].mu);
 
-	// safety for hyperbola
-	kepler.a = Math.abs(kepler.a);
-
-	const a = kepler.a * scale; // meters to scale
-	const e = kepler.e;
-	const i = kepler.i;
-	const lan = kepler.lan;
-	const w = kepler.w;
+	// use absolute for safety in case of hyperbola
+	const a = Math.abs(body[draw].kepler.a) * scale;
+	const e = body[draw].kepler.e;
+	const i = kepi.i;
+	const lan = kepi.lan;
+	const w = kepi.w;
 
 	const b = a * Math.sqrt(1 - e**2);
 	const c = -Math.sqrt(a**2 - b**2);

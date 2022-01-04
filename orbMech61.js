@@ -1,5 +1,5 @@
 "use strict";
-// revision 60
+// revision 61
 // return values are not accurate for distances or velocities ~0
 // hyperbolic results beyond maxIterations will output NaN values
 
@@ -12,6 +12,7 @@ function getEcc(ap, pe, msl) {
 	return 1 - 2 / ((ap + msl)/(pe + msl) + 1);
 }
 
+// convert Cartesian State Vectors to Keplerian Orbital Elements
 function toKepler(cartes, mu) {
 	let {x, y, z, vx, vy, vz} = cartes;
 
@@ -239,7 +240,7 @@ function toKepler(cartes, mu) {
 }
 
 
-
+// convert Keplerian Orbital Elements to Cartesian State Vectors
 function toCartes(kepler, mu) {
 	let {a, e, i, lan, w, meanAnom} = kepler;
 
@@ -402,4 +403,137 @@ function nodalPrecession(kepler, mu, J2, R) {
 	}
 
 	return {lanRate, wRate};
+}
+
+
+
+// shortened to just get i, lan, and w, for orienting orbit ellipse
+function toKepi(cartes, mu) {
+	let {x, y, z, vx, vy, vz} = cartes;
+
+	// distance and speed
+	let r = Math.sqrt(x*x + y*y + z*z);
+	let v = Math.sqrt(vx*vx + vy*vy + vz*vz);
+
+	// radial velocity
+	// if > 0, spacecraft is flying away from perigee
+	// if < 0, spacecraft is flying toward perigee
+	let vRadial = (x*vx + y*vy + z*vz) / r;
+
+	// specific angular momentum
+	let hx = y*vz - z*vy;
+	let hy = z*vx - x*vz;
+	let hz = x*vy - y*vx;
+
+	// magnitude of the specific angular momentum
+	let h = Math.sqrt(hx*hx + hy*hy + hz*hz);
+
+	// inclination
+	let i = Math.acos(hz/h);
+	if (isNaN(i)) {
+		i = 0;
+	}
+
+	// define node line, calculate magnitude
+	//let nx = 0 * hz - 1 * hy; // simplified: use -hy in place of nx
+	//let ny = 1 * hx - 0 * hz; // simplified: use hx in place of ny
+	//let nz = 0 * hy - 0 * hx; // simplified: use 0 in place of nz
+	//let n = Math.sqrt(nx*nx + ny*ny + nz*nz);
+	// simplified
+	let n = Math.sqrt(hy*hy + hx*hx); // use hy not -hy because squared = positive
+
+	// longitude of the ascending node (also known as RAAN or Node)
+	let lan = 0;
+	if (n !== 0) {
+		lan = Math.acos(-hy/n);
+		if (hx < 0) {
+			lan = 2 * Math.PI - lan;
+		}
+	} else {
+		lan = 0;
+	}
+
+	// eccentricity
+	let ex = 1/mu * ((v*v - mu/r) * x - r * vRadial * vx);
+	let ey = 1/mu * ((v*v - mu/r) * y - r * vRadial * vy);
+	let ez = 1/mu * ((v*v - mu/r) * z - r * vRadial * vz);
+	//let e = Math.sqrt(ex*ex + ey*ey + ez*ez);
+	// sample output: 0.17121234628445342
+
+	// eccentricity (depending only on the scalars obtained thus far)
+	// this procedure is being chosen because it generates a lower number than the
+	//   other procedures. Lower is safer (and more accurate) for ~0 velocities.
+	//   This will help to avoid an ~0 velocity ellipse of 0.999... producing
+	//   an eccentricity value > 1, which would be a catastrophic failure.
+	let e = Math.sqrt(1 + h*h/(mu*mu) * (v*v - 2*mu/r));
+	// sample output: 0.17121234628445206
+
+	// eccentricity (using semi-major axis)
+	//let aAlternative = 1 / (2/r - v*v/mu);
+	//let eTest2 = Math.sqrt(1 - (h*h / mu) / aAlternative);
+	// sample output: 0.1712123462844524
+
+	// textbook custom atan2 procedure: must return between 0 and 2 * Math.PI
+	function atan2_in_range(y, x) {
+		let t = 0;
+		if (x === 0) {
+			if (y === 0) {
+				t = 0;
+			} else if (y > 0) {
+				t = Math.PI / 2;
+			} else {
+				t = Math.PI * 1.5;
+			}
+		} else if (x > 0) {
+			if (y >= 0) {
+				t = Math.atan(y/x);
+			} else {
+				t = Math.atan(y/x) + 2 * Math.PI;
+			}
+		} else if (x < 0) {
+			if (y === 0) {
+				t = Math.PI;
+			} else {
+				t = Math.atan(y/x) + Math.PI;
+			}
+		}
+		return t;
+	}
+
+	// argument of periapsis/pericenter/perigee/perihelion, etc. (lowercase omega)
+	let w = 0;
+	if (n !== 0) {
+		// why 1e-10 instead of 0 or Number.EPSILON or 1e-14 or 1e-12?
+		if (e > 1e-10) {
+			// use safety to correct floating point errors and avoid failure
+			let wSafety = (-hy*ex + hx*ey) / (n*e);
+			if (wSafety < -1) {
+				wSafety = -1;
+			} else if (wSafety > 1) {
+				wSafety = 1;
+			}
+			w = Math.acos(wSafety);
+			if (ez < 0) {
+				w = 2 * Math.PI - w;
+			}      
+		} else {
+			// consider the orbit circular. argument of periapsis shall equal zero.
+			w = 0;
+		}
+	} else {
+		// without i, and therefore no LAN/RAAN, w is "strictly undefined"
+		//w = 0;
+		// however, i still need to define it...
+		// wikipedia gives a formula with atan2, but it needs to be in range
+		// equatorial orbit: define by vernal point, in direction of motion
+		w = atan2_in_range(ey, ex);
+		if (hz < 0) {
+			w = 2 * Math.PI - w;
+		}
+	}
+	// final correction
+	if (w === 2 * Math.PI) {
+		w = 0;
+	}
+	return {i, lan, w};
 }
