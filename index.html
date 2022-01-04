@@ -2304,7 +2304,7 @@ function keplerPosition() {
 			body[focus].rightAscension, body[focus].declination);
 
 		// get elements in ecliptic frame, just for reporting data to user
-		if (i === view && body[i].focus === 0 && reportEcliptic)
+		if (i === view && body[i].focus === 0 && reportEcliptic) {
 			// RA 270 * Math.PI / 180 = 4.71238898038469
 			// DEC 90 - 23.43929 = 66.56071, * Math.PI / 180 = 1.161703541965115
 			const cartesEcliptic = icrfToEci(body[i].cartes, 4.71238898038469,
