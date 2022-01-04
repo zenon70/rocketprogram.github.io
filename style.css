@@ -242,7 +242,7 @@ a:active {
 	color: skyblue;
 }
 
-pre, code, span, em, ul, li, p, table, thead, tr, th, tbody, td, warn,
+pre, span, em, ul, li, p, table, thead, tr, th, tbody, td, warn,
 div, input, label {
 	background:rgba(0, 0, 0, 0);
 }
