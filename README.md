@@ -92,14 +92,18 @@ drag| newtons of force
 ### Reference Plane for objects orbiting the sun
 this setting allows you to change the data output on the screen for the object you are currently viewing.
 - the ecliptic plane is the de facto standard in space literature unless specified.
+
 - body equator: this is what the underlying code uses no matter which presentation option is selected, because the program uses it to calculate the J2 zonal harmonic (gravitational effect of the equatorial bulge). this body equator frame, and plane, of reference is the de facto standard for all objects orbiting anything other than the sun, such as moons and satellites.
+
 - the invariable plane, not to be confused with la place plane, is a plane which is the sum of all angular momentum of a system, or in other words, the average orbit considering the mass of all planets and objects. (the la place plane is essentially the average plane of an orbit when nodal precession (gravity due to equatorial bulge) and other perturbing forces are taken into account.)
+
 - the galactic plane lines up with the milky way.
+
 - the ICRF frame is fixed to the stars, and is based on the earth's equator. this is not usually used in reference to objects orbiting the sun.
 
 ### navigation tips
 
-- if you feel *upside down*, you can spin the view. tap (or click) and hold and make a circular motion. go clockwise or counter-clockwise to rotate the view. astronauts are always faced with the challenge of determining which was is _up_. if the ISS (International Space Station) had an axes helper, it would show red forward, roughly east, and blue pointing down towards earth, and green to the right, starboard, which is roughly south because it heads east.
+- if you feel *upside down*, you can spin the view. tap (or click) and hold and make a circular motion. go clockwise or counter-clockwise to rotate the view. astronauts are always faced with the challenge of determining which way is _up_. if the ISS (International Space Station) had an axes helper, it would show red forward, roughly east, and blue pointing down towards earth, and green to the right, starboard, which is roughly south because it heads east.
 
 - due to current graphics limitations, the visible surface appears to be below the *actual* surface. so, when a spacecraft is landed on the surface, it will appear to be high up over the surface. trust the gps data, not the graphics.
 

@@ -65,11 +65,11 @@
 				<br>
 				<h3>Stars Resolution</h3>
 				<input type="radio" id="noStars" value="0" name="stars"
-					onchange="changeStars(value)" checked>
+					onchange="changeStars(value)">
 				<label for="noStars">None</label>
 				<br>
 				<input type="radio" id="1kStars" value="1" name="stars"
-					onchange="changeStars(value)">
+					onchange="changeStars(value)" checked>
 				<label for="1kStars">1024 x 1024 x 6, Bright</label>
 				<br>
 				<input type="radio" id="2kStars" value="2" name="stars"
@@ -88,11 +88,11 @@
 				<label for="noEarth">None</label>
 				<br>
 				<input type="radio" id="1kEarth" value="1" name="earth"
-					onchange="changeEarth(value)" checked>
+					onchange="changeEarth(value)">
 				<label for="1kEarth">1024 x 512</label>
 				<br>
 				<input type="radio" id="4kEarth" value="2" name="earth"
-					onchange="changeEarth(value)">
+					onchange="changeEarth(value)" checked>
 				<label for="4kEarth">4096 x 2048, Jpeg Quality 90%</label>
 				<br>
 				<h3>Reference Plane for objects orbiting the sun</h3>
@@ -275,15 +275,20 @@
 <h3 id="reference-plane-for-objects-orbiting-the-sun">Reference Plane for objects orbiting the sun</h3>
 <p>this setting allows you to change the data output on the screen for the object you are currently viewing.</p>
 <ul>
-<li>the ecliptic plane is the de facto standard in space literature unless specified.</li>
-<li>body equator: this is what the underlying code uses no matter which presentation option is selected, because the program uses it to calculate the J2 zonal harmonic (gravitational effect of the equatorial bulge). this body equator frame, and plane, of reference is the de facto standard for all objects orbiting anything other than the sun, such as moons and satellites.</li>
-<li>the invariable plane, not to be confused with la place plane, is a plane which is the sum of all angular momentum of a system, or in other words, the average orbit considering the mass of all planets and objects. (the la place plane is essentially the average plane of an orbit when nodal precession (gravity due to equatorial bulge) and other perturbing forces are taken into account.)</li>
-<li>the galactic plane lines up with the milky way.</li>
-<li>the ICRF frame is fixed to the stars, and is based on the earth&#39;s equator. this is not usually used in reference to objects orbiting the sun.</li>
+<li><p>the ecliptic plane is the de facto standard in space literature unless specified.</p>
+</li>
+<li><p>body equator: this is what the underlying code uses no matter which presentation option is selected, because the program uses it to calculate the J2 zonal harmonic (gravitational effect of the equatorial bulge). this body equator frame, and plane, of reference is the de facto standard for all objects orbiting anything other than the sun, such as moons and satellites.</p>
+</li>
+<li><p>the invariable plane, not to be confused with la place plane, is a plane which is the sum of all angular momentum of a system, or in other words, the average orbit considering the mass of all planets and objects. (the la place plane is essentially the average plane of an orbit when nodal precession (gravity due to equatorial bulge) and other perturbing forces are taken into account.)</p>
+</li>
+<li><p>the galactic plane lines up with the milky way.</p>
+</li>
+<li><p>the ICRF frame is fixed to the stars, and is based on the earth&#39;s equator. this is not usually used in reference to objects orbiting the sun.</p>
+</li>
 </ul>
 <h3 id="navigation-tips">navigation tips</h3>
 <ul>
-<li><p>if you feel <em>upside down</em>, you can spin the view. tap (or click) and hold and make a circular motion. go clockwise or counter-clockwise to rotate the view. astronauts are always faced with the challenge of determining which was is <em>up</em>. if the ISS (International Space Station) had an axes helper, it would show red forward, roughly east, and blue pointing down towards earth, and green to the right, starboard, which is roughly south because it heads east.</p>
+<li><p>if you feel <em>upside down</em>, you can spin the view. tap (or click) and hold and make a circular motion. go clockwise or counter-clockwise to rotate the view. astronauts are always faced with the challenge of determining which way is <em>up</em>. if the ISS (International Space Station) had an axes helper, it would show red forward, roughly east, and blue pointing down towards earth, and green to the right, starboard, which is roughly south because it heads east.</p>
 </li>
 <li><p>due to current graphics limitations, the visible surface appears to be below the <em>actual</em> surface. so, when a spacecraft is landed on the surface, it will appear to be high up over the surface. trust the gps data, not the graphics.</p>
 </li>
@@ -355,13 +360,14 @@
 <li><p>as a side effect of the way this program was developed, it is possible to bore through planets. this program could also be called &quot;boring program&quot;.</p>
 </li>
 </ul>
+v54
 
 				</div><!-- end readme -->
 			</div><!-- end contents -->
 		</div><!-- end popup -->
 		<script>"use strict";
 
-const versionInfo = "v53";
+//const versionInfo = null;
 let dragx = 0;
 
 
@@ -405,7 +411,7 @@ let sun = body.push({
 	declination: 63.87,
 	primeMeridian: 84.176,
 
-	//map: "graphics/sun_1k.jpg",
+	map: "graphics/sun_1k.jpg",
 	color: 0xffffff,
 	emissive: 0xffffff
 }) - 1;
@@ -432,7 +438,7 @@ body.push({
 	declination: 61.4143,
 	primeMeridian: 329.5469,
 
-	//map: "graphics/planet1_2k.jpg",
+	map: "graphics/planet1_2k.jpg",
 	color: 0x848383
 });
 
@@ -457,7 +463,7 @@ body.push({
 	declination: -67.16,
 	primeMeridian: 160.20 + 180, // iau defines neg as north. adding 180
 
-	//map: "graphics/planet2_2k.jpg",
+	map: "graphics/planet2_2k.jpg",
 	color: 0xe4bd7f
 });
 
@@ -485,9 +491,9 @@ let earth = body.push({
 	declination: 90,
 	primeMeridian: 190.147,
 
-	map: "graphics/planet3_1k.jpg",
+	map: "graphics/planet3_4k.jpg",
 	color: 0x419dd9,
-	segments: 32
+	segments: 64
 }) - 1;
 
 
@@ -513,8 +519,8 @@ let planet4 = body.push({
 	declination: 52.88650,
 	primeMeridian: 176.630,
 
-	//segments: 48,
-	//map: "graphics/planet4_2k.jpg",
+	segments: 48,
+	map: "graphics/planet4_2k.jpg",
 	color: 0xb76247
 }) - 1;
 
@@ -547,7 +553,7 @@ body.push({
 	declination: 64.495393,
 	primeMeridian: 284.95,
 
-	//map: "graphics/planet5_2k.jpg",
+	map: "graphics/planet5_2k.jpg",
 	color: 0xada396
 });
 
@@ -581,8 +587,8 @@ body.push({
 	declination: 83.537,
 	primeMeridian: 38.90,
 
-	//map: "graphics/planet6_2k.jpg",
-	//ringsMap: "graphics/planet6rings_1k.png",
+	map: "graphics/planet6_2k.jpg",
+	ringsMap: "graphics/planet6rings_1k.png",
 	ringsRadius: 140415 * 1000,
 	color: 0xcfc0a2
 });
@@ -616,7 +622,7 @@ body.push(
 	declination: -15.175,
 	primeMeridian: 203.81,
 
-	//map: "graphics/planet7_1k.jpg",
+	map: "graphics/planet7_1k.jpg",
 	color: 0x98afb7
 });
 
@@ -647,7 +653,7 @@ body.push({
 	declination: 43.46,
 	primeMeridian: 253.18,
 
-	//map: "graphics/planet8_2k.jpg",
+	map: "graphics/planet8_2k.jpg",
 	color: 0x364fa7
 });
 
@@ -679,7 +685,7 @@ body.push({
 	// 0 longitude on the map is the left edge, so add 180
 	primeMeridian: 237.305 + 180,
 
-	//map: "graphics/planet9_2k.jpg",
+	map: "graphics/planet9_2k.jpg",
 	color: 0x967a63
 });
 
@@ -714,14 +720,13 @@ let moon = body.push({
 	declination: 66.5392,
 	primeMeridian: 38.3213,
 	
-	//map: "graphics/moon301_2k.jpg",
-	map: "graphics/moon301_1k.jpg",
-	//segments: 32,
+	map: "graphics/moon301_2k.jpg",
+	//map: "graphics/moon301_1k.jpg",
+	segments: 64,
 	color: 0x969392
 }) - 1;
 
 // 401
-
 // mass from https://web.archive.org/web/20131019162634/http://solarsystem.nasa.gov/planets/profile.cfm?Object=Mar_Phobos&Display=Facts
 
 // 2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
@@ -745,13 +750,12 @@ let moon401 = body.push({
 	declination: 52.90,
 	primeMeridian: 35.06,
 
-	//map: "graphics/moon401_720x360.jpg",
+	map: "graphics/moon401_720x360.jpg",
 	//segments: 32,
 	color: 0x9a8d84
 }) - 1;
 
 // 402
-
 // mass from https://web.archive.org/web/20131019172735/http://solarsystem.nasa.gov/planets/profile.cfm?Object=Mar_Deimos&Display=Facts
 
 // 2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
@@ -775,7 +779,7 @@ let moon402 = body.push({
 	declination: 53.52,
 	primeMeridian: 79.41,
 
-	//map: "graphics/moon402_720x360.jpg",
+	map: "graphics/moon402_720x360.jpg",
 	color: 0xb0aa9f
 }) - 1;
 
@@ -810,7 +814,7 @@ for (let i = body.length - 1; i > -1; i--) {
 
 
 	if (body[i].segments === undefined) {
-		body[i].segments = 6;
+		body[i].segments = 32;
 	}
 
 /*
@@ -944,27 +948,29 @@ let rocket = body.push({
 	body[i].kepler = {
 		a: aTemp,
 		e: eTemp,
-		i: 61,
-		lan: 5,
-		w: 5,
-		meanAnom: 5
+		i: 61 * Math.PI / 180,
+		lan: 5 * Math.PI / 180,
+		w: 5 * Math.PI / 180,
+		meanAnom: 5 * Math.PI / 180
 	}
 */
-	/*
-	let aTemp = getAxis(133422000, 4180, body[focus].radiusEquator);
-	let eTemp = getEcc(133422000, 4180, body[focus].radiusEquator);
+	
+	let aTemp = getAxis(322000999, 418000999, body[focus].radiusEquator);
+	let eTemp = getEcc(322000999, 418000999, body[focus].radiusEquator);
 	body[i].kepler = {
 		a: aTemp,
 		e: eTemp,
-		i: 51.64,
-		lan: 0,
-		w: 0,
-		meanAnom: 180
+		i: 20 * Math.PI / 180,
+		lan: 12 * Math.PI / 180,
+		w: 61 * Math.PI / 180,
+		meanAnom: 146 * Math.PI / 180
 	}
 
 	body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
-	body[i].cartes = toCartes(body[i].kepler, body[i].mu);
-	*/
+	body[i].cartesEci = toCartes(body[i].kepler, body[i].mu);
+	body[i].cartes = eciToIcrf(body[i].cartesEci, body[focus].rightAscension,
+		body[focus].declination);
+	
 }
 
 
@@ -1030,8 +1036,10 @@ const camera = new THREE.PerspectiveCamera(
 	0.001,
 	1e10
 );
-camera.position.set(-200 * scale, 0 * scale, -250 * scale); // texas
+//camera.position.set(-200 * scale, 0 * scale, -250 * scale); // texas
 //camera.position.set(0 * scale, -300 * scale, 0 * scale); // kazakhstan
+camera.position.set(-200 * scale, 0 * scale, -350 * scale); // kourou
+camera.up.set(0.62, -0.5, 2); // kourou
 
 const camera2 = new THREE.OrthographicCamera(
 	-window.innerWidth / 2,
@@ -1169,7 +1177,6 @@ function changeStars(value) {
 	switch (value) {
 		case "0":
 			scene.background = null;
-			scene.background.needsUpdate = true;
 			break;
 		case "1":
 			// 1k (1024x1024) Low Resolution (from bright 8k TIFF)
@@ -1228,10 +1235,9 @@ function changeStars(value) {
 			break;
 		default:
 			scene.background = null;
-			scene.background.needsUpdate = true;
 	} 
 }
-
+changeStars("1");
 
 function changeEarth(value) {
 	if (body[earth].mesh.material.map) {
@@ -1430,7 +1436,7 @@ let view;
 	// temporary mesh
 	const geometry = new THREE.CylinderGeometry(
 		//3.66 * scale, 3.66 * scale, 70 * scale, 8);  // falcon 9
-		9 * scale, 9 * scale, 50 * scale, 8);  // starship
+		9 * scale, 9 * scale, 50 * scale, 12);  // starship
 	const texture = new THREE.TextureLoader().load("graphics/test.jpg");
 	texture.magFilter = THREE.NearestFilter;
 	texture.minFilter = THREE.NearestFilter;
@@ -1634,7 +1640,7 @@ function cycleView() {
 	}
 
 	// don't look at the sun
-	if (view === 0) view++;
+	//if (view === 0) view++;
 
 /*
 	if (body[view].type === "Artificial") {
@@ -1998,6 +2004,31 @@ function nBodyVelocity(/*body, GRAVITY, timestep*/) {
 
 
 
+let reportPlane = "ecliptic";
+let keplerAltPlane; // alternative plane, object for reportPlane
+
+function setPlane(value) {
+	switch (value) {
+		case "ecliptic":
+			reportPlane = "ecliptic";
+			break;
+		case "body":
+			reportPlane = "body";
+			break;
+		case "invariable":
+			reportPlane = "invariable";
+			break;
+		case "galactic":
+			reportPlane = "galactic";
+			break;
+		case "icrf":
+			reportPlane = "icrf";
+			break;
+		default:
+			reportPlane = "ecliptic";
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // keplerian physics
 // compute local position, subtract greatest force (use it through
@@ -2058,24 +2089,24 @@ function keplerPosition() {
 			(body[i].focusDistanceZ / body[i].focusDistance) * timestep;
 
 		// tilt the orbit to match parent body frame (axial tilt)
-		body[i].cartes = icrfToEci(body[i].cartes, body[focus].rightAscension,
+		body[i].cartesEci = icrfToEci(body[i].cartes, body[focus].rightAscension,
 			body[focus].declination);
 
 		/*
 		if (i === 8 && debugLog < 3) {
 			console.log("1. initial eci vectors",
-				body[i].cartes.x, body[i].cartes.y, body[i].cartes.z,
-				body[i].cartes.vx, body[i].cartes.vy, body[i].cartes.vz,
-				body[i].cartes.meanAnom + " meanAnom",
-				body[i].cartes.eAnom + " eAnom",
-				body[i].cartes.truAnom + " truAnom",
-				body[i].cartes.truAnomB + " truAnomB",
-				body[i].cartes.h + " h");
+				body[i].cartesEci.x, body[i].cartesEci.y, body[i].cartesEci.z,
+				body[i].cartesEci.vx, body[i].cartesEci.vy, body[i].cartesEci.vz,
+				body[i].cartesEci.meanAnom + " meanAnom",
+				body[i].cartesEci.eAnom + " eAnom",
+				body[i].cartesEci.truAnom + " truAnom",
+				body[i].cartesEci.truAnomB + " truAnomB",
+				body[i].cartesEci.h + " h");
 		}
 		*/
 		// use the updated vectors and mu to get keplerian elements
 		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
-		body[i].kepler = toKepler(body[i].cartes, body[i].mu);
+		body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
 		/*
 		if (i === 8 && debugLog < 3) {
 			console.log("2. initial elements",
@@ -2122,21 +2153,19 @@ function keplerPosition() {
 		*/
 
 		// use the new keplerian elements to get new vectors
-		body[i].cartes = toCartes(body[i].kepler, body[i].mu);
+		body[i].cartesEci = toCartes(body[i].kepler, body[i].mu);
 
-		// this is eci, so save it now before it gets tilted back
-		//body[i].eci = body[i].cartes;
 
 		/*
 		if (i === 8 && debugLog < 3) {
 			console.log("3. post-move vectors",
-				body[i].cartes.x, body[i].cartes.y, body[i].cartes.z,
-				body[i].cartes.vx, body[i].cartes.vy, body[i].cartes.vz,
-				body[i].cartes.meanAnom + " meanAnom",
-				body[i].cartes.eAnom + " eAnom",
-				body[i].cartes.truAnom + " truAnom",
-				body[i].cartes.truAnomB + " truAnomB",
-				body[i].cartes.h + " h");
+				body[i].cartesEci.x, body[i].cartesEci.y, body[i].cartesEci.z,
+				body[i].cartesEci.vx, body[i].cartesEci.vy, body[i].cartesEci.vz,
+				body[i].cartesEci.meanAnom + " meanAnom",
+				body[i].cartesEci.eAnom + " eAnom",
+				body[i].cartesEci.truAnom + " truAnom",
+				body[i].cartesEci.truAnomB + " truAnomB",
+				body[i].cartesEci.h + " h");
 		}
 		*/
 
@@ -2150,12 +2179,12 @@ function keplerPosition() {
 		body[i].cartes.y += body[i].cartes.vy * timestep;
 		body[i].cartes.z += body[i].cartes.vz * timestep;
 
-		body[i].cartes = icrfToEci(body[i].cartes, body[focus].rightAscension,
+		body[i].cartesEci = icrfToEci(body[i].cartes, body[focus].rightAscension,
 			body[focus].declination);
 
 		// get new kepler from cartes
 		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
-		body[i].kepler = toKepler(body[i].cartes, body[i].mu);
+		body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
 //	}
 //}
 */
@@ -2163,7 +2192,7 @@ function keplerPosition() {
 ////////////////////////////////////////////////////////////////////////////////
 
 		/*
-		if (body[i].cartes.iterations === body[i].cartes.maxIterations) {
+		if (body[i].cartesEci.iterations === body[i].cartesEci.maxIterations) {
 			console.log(body[i].name + " is being ejected.");
 			body.splice(i);
 			continue;
@@ -2173,7 +2202,7 @@ function keplerPosition() {
 
 		/*
 		{
-			let {x, y, z, vx, vy, vz} = body[i].cartes;
+			let {x, y, z, vx, vy, vz} = body[i].cartesEci;
 
 			if (isNaN(x) || isNaN(y) || isNaN(z) ||
 				isNaN(vx) || isNaN(vy) || isNaN(vz)) {
@@ -2184,7 +2213,7 @@ function keplerPosition() {
 				console.log("onSurface: " + body[i].onSurface);
 				//console.log(m1, m2);
 				console.log(body[i].kepler);
-				console.log(body[i].cartes);
+				console.log(body[i].cartesEci);
 				console.log(x, y, z, vx, vy, vz);
 
 				clearInterval(loop);
@@ -2205,8 +2234,9 @@ function keplerPosition() {
 				body[i].spun += body[i].angularVelocity * timestep;
 			} else {
 				// cartes.truAnom is new, kepler.truAnom is old
-				body[i].mesh.rotateY(body[i].cartes.truAnom - body[i].kepler.truAnom);
-				body[i].spun += body[i].cartes.truAnom - body[i].kepler.truAnom;
+				body[i].mesh.rotateY(body[i].cartesEci.truAnom -
+					body[i].kepler.truAnom);
+				body[i].spun += body[i].cartesEci.truAnom - body[i].kepler.truAnom;
 			}
 			body[i].spun %= 2 * Math.PI;
 		} else {
@@ -2214,7 +2244,7 @@ function keplerPosition() {
 
 		// get Earth-Centered-Earth-Fixed and GPS coordinates
 			if (!body[i].onSurface) {
-				body[i].ecef = eciToEcef(body[i].cartes,
+				body[i].ecef = eciToEcef(body[i].cartesEci,
 					body[focus].spun,
 					body[focus].angularVelocity,
 					body[focus].radiusEquator, body[focus].e2);
@@ -2234,7 +2264,7 @@ function keplerPosition() {
 
 			if (body[i].onSurface) {
 				// use ecef to move with surface
-				body[i].cartes = ecefToEci(body[i].ecef,
+				body[i].cartesEci = ecefToEci(body[i].ecef,
 					body[focus].spun,
 					body[focus].angularVelocity, body[focus].radiusEquator,
 					body[focus].e2);
@@ -2321,14 +2351,14 @@ function keplerPosition() {
 					// final prograde direction, may have an issue, or may be better
 
 					// send info back up the chain
-					body[i].cartes = ecefToEci(body[i].ecef,
+					body[i].cartesEci = ecefToEci(body[i].ecef,
 					body[focus].spun,
 					body[focus].angularVelocity, body[focus].radiusEquator,
 					body[focus].e2);
 				}
 			}
 		// tilt back, to match icrf frame
-		body[i].cartes = eciToIcrf(body[i].cartes,
+		body[i].cartes = eciToIcrf(body[i].cartesEci,
 			body[focus].rightAscension, body[focus].declination);
 
 		// get elements in ecliptic frame, just for reporting data to user
@@ -2356,32 +2386,6 @@ function keplerPosition() {
 			}
 		}
 	} // close for loop
-}
-
-
-let reportPlane = "ecliptic";
-let keplerAltPlane; // object for reportPlane
-
-function setPlane(value) {
-	switch (value) {
-		case "ecliptic":
-			reportPlane = "ecliptic";
-			break;
-		case "body":
-			reportPlane = "body";
-			break;
-		case "invariable":
-			reportPlane = "invariable";
-			break;
-		case "galactic":
-			reportPlane = "galactic";
-			break;
-		case "icrf":
-			reportPlane = "icrf";
-			break;
-		default:
-			reportPlane = "ecliptic";
-	}
 }
 
 
@@ -2472,40 +2476,27 @@ function displayText() {
 			1000).toFixed(3);
 	} else {
 		let vFocus = body[view].focus;
-		
+		let keplerShow;
 		if (reportPlane !== "body" && body[view].focus === 0) {
-			document.getElementById("hudDateOrbit").innerHTML = now.toISOString() +
-				"<br>a " + (keplerAltPlane.a / 1000)/*.toFixed(3)*/ +
-				"<br>e " + (keplerAltPlane.e)/*.toFixed(3)*/ +
-				"<br>i " + (keplerAltPlane.i * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>Ω " + (keplerAltPlane.lan * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>ω " + (keplerAltPlane.w * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>M " + (keplerAltPlane.meanAnom * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>Ap " +
-				((keplerAltPlane.apoapsis - body[vFocus].radiusEquator) / 1000).
-				toFixed(3) +
-				"<br>Pe " +
-				((keplerAltPlane.periapsis - body[vFocus].radiusEquator) / 1000).
-				toFixed(3) +
-				"<br>kms " + (keplerAltPlane.v / 1000).toFixed(3) +
-				"<br>" + versionInfo;
+			keplerShow = keplerAltPlane;
 		} else {
-			document.getElementById("hudDateOrbit").innerHTML = now.toISOString() +
-				"<br>a " + (body[view].kepler.a / 1000)/*.toFixed(3)*/ +
-				"<br>e " + (body[view].kepler.e)/*.toFixed(3)*/ +
-				"<br>i " + (body[view].kepler.i * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>Ω " + (body[view].kepler.lan * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>ω " + (body[view].kepler.w * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>M " + (body[view].kepler.meanAnom * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>Ap " +
-				((body[view].kepler.apoapsis - body[vFocus].radiusEquator) / 1000).
-				toFixed(3) +
-				"<br>Pe " +
-				((body[view].kepler.periapsis - body[vFocus].radiusEquator) / 1000).
-				toFixed(3) +
-				"<br>kms " + (body[view].kepler.v / 1000).toFixed(3) +
-				"<br>" + versionInfo;
+			keplerShow = body[view].kepler;
 		}
+		document.getElementById("hudDateOrbit").innerHTML = now.toISOString() +
+			"<br>a " + (keplerShow.a / 1000).toFixed(3) +
+			"<br>e " + (keplerShow.e).toFixed(7) +
+			"<br>i " + (keplerShow.i * 180 / Math.PI).toFixed(7) +
+			"<br>Ω " + (keplerShow.lan * 180 / Math.PI).toFixed(5) +
+			"<br>ω " + (keplerShow.w * 180 / Math.PI).toFixed(7) +
+			"<br>M " + (keplerShow.meanAnom * 180 / Math.PI).toFixed(5) +
+			"<br>Ap " +
+			((keplerShow.apoapsis - body[vFocus].radiusEquator) / 1000).
+			toFixed(3) +
+			"<br>Pe " +
+			((keplerShow.periapsis - body[vFocus].radiusEquator) / 1000).
+			toFixed(3) +
+			"<br>kms " + (keplerShow.v / 1000).toFixed(3);// +
+			//"<br>" + versionInfo;
 	}
 
 	if (body[view].type === "Artificial") {
@@ -2573,10 +2564,9 @@ let drawOrbits = false;
 function toggleAllOrbits() {
 	if (drawOrbits) {
 		if (drawLocalOrbits) {
-			let localParent = body[rocket].focus;
 			// skip sun
 			for (let i = body.length - 1; i > 0; i--) {
-				if (body[i].focus !== localParent) {
+				if (body[i].focus !== body[rocket].focus) {
 					body[i].ellipse.visible = false;
 				}
 			}
@@ -2606,7 +2596,7 @@ function toggleLocalOrbits() {
 ////////////////////////////////////////////////////////////////////////////////
 // preAnimate
 
-let running = true;
+
 //let skipDraw = 0;
 let navQ = new THREE.Quaternion();
 let oldViewX = 0;
@@ -2632,14 +2622,15 @@ function preAnimate() {
 			}
 */
 		}
-	}
-
-	if (drawLocalOrbits === true) {
-		let localParent = body[rocket].focus;
+	} else if (drawLocalOrbits === true) {
 		for (let i = body.length - 1; i > 0; i--) {
-			if (body[i].focus === localParent) {
+			if (body[i].focus === body[rocket].focus) {
 				drawEllipse(i, body[i].color, scale);
 				body[i].ellipse.visible = true;
+			} else {
+				if (body[i].ellipse) {
+					body[i].ellipse.visible = false;
+				}
 			}
 		}
 	}
@@ -2714,7 +2705,7 @@ animate();
 
 
 let loop = setInterval(main, 10);
-
+let running = true;
 function playPause() {
 	if (running === true) {
 		clearInterval(loop);

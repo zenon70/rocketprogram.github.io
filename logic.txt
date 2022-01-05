@@ -51,15 +51,6 @@ crash at center of planet
 
 rocket goes down when low thrust on surface
 
-orbit lines float away after changing focus
-occurs when changing from orbit to hyperbolic on focus change...
-like earth orbit -> moon hyperbolic
-this will get resolved when hyperbolic trajectories etc are drawn
-  orbit line
-    draw pure hyperbolic line (vs ellipse)
-    draw nbody trajectory
-    apo/peri/incl markers on orbit line
-
 ecliptic lan parameter is off by almost precisely 90 deg, not sure why
   (ecliptic notes below)
 
