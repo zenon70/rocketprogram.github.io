@@ -1927,7 +1927,7 @@ function rocketControl() {
 //let currentFocus = body[8].focus;
 //let debugLog = 0;
 
-function nBodyVelocity(body, GRAVITY, timestep) {
+function nBodyVelocity(/*body, GRAVITY, timestep*/) {
 	for (let i = body.length - 1; i > -1; i--) {
 
 		// initialize most influential gravity value
@@ -2006,12 +2006,13 @@ function nBodyVelocity(body, GRAVITY, timestep) {
 // kepler's equation, get ecef, and untilt
 /*
 	depends:
-		tilt
-		untilt
-		toKepler
-		toCartes
-		nodalPrecession
-		eciToEcef
+		icrfToEci()
+		eciToIcrf()
+		toKepler()
+		toCartes()
+		nodalPrecession()
+		eciToEcef()
+		...
 
 	requires:
 		body [array]
@@ -2025,6 +2026,7 @@ function nBodyVelocity(body, GRAVITY, timestep) {
 		kepler [eci]
 		ecef
 		surfacePeriapsis
+		...
 
 */
 
@@ -2533,8 +2535,9 @@ function main() {
 	// spin and throttle rocket
 	rocketControl();
 
-	// calculate new velocities for everything (true n-body physics)
-	body = nBodyVelocity(body, GRAVITY, timestep);
+	// calculate new velocities for everything (true n-body physics.
+	//body = nBodyVelocity(body, GRAVITY, timestep);
+	nBodyVelocity();
 
 	// update sun position. relative to system barycenter. no keplerian orbit
 	body[mostMassiveBody].x += body[mostMassiveBody].vx * timestep;
