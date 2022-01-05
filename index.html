@@ -360,7 +360,7 @@
 <li><p>as a side effect of the way this program was developed, it is possible to bore through planets. this program could also be called &quot;boring program&quot;.</p>
 </li>
 </ul>
-v54
+v55
 
 				</div><!-- end readme -->
 			</div><!-- end contents -->
@@ -931,14 +931,14 @@ let rocket = body.push({
 	// convert to ecef then to cartes
 	body[i].ecef = gpsToEcef(body[i].gps, body[focus].radiusEquator,
 		body[focus].e2);
-	body[i].cartes = ecefToEci(body[i].ecef, body[focus].spun,
+	body[i].cartesEci = ecefToEci(body[i].ecef, body[focus].spun,
 		body[focus].angularVelocity, body[focus].radiusEquator, body[focus].e2);
 
 	// save eci for orbital prograde etc
 	//body[i].eci = body[i].cartes;
 
 	// not necessary for earth, but should be standard practice
-	body[i].cartes = eciToIcrf(body[i].cartes,
+	body[i].cartes = eciToIcrf(body[i].cartesEci,
 		body[focus].rightAscension, body[focus].declination);
 
 /*
@@ -953,7 +953,6 @@ let rocket = body.push({
 		w: 5 * Math.PI / 180,
 		meanAnom: 5 * Math.PI / 180
 	}
-*/
 	
 	let aTemp = getAxis(322000999, 418000999, body[focus].radiusEquator);
 	let eTemp = getEcc(322000999, 418000999, body[focus].radiusEquator);
@@ -970,7 +969,7 @@ let rocket = body.push({
 	body[i].cartesEci = toCartes(body[i].kepler, body[i].mu);
 	body[i].cartes = eciToIcrf(body[i].cartesEci, body[focus].rightAscension,
 		body[focus].declination);
-	
+*/
 }
 
 
