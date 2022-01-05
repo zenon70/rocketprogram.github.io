@@ -63,6 +63,18 @@
 				<input type="checkbox" id="localOrbits" onchange="toggleLocalOrbits()">
 				<label for="localOrbits">Local Orbits</label>
 				<br>
+				<h3>Starlight Intensity (ambient light)</h3>
+				<div id="starlightOutput" class="slider">300%</div>
+					<div class="slideContainer">
+						<input type="range" min="0" max="100" value="30" class="slider"
+							id="starlight">
+					</div>
+				<h3>Sunlight Intensity (point light)</h3>
+				<div id="sunlightOutput" class="slider">100%</div>
+					<div class="slideContainer">
+						<input type="range" min="0" max="100" value="100" class="slider"
+							id="sunlight">
+					</div>
 				<h3>Stars Resolution</h3>
 				<input type="radio" id="noStars" value="0" name="stars"
 					onchange="changeStars(value)">
@@ -360,7 +372,7 @@
 <li><p>as a side effect of the way this program was developed, it is possible to bore through planets. this program could also be called &quot;boring program&quot;.</p>
 </li>
 </ul>
-v55
+v56
 
 				</div><!-- end readme -->
 			</div><!-- end contents -->
@@ -370,6 +382,25 @@ v55
 //const versionInfo = null;
 let dragx = 0;
 
+let starlightControl = 0.3;
+let starlightSlider = document.getElementById("starlight");
+let starlightOutput = document.getElementById("starlightOutput");
+// Update the current slider value (each time you drag the slider handle)
+starlightSlider.oninput = function() {
+	starlightOutput.innerHTML = this.value * 10 + "%";
+	starlightControl = this.value / 100;
+	if (body[view].name !== "10") {
+		starlight.intensity = starlightControl;
+	}
+}
+
+let sunlightSlider = document.getElementById("sunlight");
+let sunlightOutput = document.getElementById("sunlightOutput");
+// Update the current slider value (each time you drag the slider handle)
+sunlightSlider.oninput = function() {
+	sunlightOutput.innerHTML = this.value + "%";
+	body[sun].sunlight.intensity = this.value / 100;
+}
 
 const popup = document.querySelector('.popup');
 function menu() {
@@ -1293,9 +1324,7 @@ function changeEarth(value) {
 const starlight = new THREE.AmbientLight (0xffffff);
 scene.add(starlight);
 
-function setStarlight(value) {
 
-}
 
 // planets, moons, etc: oblate spheroids (with helpers)
 for (let i = body.length - 1; i > -1; i--) {
@@ -1669,7 +1698,7 @@ function cycleView() {
 	}
 	else {
 		body[mostMassiveBody].mesh.material.emissiveIntensity = 1;
-		starlight.intensity = 0.3;
+		starlight.intensity = starlightControl;
 /*
 		if (scene.background) {
 			scene.background.visible = true;

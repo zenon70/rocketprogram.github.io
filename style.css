@@ -5,6 +5,18 @@
 	overscroll-behavior: contain;
 }
 
+.slideContainer {
+	width: 90%;
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+.slider {
+	width: 100%;
+	margin: 1%;
+	padding: 1%;
+}
+
 .hud {
 	position: fixed;
 	color: #dddddd;
