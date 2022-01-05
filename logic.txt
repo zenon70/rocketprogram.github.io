@@ -7,7 +7,7 @@ livestream crashes, need super low-res startup, set hi-resolution maps
   with orbit lines... so efficiency needs to be improved.
 why slow?
 - loading all planets & moons with textures at the same time
-- polygons, gtlf models
+- polygons, gltf models
 - high res textures
 - two scenes
 - orbit lines
@@ -26,6 +26,8 @@ initialization-only
 
 
 ISSUES:
+
+gui hud numbers wrapping, and going outside of tinted background
 
 spacecraft rotation during and resulting from warp is wrong.. requires
   complicated formula.
@@ -90,12 +92,13 @@ constellation map
 
 air density on other planets
   re-entry heat
+visual clouds
+  planets 2, 3, maybe 4, maybe a few moons
 
 terrain: bump/relief map w/collision detection
   aerodynamics and negative altitude loss of momentum will need to be revised
   
 GRAPHICS
-  cloud layer
   sky color during daytime or in thick atmosphere, from camera location
   shadows, especially for planet 6 rings
     use DirectionalLight or SpotLight near planet
