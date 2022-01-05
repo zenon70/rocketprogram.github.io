@@ -95,9 +95,29 @@
 					onchange="changeEarth(value)">
 				<label for="4kEarth">4096 x 2048, Jpeg Quality 90%</label>
 				<br>
+				<h3>Reference Plane for objects orbiting the sun</h3>
+				<input type="radio" id="eclipticFrame" value="ecliptic" name="plane"
+					onchange="setPlane(value)" checked>
+				<label for="eclipticFrame">Ecliptic IAU76/80 & IAU2009 J2000.0</label>
+				<br>
+				<input type="radio" id="sunBodyFrame" value="body" name="plane"
+					onchange="setPlane(value)">
+				<label for="sunBodyFrame">Body - Sun Equator IAU2009 J2000.0</label>
+				<br>
+				<input type="radio" id="invariablePlane" value="invariable" name="plane"
+					onchange="setPlane(value)">
+				<label for="invariablePlane">Invariable Plane IAU2009 J2000.0</label>
+				<br>
+				<input type="radio" id="galacticPlane" value="galactic" name="plane"
+					onchange="setPlane(value)">
+				<label for="galacticPlane">Galactic Plane IAU2009 J2000.0</label>
+				<br>
+				<input type="radio" id="icrfFrame" value="icrf" name="plane"
+					onchange="setPlane(value)">
+				<label for="icrfFrame">ICRF (International Celestial Reference Frame) J2000.0</label>
+				<br>
 				<h3>About</h3>
 				<div id="readme">
-
 <pre>
                     _          _
       _ _ ___   __ | | _  ___ | |_
@@ -110,8 +130,8 @@
 | ,__/|_| \___/ \__, |_| \__,_|_| |_| |_|
 |_|             |___/
 </pre>
-<h1 id="rocket-program">this is a rocket program</h1>
-<p>this program simulates rocket launches, orbits, and interplanetary spaceflight.  </p>
+<h1 id="this-is-a-rocket-program">this is a rocket program</h1>
+<p>this program simulates rocket launches, orbits, and interplanetary spaceflight.</p>
 <p><em>orbMech[ver].js can be used to convert between Keplerian Orbital Elements and Cartesian State Vectors</em></p>
 <h2 id="main-features">main features</h2>
 <ul>
@@ -207,11 +227,11 @@
 </tr>
 <tr>
 <td>Ap</td>
-<td>apoapsis altitude from MSL (mean sea level)</td>
+<td>apoapsis altitude from MSL (mean sea level) at Equator</td>
 </tr>
 <tr>
 <td>Pe</td>
-<td>periapsis altitude from MSL (mean sea level)</td>
+<td>periapsis altitude from MSL (mean sea level) at Equator</td>
 </tr>
 <tr>
 <td>kms</td>
@@ -239,7 +259,7 @@
 </tr>
 <tr>
 <td>Alt</td>
-<td>altitude from MSL (mean sea level)</td>
+<td>altitude from MSL (mean sea level) at your location</td>
 </tr>
 <tr>
 <td>kms</td>
@@ -252,7 +272,16 @@
 </tbody>
 </table>
 <p>* the kms listed with gps info is surface speed. this is the ECEF (earth-centered earth-fixed) frame, and it does consider the spin of the planet/moon/etc.</p>
-<h2 id="navigation-tips">navigation tips</h2>
+<h3 id="reference-plane-for-objects-orbiting-the-sun">Reference Plane for objects orbiting the sun</h3>
+<p>this setting allows you to change the data output on the screen for the object you are currently viewing.</p>
+<ul>
+<li>the ecliptic plane is the de facto standard in space literature unless specified.</li>
+<li>body equator: this is what the underlying code uses no matter which presentation option is selected, because the program uses it to calculate the J2 zonal harmonic (gravitational effect of the equatorial bulge). this body equator frame, and plane, of reference is the de facto standard for all objects orbiting anything other than the sun, such as moons and satellites.</li>
+<li>the invariable plane, not to be confused with la place plane, is a plane which is the sum of all angular momentum of a system, or in other words, the average orbit considering the mass of all planets and objects. (the la place plane is essentially the average plane of an orbit when nodal precession (gravity due to equatorial bulge) and other perturbing forces are taken into account.)</li>
+<li>the galactic plane lines up with the milky way.</li>
+<li>the ICRF frame is fixed to the stars, and is based on the earth&#39;s equator. this is not usually used in reference to objects orbiting the sun.</li>
+</ul>
+<h3 id="navigation-tips">navigation tips</h3>
 <ul>
 <li><p>if you feel <em>upside down</em>, you can spin the view. tap (or click) and hold and make a circular motion. go clockwise or counter-clockwise to rotate the view. astronauts are always faced with the challenge of determining which was is <em>up</em>. if the ISS (International Space Station) had an axes helper, it would show red forward, roughly east, and blue pointing down towards earth, and green to the right, starboard, which is roughly south because it heads east.</p>
 </li>
@@ -309,7 +338,7 @@
 </ul>
 <h2 id="design-choices">design choices</h2>
 <ul>
-<li><p>functional programming. wherever possible and practical, <em>pure</em> (independent) functions are written and utilized. this keeps the working pieces of the program separate, and therefore makes the program more reliable and more extensible. it is my goal to make it so that advanced users and programmers can easily understand and use the code.</p>
+<li><p>functional programming. wherever possible and practical, <em>pure</em> (independent)  functions are written and utilized. this keeps the working pieces of the program separate, and therefore makes the program more reliable and more extensible. it is my goal to make it so that advanced users and programmers can easily understand and use the code.</p>
 </li>
 <li><p>the internal structure of the code uses the x, y, and z of space conventions, not cgi graphics animation conventions which is the de facto standard in the threejs 3D library and many other programs. the benefit of using space conventions is that all formulas, source code, data input/output, etc., will not need to be converted. this helps avoid confusion for the advanced users and programmers.</p>
 </li>
@@ -327,13 +356,12 @@
 </li>
 </ul>
 
-
 				</div><!-- end readme -->
 			</div><!-- end contents -->
 		</div><!-- end popup -->
 		<script>"use strict";
 
-const versionInfo = "v52";
+const versionInfo = "v53";
 let dragx = 0;
 
 
@@ -1969,8 +1997,6 @@ function nBodyVelocity(body, GRAVITY, timestep) {
 }
 
 
-let reportEcliptic = true;
-let keplerEcliptic; // object for reportEcliptic
 
 ////////////////////////////////////////////////////////////////////////////////
 // keplerian physics
@@ -2304,17 +2330,57 @@ function keplerPosition() {
 			body[focus].rightAscension, body[focus].declination);
 
 		// get elements in ecliptic frame, just for reporting data to user
-		if (i === view && body[i].focus === 0 && reportEcliptic) {
-			// RA 270 * Math.PI / 180 = 4.71238898038469
-			// DEC 90 - 23.43929 = 66.56071, * Math.PI / 180 = 1.161703541965115
-			const cartesEcliptic = icrfToEci(body[i].cartes, 4.71238898038469,
-				1.161703541965115);
-			keplerEcliptic = toKepler(cartesEcliptic, body[i].mu);
+		if (i === view && body[i].focus === 0 && reportPlane !== "body") {
+			if (reportPlane === "ecliptic") {
+				const cartesAltPlane = icrfToEci(body[i].cartes,
+				// RA 270 * Math.PI / 180 = 4.71238898038469
+					4.71238898038469,
+				// DEC 90 - 23.43929 = 66.56071, * Math.PI / 180 = 1.161703541965115
+					1.161703541965115);
+				keplerAltPlane = toKepler(cartesAltPlane, body[i].mu);
+			} else if (reportPlane === "icrf") {
+				// currently in icrf frame
+				keplerAltPlane = toKepler(body[i].cartes, body[i].mu);
+			} else if (reportPlane === "galactic") {
+				const cartesAltPlane = icrfToEci(body[i].cartes,
+					0.38147085502186906, // 21.85667 deg
+					0.4735078260660616); // 27.13 deg
+				keplerAltPlane = toKepler(cartesAltPlane, body[i].mu);
+			} else /* invariable */ {
+				const cartesAltPlane = icrfToEci(body[i].cartes,
+					4.779584156586472, // 273.85 deg
+					1.1691960659110012); // 66.99 deg
+				keplerAltPlane = toKepler(cartesAltPlane, body[i].mu);
+			}
 		}
 	} // close for loop
 }
 
 
+let reportPlane = "ecliptic";
+let keplerAltPlane; // object for reportPlane
+
+function setPlane(value) {
+	switch (value) {
+		case "ecliptic":
+			reportPlane = "ecliptic";
+			break;
+		case "body":
+			reportPlane = "body";
+			break;
+		case "invariable":
+			reportPlane = "invariable";
+			break;
+		case "galactic":
+			reportPlane = "galactic";
+			break;
+		case "icrf":
+			reportPlane = "icrf";
+			break;
+		default:
+			reportPlane = "ecliptic";
+	}
+}
 
 
 
@@ -2405,21 +2471,21 @@ function displayText() {
 	} else {
 		let vFocus = body[view].focus;
 		
-		if (reportEcliptic && body[view].focus === 0) {
+		if (reportPlane !== "body" && body[view].focus === 0) {
 			document.getElementById("hudDateOrbit").innerHTML = now.toISOString() +
-				"<br>a " + (keplerEcliptic.a / 1000)/*.toFixed(3)*/ +
-				"<br>e " + (keplerEcliptic.e)/*.toFixed(3)*/ +
-				"<br>i " + (keplerEcliptic.i * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>Ω " + (keplerEcliptic.lan * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>ω " + (keplerEcliptic.w * 180 / Math.PI)/*.toFixed(3)*/ +
-				"<br>M " + (keplerEcliptic.meanAnom * 180 / Math.PI)/*.toFixed(3)*/ +
+				"<br>a " + (keplerAltPlane.a / 1000)/*.toFixed(3)*/ +
+				"<br>e " + (keplerAltPlane.e)/*.toFixed(3)*/ +
+				"<br>i " + (keplerAltPlane.i * 180 / Math.PI)/*.toFixed(3)*/ +
+				"<br>Ω " + (keplerAltPlane.lan * 180 / Math.PI)/*.toFixed(3)*/ +
+				"<br>ω " + (keplerAltPlane.w * 180 / Math.PI)/*.toFixed(3)*/ +
+				"<br>M " + (keplerAltPlane.meanAnom * 180 / Math.PI)/*.toFixed(3)*/ +
 				"<br>Ap " +
-				((keplerEcliptic.apoapsis - body[vFocus].radiusEquator) / 1000).
+				((keplerAltPlane.apoapsis - body[vFocus].radiusEquator) / 1000).
 				toFixed(3) +
 				"<br>Pe " +
-				((keplerEcliptic.periapsis - body[vFocus].radiusEquator) / 1000).
+				((keplerAltPlane.periapsis - body[vFocus].radiusEquator) / 1000).
 				toFixed(3) +
-				"<br>kms " + (keplerEcliptic.v / 1000).toFixed(3) +
+				"<br>kms " + (keplerAltPlane.v / 1000).toFixed(3) +
 				"<br>" + versionInfo;
 		} else {
 			document.getElementById("hudDateOrbit").innerHTML = now.toISOString() +

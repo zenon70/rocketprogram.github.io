@@ -11,12 +11,12 @@
 |_|             |___/
 ```
 
-# this is a rocket program  
-  
-this program simulates rocket launches, orbits, and interplanetary spaceflight.  
-  
-*orbMech[ver].js can be used to convert between Keplerian Orbital Elements and Cartesian State Vectors*  
-  
+# this is a rocket program
+
+this program simulates rocket launches, orbits, and interplanetary spaceflight.
+
+*orbMech[ver].js can be used to convert between Keplerian Orbital Elements and Cartesian State Vectors*
+
 ## main features ##
 - n-body physics integrated with keplerian physics
 	- lagrange points, lissajous orbits, horseshoe orbits, etc.
@@ -45,15 +45,15 @@ this program simulates rocket launches, orbits, and interplanetary spaceflight.
 *development version:*
 - Live: https://cubetronic.github.io
 - Code: https://github.com/cubetronic/cubetronic.github.io
-  
+
 *stable version:*
 - Live: https://rocketprogram.github.io
 - Code: https://github.com/rocketprogram/rocketprogram.github.io
 
----  
+---
 
 - many orbital formulas in this program are based on MATLAB scripts from the 2020 textbook _Orbital Mechanics for Engineering Students_ by Curtis. in the practical application of these scripts, necessary adjustments and additions have been made.
-  
+
 - this program was developed from scratch, starting with a simple 1-Dimensional concept of a rocket going up. then it became a 2D simulation with a JavaScript canvas. now it's 3D, with _three.js_ used to render 3D graphics.
 
 ## user guide
@@ -70,26 +70,34 @@ i     | inclination
 Ω     | longitude of the ascending node
 ω     | argument of periapsis
 M     | mean anomaly
-Ap    | apoapsis altitude from MSL (mean sea level)
-Pe    | periapsis altitude from MSL (mean sea level)
+Ap    | apoapsis altitude from MSL (mean sea level) at Equator
+Pe    | periapsis altitude from MSL (mean sea level) at Equator
 kms   | kilometers per second*
 
 
 \* the kms listed with orbital info is orbital speed. this is the ECI (earth centered inertial) frame, which means it does not consider the spin of the planet/moon/etc.
 
-**surface info**  
+**surface info**
 
 abbv|meaning
 ----|-------
 Lat | latitude
 Lon | longitude
-Alt | altitude from MSL (mean sea level)
+Alt | altitude from MSL (mean sea level) at your location
 kms | kilometers per second*
 drag| newtons of force
 
 \* the kms listed with gps info is surface speed. this is the ECEF (earth-centered earth-fixed) frame, and it does consider the spin of the planet/moon/etc.
 
-## navigation tips
+### Reference Plane for objects orbiting the sun
+this setting allows you to change the data output on the screen for the object you are currently viewing.
+- the ecliptic plane is the de facto standard in space literature unless specified.
+- body equator: this is what the underlying code uses no matter which presentation option is selected, because the program uses it to calculate the J2 zonal harmonic (gravitational effect of the equatorial bulge). this body equator frame, and plane, of reference is the de facto standard for all objects orbiting anything other than the sun, such as moons and satellites.
+- the invariable plane, not to be confused with la place plane, is a plane which is the sum of all angular momentum of a system, or in other words, the average orbit considering the mass of all planets and objects. (the la place plane is essentially the average plane of an orbit when nodal precession (gravity due to equatorial bulge) and other perturbing forces are taken into account.)
+- the galactic plane lines up with the milky way.
+- the ICRF frame is fixed to the stars, and is based on the earth's equator. this is not usually used in reference to objects orbiting the sun.
+
+### navigation tips
 
 - if you feel *upside down*, you can spin the view. tap (or click) and hold and make a circular motion. go clockwise or counter-clockwise to rotate the view. astronauts are always faced with the challenge of determining which was is _up_. if the ISS (International Space Station) had an axes helper, it would show red forward, roughly east, and blue pointing down towards earth, and green to the right, starboard, which is roughly south because it heads east.
 
