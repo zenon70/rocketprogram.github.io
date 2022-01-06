@@ -72,8 +72,6 @@ MEDIUM PRIORITY FEATURE REQUESTS:
 
 impulse power for spin controls
 
-have hud show what the current view object is orbiting
-
 camera should start UP, wherever you start
 
 make menu look nice, nicer user interface (menus, info, more options)
