@@ -2,6 +2,13 @@
 
 IN-PROGRESS:
 
+
+
+
+
+
+ISSUES:
+
 livestream crashes, need super low-res startup, set hi-resolution maps
   running 9 planets and 3 moons and a sun and rocket.. is slow.. especially
   with orbit lines... so efficiency needs to be improved.
@@ -22,15 +29,9 @@ initialization-only
     but i prefer console use (n/a with modules)
 - processing space data (instead of it being pre-processed)
 
-
-
-
-ISSUES:
-
 gui hud numbers wrapping, and going outside of tinted background
 
-spacecraft rotation during and resulting from warp is wrong.. requires
-  complicated formula.
+spacecraft rotation from warp is wrong.. requires complicated formula.
 
 401 surface and graphics are WAY off
   more than just the dips in polygons
@@ -69,9 +70,7 @@ rotate with surface while landed
 
 MEDIUM PRIORITY FEATURE REQUESTS:
 
-camera should start UP
-
-restore camera zoom level on view change?
+camera should start UP, wherever you start
 
 make menu look nice, nicer user interface (menus, info, more options)
   show/hide axes (planets, etc)
@@ -84,7 +83,6 @@ make menu larger for big screens, ok for smaller screens?
 
 LOW PRIORITY FEATURE REQUESTS:
 
-brighten/dim ambient light starlight
 
 select launch location
 
@@ -117,6 +115,7 @@ track any asteroid or object
 
 adjustable scale
 
+restore camera zoom level on view change?
 
 
 
