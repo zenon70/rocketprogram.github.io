@@ -70,19 +70,27 @@ rotate with surface while landed
 
 MEDIUM PRIORITY FEATURE REQUESTS:
 
+impulse power for spin controls
+
+have hud show what the current view object is orbiting
+
 camera should start UP, wherever you start
 
 make menu look nice, nicer user interface (menus, info, more options)
   show/hide axes (planets, etc)
   show/hide individual orbit lines
   gui buttons sizes mobile (normal) vs desktop etc
-
-make menu larger for big screens, ok for smaller screens?
+  make menu larger for big screens, ok for smaller screens?
 
 
 
 LOW PRIORITY FEATURE REQUESTS:
 
+use an actual convention for orbital parameter variable names, like IAU or mpcorb or NASA or UCS.. whichever i want to import from most
+
+use a json object file for solar system orbit data
+
+segments should be two numbers i.e. 64, 32.. not just 64
 
 select launch location
 

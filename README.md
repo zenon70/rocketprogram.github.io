@@ -58,8 +58,6 @@ this program simulates rocket launches, orbits, and interplanetary spaceflight.
 
 ## user guide
 
-### key
-
 **orbital info**
 
 symbol|meaning
@@ -130,7 +128,7 @@ this setting allows you to change the data output on the screen for the object y
 
 - the stars are accurately placed. the images are based on a catalog of all available stars. they are not photos - they are better than photos. different source image brightnesses and resolutions are available in the settings.
 
-- everything is at real scale, with real masses. however, the rocket's engine thrust has not be calibrated to be very realistic yet. it can barely manage a lift-off from earth at 70% throttle, which may even be over-powered still.
+- everything is at real scale, with real masses. however, the rocket's engine thrust has not been calibrated to be very realistic yet. it can barely manage a lift-off from earth at 70% throttle, which may even be over-powered still.
 
 - gps coordinates are accurate, even with oblate spheroid bodies.
 
@@ -160,7 +158,7 @@ this setting allows you to change the data output on the screen for the object y
 
 - the internal structure of the code uses the x, y, and z of space conventions, not cgi graphics animation conventions which is the de facto standard in the threejs 3D library and many other programs. the benefit of using space conventions is that all formulas, source code, data input/output, etc., will not need to be converted. this helps avoid confusion for the advanced users and programmers.
 
-- icrf orientation. the x, y, and z used in the program refer to icrf (international celestial reference frame) orientation. this makes it so the threejs built-in skybox can be used for the stars, as it doesn't have to be rotated. this is the most efficient way to go, and, imho, makes the most sense.
+- icrf orientation. the x, y, and z used in the program refer to icrf (international celestial reference frame) orientation. this makes it so the threejs built-in skybox can be used for the stars, as it doesn't have to be rotated. this is the most efficient way to go, and probably makes the most sense.
 
 - the surfaces of planets are used as textures instead of with clouds, if i could find surface textures for the object. for example, the 2nd planet surface texture is used. this will aid in attempting to land in the correct location.
 
@@ -168,6 +166,6 @@ this setting allows you to change the data output on the screen for the object y
 
 - this program is designed to allow addition of an unlimited number of celesital objects. the project goal is to include all planets, known moons, dwarf planets, and a good number of asteroids. the program is designed to allow for dynamic transitions where asteroids and moons can be gracefully ejected and become the child of a new planet or celestial object, should the opportunity arise - just like how the rocket can transfer.
 
-- orbMech was written so that the code can be used elsewhere. it simply converts from keplerian orbital elements to cartesian state vectors, and of course also from cartesian state vectors to keplerian orbital elements. if i find the time, perhaps i will make part of this program dedicated to being a conversion calculator.
+- the underlying physics engine is called orbMech, which was written so that the code can be used elsewhere. it converts from keplerian orbital elements to cartesian state vectors, and of course also from cartesian state vectors to keplerian orbital elements. if i find the time, perhaps i will make part of this program dedicated to being a conversion calculator.
 
 - as a side effect of the way this program was developed, it is possible to bore through planets. this program could also be called "boring program".

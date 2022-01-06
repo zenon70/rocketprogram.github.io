@@ -1719,27 +1719,20 @@ function cycleView() {
 	}
 
 	// sun view
-	if (body[view].name === "10") {
+	if (view === 0) {
 		body[view].mesh.material.emissiveIntensity = 0;
 		starlight.intensity = 1;
-		/*
-		if (scene.background) {
-			scene.background.visible = false;
-		}
-		*/
+		document.getElementById("hudView").innerHTML = body[view].name + "<br>@ " +
+			"glxy";
 	}
 	else {
 		body[mostMassiveBody].mesh.material.emissiveIntensity = 1;
 		starlight.intensity = starlightControl;
-/*
-		if (scene.background) {
-			scene.background.visible = true;
-		}
-*/
+		document.getElementById("hudView").innerHTML = body[view].name + "<br>@ " +
+			body[body[view].focus].name;
 	}
 
 	//body[view].mesh.attach(camera);
-	document.getElementById("hudView").innerHTML = body[view].name;
 }
 cycleView();
 
@@ -2573,6 +2566,13 @@ function displayText() {
 			"<br>EqRad " + (body[view].radiusEquator / 1000).toFixed(0) + " km" +
 			"<br>PoRad " + (body[view].radiusPole / 1000).toFixed(0) + " km" +
 			"<br>Sdrl " + body[view].sidereal.toFixed(2) + " hr";
+	}
+	if (view !== 0) {
+		document.getElementById("hudView").innerHTML = body[view].name + "<br>@ " +
+			body[body[view].focus].name;
+	} else {
+		document.getElementById("hudView").innerHTML = body[view].name + "<br>@ " +
+			"glxy";
 	}
 }
 

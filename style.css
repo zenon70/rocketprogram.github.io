@@ -21,7 +21,7 @@
 	position: fixed;
 	color: #dddddd;
 	background:rgba(0, 0, 0, .5);
-	height: 15px;
+	height: 24px;
 	width: 37px;
 	bottom: 175px;
 	font-family: monospace;
@@ -61,17 +61,14 @@
 
 
 #hudYaw {
-	height: 24px;
 	right: 121px;
 	text-align: center;
 }
 #hudPitch {
-	height: 24px;
 	right: 61px;
 	text-align: center;
 }
 #hudRoll {
-	height: 24px;
 	right: 1px;
 	text-align: center;
 }
