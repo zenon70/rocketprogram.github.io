@@ -29,7 +29,24 @@ initialization-only
     but i prefer console use (n/a with modules)
 - processing space data (instead of it being pre-processed)
 
+
 gui hud numbers wrapping, and going outside of tinted background
+a var
+e 0-1
+i deg
+Ω deg
+ω deg
+M deg
+Ap var
+Pe var
+kms var
+
+lat deg
+lon deg
+alt var
+kms var
+drag exponential fixed
+
 
 spacecraft rotation from warp is wrong.. requires complicated formula.
 

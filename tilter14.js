@@ -507,3 +507,46 @@ function earthAtmosphere(altitude) {
 	// outputs air density in kg/m**3
 	return density[i] * Math.exp( - (altitude - height[i]) / scaleHeight[i]);
 }
+
+
+function secondsToYears(seconds) {
+//function s(seconds) {
+	let y = 0;
+	let d = 0;
+	let h = 0;
+	let m = 0;
+
+	while (seconds >= 3600*24*365.2422) {
+		seconds -= 3600*24*365.2422;
+		y++;
+	}
+	while (seconds >= 3600*24) {
+		seconds -= 3600*24;
+		d++;
+	}
+	while (seconds >= 3600) {
+		seconds -= 3600;
+		h++;
+	}
+	while (seconds >= 60) {
+		seconds -= 60;
+		m++;
+	}
+
+	h = String(h).padStart(2, "0"); // "09"
+	m = String(m).padStart(2, "0"); // "09"
+	seconds = String(Math.floor(seconds)).padStart(2, "0"); // "09"
+
+
+	return y + "y " + d + "d " + h + ":" + m + ":" + seconds;
+
+	/*
+	// nice but doesn't work well with non-integer year values
+	let y = Math.floor(seconds / (3600*24*365));
+	let d = Math.floor(seconds % (3600*24*365) / (3600*24));
+	let h = Math.floor(seconds % (3600*24) / 3600);
+	let m = Math.floor(seconds % 3600 / 60);
+	let s = Math.floor(seconds % 60);
+	return y + "y " + d + "d " + h + ":" + m + ":" + s;
+	*/
+}

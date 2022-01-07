@@ -2601,23 +2601,23 @@ function drawEllipse(draw, shade, scale) {
 // display data on-screen
 
 function displayText() {
+	let vFocus = body[view].focus;
 
 	if (view === mostMassiveBody) {
 		document.getElementById("hudDateOrbit").innerHTML = now.toISOString() +
 			"<br>r " +
 			(Math.sqrt(body[view].x**2 + body[view].y**2 + body[view].z**2) / 1000).
-			toFixed(3) +
-			"<br>x " + (body[view].x).toFixed(3) +
-			"<br>y " + (body[view].y).toFixed(3) +
-			"<br>z " + (body[view].z).toFixed(3) +
-			"<br>vx " + (body[view].vx).toFixed(3) +
-			"<br>vy " + (body[view].vy).toFixed(3) +
-			"<br>vz " + (body[view].vz).toFixed(3) +
-			"<br>kms " +
+			toFixed(3) + " km" +
+			"<br>x " + (body[view].x / 1000).toFixed(3) + " km" +
+			"<br>y " + (body[view].y / 1000).toFixed(3) + " km" +
+			"<br>z " + (body[view].z / 1000).toFixed(3) + " km" +
+			"<br>vx " + (body[view].vx / 1000).toFixed(3) + " km/s" +
+			"<br>vy " + (body[view].vy / 1000).toFixed(3) + " km/s" +
+			"<br>vz " + (body[view].vz / 1000).toFixed(3) + " km/s" +
+			"<br>v " +
 			(Math.sqrt(body[view].vx**2 + body[view].vy**2 + body[view].vz**2) /
-			1000).toFixed(3);
+			1000).toFixed(3) + " km/s";
 	} else {
-		let vFocus = body[view].focus;
 		let keplerShow;
 		if (reportPlane !== "body" && body[view].focus === 0) {
 			keplerShow = keplerAltPlane;
@@ -2625,37 +2625,41 @@ function displayText() {
 			keplerShow = body[view].kepler;
 		}
 		document.getElementById("hudDateOrbit").innerHTML = now.toISOString() +
-			"<br>a " + (keplerShow.a / 1000).toFixed(3) +
-			"<br>e " + (keplerShow.e).toFixed(7) +
-			"<br>i " + (keplerShow.i * 180 / Math.PI).toFixed(7) +
-			"<br>Ω " + (keplerShow.lan * 180 / Math.PI).toFixed(5) +
-			"<br>ω " + (keplerShow.w * 180 / Math.PI).toFixed(7) +
-			"<br>M " + (keplerShow.meanAnom * 180 / Math.PI).toFixed(5) +
-			"<br>Ap " +
-			((keplerShow.apoapsis - body[vFocus].radiusEquator) / 1000).
-			toFixed(3) +
-			"<br>Pe " +
-			((keplerShow.periapsis - body[vFocus].radiusEquator) / 1000).
-			toFixed(3) +
-			"<br>kms " + (keplerShow.v / 1000).toFixed(3);// +
-			//"<br>" + versionInfo;
+			"<br>a " + (keplerShow.a / 1000).toFixed(3) + " km" +
+			"<br>e " + (keplerShow.e).toFixed(9) +
+			"<br>i " + (keplerShow.i * 180 / Math.PI).toFixed(7) + "°" +
+			"<br>Ω " + (keplerShow.lan * 180 / Math.PI).toFixed(5) + "°" +
+			"<br>ω " + (keplerShow.w * 180 / Math.PI).toFixed(7) + "°" +
+			"<br>M " + (keplerShow.meanAnom * 180 / Math.PI).toFixed(5) + "°" +
+			"<br>Ap " + (keplerShow.apoapsis / 1000).toFixed(3) + " km" +
+			"<br>Pe " + (keplerShow.periapsis / 1000).toFixed(3) + " km" +
+			"<br>v " + (keplerShow.v / 1000).toFixed(3) + " km/s" +
+			"<br>period " + secondsToYears(
+				2*Math.PI / Math.sqrt(body[view].mu) * keplerShow.a**(3/2));
 	}
 
 	if (body[view].type === "Artificial") {
 		document.getElementById("hudGpsInfo").innerHTML =
-			"Lat " + (body[view].gps.lat * 180 / Math.PI).toFixed(6) +
-			"<br>Lon " + (body[view].gps.lon * 180 / Math.PI).toFixed(6) +
+			"Mass " + body[view].mass.toExponential(0) + " kg" +
+			"<br>Ap " + ((body[view].kepler.apoapsis - body[vFocus].radiusEquator)
+				/ 1000).toFixed(3) + " km" +
+			"<br>Pe " + ((body[view].kepler.periapsis - body[vFocus].radiusEquator)
+				/ 1000).toFixed(3) + " km" +
+			"<br>Lat " + (body[view].gps.lat * 180 / Math.PI).toFixed(6) + "°" +
+			"<br>Lon " + (body[view].gps.lon * 180 / Math.PI).toFixed(6) + "°" +
 			"<br>Alt " + (body[view].gps.alt / 1000).toFixed(6) +
-			"<br>kms " + (Math.sqrt(body[view].ecef.vx**2 +
-			body[view].ecef.vy**2 + body[view].ecef.vz**2) / 1000).toFixed(6) +
-			"<br>drag " + dragx.toExponential(2);
+			"<br>v " + (Math.sqrt(body[view].ecef.vx**2 + body[view].ecef.vy**2 +
+				body[view].ecef.vz**2) / 1000).toFixed(6) + " km/s" +
+			"<br>drag " + dragx.toExponential(2) + " m/s²";
 	} else {
 		document.getElementById("hudGpsInfo").innerHTML =
 			"Mass " + body[view].mass.toExponential(0) + " kg" +
 			"<br>EqRad " + (body[view].radiusEquator / 1000).toFixed(0) + " km" +
 			"<br>PoRad " + (body[view].radiusPole / 1000).toFixed(0) + " km" +
-			"<br>Sdrl " + body[view].sidereal.toFixed(2) + " hr";
+			"<br>Sidereel " + body[view].sidereal.toFixed(2) + " hr";
 	}
+
+	// update in case object is now orbiting something else
 	if (view !== 0) {
 		document.getElementById("hudView").innerHTML = body[view].name + "<br>@ " +
 			body[body[view].focus].name;
