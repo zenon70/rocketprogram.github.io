@@ -50,9 +50,8 @@
 		<div class="popup">
 			<div class="blocker" onclick="hidePopup()"></div>
 			<div class="contents">
-v64
 				<h3>Visual Helpers</h3>
-				<input type="checkbox" id="sprites" onchange="toggleSprites()" checked>
+				<input type="checkbox" id="sprites" onchange="toggleSprites()">
 				<label for="sprites">Sprites</label>
 				<br>
 				<input type="checkbox" id="rocketAxes" onchange="toggleRocketAxes()">
@@ -82,7 +81,7 @@ v64
 				<label for="noStars">None</label>
 				<br>
 				<input type="radio" id="1kStars" value="1" name="stars"
-					onchange="changeStars(value)" checked>
+					onchange="changeStars(value)">
 				<label for="1kStars">1024 x 1024 x 6, Bright</label>
 				<br>
 				<input type="radio" id="2kStars" value="2" name="stars"
@@ -101,7 +100,7 @@ v64
 				<label for="noEarth">None</label>
 				<br>
 				<input type="radio" id="1kEarth" value="1" name="earth"
-					onchange="changeEarth(value)" checked>
+					onchange="changeEarth(value)">
 				<label for="1kEarth">1024 x 512</label>
 				<br>
 				<input type="radio" id="4kEarth" value="2" name="earth"
@@ -109,13 +108,13 @@ v64
 				<label for="4kEarth">4096 x 2048, Jpeg Quality 90%</label>
 				<br>
 				<h3>Reference Plane for objects orbiting the sun</h3>
-				<input type="radio" id="eclipticFrame" value="ecliptic" name="plane"
-					onchange="setPlane(value)" checked>
-				<label for="eclipticFrame">Ecliptic IAU76/80 & IAU2009 J2000.0</label>
-				<br>
-				<input type="radio" id="sunBodyFrame" value="body" name="plane"
+				<input type="radio" id="eclipticPlane" value="ecliptic" name="plane"
 					onchange="setPlane(value)">
-				<label for="sunBodyFrame">Body - Sun Equator IAU2009 J2000.0</label>
+				<label for="eclipticPlane">Ecliptic IAU76/80 & IAU2009 J2000.0</label>
+				<br>
+				<input type="radio" id="sunBodyPlane" value="body" name="plane"
+					onchange="setPlane(value)">
+				<label for="sunBodyPlane">Body - Sun Equator IAU2009 J2000.0</label>
 				<br>
 				<input type="radio" id="invariablePlane" value="invariable" name="plane"
 					onchange="setPlane(value)">
@@ -125,9 +124,9 @@ v64
 					onchange="setPlane(value)">
 				<label for="galacticPlane">Galactic Plane IAU2009 J2000.0</label>
 				<br>
-				<input type="radio" id="icrfFrame" value="icrf" name="plane"
+				<input type="radio" id="icrfPlane" value="icrf" name="plane"
 					onchange="setPlane(value)">
-				<label for="icrfFrame">ICRF (International Celestial Reference Frame) J2000.0</label>
+				<label for="icrfPlane">ICRF (International Celestial Reference Frame) J2000.0</label>
 				<br>
 				<h3>About</h3>
 				<div id="readme">
@@ -373,7 +372,7 @@ v64
 <li><p>as a side effect of the way this program was developed, it is possible to bore through planets. this program could also be called &quot;boring program&quot;.</p>
 </li>
 </ul>
-
+					<div>v65</div>
 				</div><!-- end readme -->
 			</div><!-- end contents -->
 		</div><!-- end popup -->
@@ -382,6 +381,9 @@ v64
 //const versionInfo = null;
 let dragx = 0;
 
+
+document.getElementById("starlight").value = 30;
+document.getElementById("starlightOutput").innerHTML = "300%";
 let starlightControl = 0.3;
 let starlightSlider = document.getElementById("starlight");
 let starlightOutput = document.getElementById("starlightOutput");
@@ -394,6 +396,8 @@ starlightSlider.oninput = function() {
 	}
 }
 
+document.getElementById("sunlight").value = 100;
+document.getElementById("sunlightOutput").innerHTML = "100%";
 let sunlightSlider = document.getElementById("sunlight");
 let sunlightOutput = document.getElementById("sunlightOutput");
 // Update the current slider value (each time you drag the slider handle)
@@ -1237,7 +1241,7 @@ const axesHelper = new THREE.AxesHelper(25e9 * scale);
 scene.add(axesHelper);
 */
 
-
+document.getElementById("1kStars").checked = true;
 function changeStars(value) {
 	if (scene.background) {
 		scene.background.dispose();
@@ -1307,6 +1311,7 @@ function changeStars(value) {
 }
 changeStars("1");
 
+document.getElementById("1kEarth").checked = true;
 function changeEarth(value) {
 	if (body[earth].mesh.material.map) {
 		body[earth].mesh.material.map.dispose();
@@ -1628,6 +1633,7 @@ let view;
 }
 
 
+document.querySelector("#sprites").checked = true;
 function toggleSprites() {
 	if (body[0].sprite.visible === true) {
 		for (let i = body.length - 1; i > -1; i--) {
@@ -1640,6 +1646,7 @@ function toggleSprites() {
 	}
 }
 
+document.querySelector("#rocketAxes").checked = false;
 function toggleRocketAxes() {
 	if (body[rocket].axesHelper.visible === true) {
 		body[rocket].axesHelper.visible = false;
@@ -2123,7 +2130,7 @@ function nBodyVelocity(/*body, GRAVITY, timestep*/) {
 }
 
 
-
+document.getElementById("eclipticPlane").checked = true;
 let reportPlane = "ecliptic";
 let keplerAltPlane; // alternative plane, object for reportPlane
 
@@ -2689,6 +2696,7 @@ function main() {
 
 
 
+document.querySelector("#allOrbits").checked = false;
 let drawOrbits = false;
 function toggleAllOrbits() {
 	if (drawOrbits) {
@@ -2709,7 +2717,7 @@ function toggleAllOrbits() {
 	drawOrbits = !drawOrbits;
 }
 
-// still needs fix for when focus changes
+document.querySelector("#localOrbits").checked = false;
 let drawLocalOrbits = false;
 function toggleLocalOrbits() {
 	drawLocalOrbits = !drawLocalOrbits;
