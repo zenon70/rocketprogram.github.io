@@ -48,7 +48,11 @@
 	height: 70px;
 }
 
-
+#hudFuel {
+	left: 1px;
+	bottom: 205px;
+	width: 54px;
+}
 #hudThrottle {
 	left: 1px;
 }

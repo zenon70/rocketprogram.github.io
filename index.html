@@ -11,6 +11,7 @@
 	<body>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
+		<p class="hud" id="hudFuel">0</p>
 		<p class="hud" id="hudThrottle">0</p>
 		<p class="hud" id="hudStep">1</p>
 		<p class="hud" id="hudView">rocket</p>
@@ -100,11 +101,11 @@
 				<label for="noEarth">None</label>
 				<br>
 				<input type="radio" id="1kEarth" value="1" name="earth"
-					onchange="changeEarth(value)">
+					onchange="changeEarth(value)" checked>
 				<label for="1kEarth">1024 x 512</label>
 				<br>
 				<input type="radio" id="4kEarth" value="2" name="earth"
-					onchange="changeEarth(value)" checked>
+					onchange="changeEarth(value)">
 				<label for="4kEarth">4096 x 2048, Jpeg Quality 90%</label>
 				<br>
 				<h3>Reference Plane for objects orbiting the sun</h3>
@@ -469,7 +470,7 @@ body.push({
 	declination: 61.4143,
 	primeMeridian: 329.5469,
 
-	map: "graphics/planet1_2k.jpg",
+	//map: "graphics/planet1_2k.jpg",
 	color: 0x848383
 });
 
@@ -494,7 +495,7 @@ body.push({
 	declination: -67.16,
 	primeMeridian: 160.20 + 180, // iau defines neg as north. adding 180
 
-	map: "graphics/planet2_2k.jpg",
+	//map: "graphics/planet2_2k.jpg",
 	color: 0xe4bd7f
 });
 
@@ -522,9 +523,9 @@ let earth = body.push({
 	declination: 90,
 	primeMeridian: 190.147,
 
-	map: "graphics/planet3_4k.jpg",
+	map: "graphics/planet3_1k.jpg",
 	color: 0x419dd9,
-	segments: 64
+	segments: 32
 }) - 1;
 
 
@@ -584,7 +585,7 @@ body.push({
 	declination: 64.495393,
 	primeMeridian: 284.95,
 
-	map: "graphics/planet5_2k.jpg",
+	//map: "graphics/planet5_2k.jpg",
 	color: 0xada396
 });
 
@@ -618,7 +619,7 @@ body.push({
 	declination: 83.537,
 	primeMeridian: 38.90,
 
-	map: "graphics/planet6_2k.jpg",
+	//map: "graphics/planet6_2k.jpg",
 	ringsMap: "graphics/planet6rings_1k.png",
 	ringsRadius: 140415 * 1000,
 	color: 0xcfc0a2
@@ -653,7 +654,7 @@ body.push(
 	declination: -15.175,
 	primeMeridian: 203.81,
 
-	map: "graphics/planet7_1k.jpg",
+	//map: "graphics/planet7_1k.jpg",
 	color: 0x98afb7
 });
 
@@ -684,7 +685,7 @@ body.push({
 	declination: 43.46,
 	primeMeridian: 253.18,
 
-	map: "graphics/planet8_2k.jpg",
+	//map: "graphics/planet8_2k.jpg",
 	color: 0x364fa7
 });
 
@@ -716,7 +717,7 @@ body.push({
 	// 0 longitude on the map is the left edge, so add 180
 	primeMeridian: 237.305 + 180,
 
-	map: "graphics/planet9_2k.jpg",
+	//map: "graphics/planet9_2k.jpg",
 	color: 0x967a63
 });
 
@@ -751,9 +752,9 @@ let moon = body.push({
 	declination: 66.5392,
 	primeMeridian: 38.3213,
 	
-	map: "graphics/moon301_2k.jpg",
-	//map: "graphics/moon301_1k.jpg",
-	segments: 64,
+	//map: "graphics/moon301_2k.jpg",
+	map: "graphics/moon301_1k.jpg",
+	//segments: 64,
 	color: 0x969392
 }) - 1;
 
@@ -845,7 +846,7 @@ for (let i = body.length - 1; i > -1; i--) {
 
 
 	if (body[i].segments === undefined) {
-		body[i].segments = 32;
+		body[i].segments = 16;
 	}
 
 /*
@@ -902,8 +903,10 @@ for (let i = body.length - 1; i > -1; i--) {
 let rocket = body.push({
 	name: "rocket",
 	focus: earth,
-	mass: 549054,
 
+	mass: 549054, // falcon 9
+	fuelMass: 411000, // falcon 9
+	burnTime: 162, // falcon 9 stage 1 only
 	thrustVac: 8277000, // falcon 9 data from wikipedia
 	thrustSea: 7605000, // falcon 9 data from spacex
 
@@ -1001,9 +1004,18 @@ let rocket = body.push({
 
 	body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
 	body[i].cartesEci = toCartes(body[i].kepler, body[i].mu);
+	body[i].ecef = eciToEcef(body[i].cartesEci,
+		body[focus].spun,
+		body[focus].angularVelocity,
+		body[focus].radiusEquator, body[focus].e2);
+	body[i].gps = ecefToGps(body[i].ecef, body[focus].radiusEquator,
+		body[focus].e2);
 	body[i].cartes = eciToIcrf(body[i].cartesEci, body[focus].rightAscension,
 		body[focus].declination);
 */
+
+	document.getElementById("hudFuel").innerHTML =
+		body[rocket].fuelMass.toFixed(2) + "<br>kg fuel";
 }
 
 
@@ -1952,7 +1964,9 @@ function rocketControl() {
 
 
 	// process thrust
-	if (throttle > 0) {
+
+	// free fuel if timewarping on last drop
+	if (throttle > 0 && body[rocket].fuelMass > 0) {
 		// update the direction vector of rocket
 		body[rocket].pointingM4.extractRotation(body[rocket].mesh.matrix);
 		// get unit vector of direction
@@ -1961,19 +1975,19 @@ function rocketControl() {
 
 
 
+		let airPressure = 0; // Pascals
 		// get current air pressure
-
-
-		// use this for now
-		const airPressure = 101325;
-
-
+		if (body[rocket].focus === earth) {
+			if (body[rocket].gps.alt < 86000) {
+				let airData = earthAirData(body[rocket].gps.alt);
+				airPressure = airData.airPressure;
+			}
+		}
 
 		//let thrustAccel = 15; // m/s**2
 		const thrustAccel = (body[rocket].thrustVac - (airPressure *
 			(body[rocket].thrustVac - body[rocket].thrustSea) / 101325))
 			/ body[rocket].mass;
-
 
 		// apply thrust according to direction the rocket is pointing
 		body[rocket].vx +=
@@ -1984,9 +1998,14 @@ function rocketControl() {
 			body[rocket].pointingV3.z * throttle/100 * thrustAccel * timestep;
 
 		// decrease mass by fuel used, and reduce fuel amount
+		body[rocket].burnTime -= throttle/100 * timestep;
 
+		let fuelMassPerSecond = body[rocket].fuelMass / body[rocket].burnTime;
+		body[rocket].fuelMass -= fuelMassPerSecond * throttle/100 * timestep;
+		body[rocket].mass -= fuelMassPerSecond * throttle/100 * timestep;
 
-
+		document.getElementById("hudFuel").innerHTML =
+			body[rocket].fuelMass.toFixed(2) + "<br>kg fuel";
 
 		body[rocket].onSurface = false;
 	}
