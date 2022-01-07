@@ -2,8 +2,6 @@
 
 IN-PROGRESS:
 
-thrust not real
-fuel, weight, thrust, deltaV ratios
 
 
 
@@ -91,8 +89,6 @@ improve naming system i.e. earth = 3 .name = 399,  planet4 = 4...
 
 use a json object file for solar system orbit data
 
-segments should be two numbers i.e. 64, 32.. not just 64
-
 select launch location
 
 constellation map
@@ -104,6 +100,8 @@ visual clouds
 
 terrain: bump/relief map w/collision detection
   aerodynamics and negative altitude loss of momentum will need to be revised
+
+deltaV display
 
 
 

@@ -128,13 +128,13 @@ this setting allows you to change the data output on the screen for the object y
 
 - the stars are accurately placed. the images are based on a catalog of all available stars. they are not photos - they are better than photos. different source image brightnesses and resolutions are available in the settings.
 
-- everything is at real scale, with real masses. however, the rocket's engine thrust has not been calibrated to be very realistic yet. it can barely manage a lift-off from earth at 70% throttle, which may even be over-powered still.
+- everything is at real scale, with real masses. the rocket's engine thrust has been calibrated to be realistic.
 
 - gps coordinates are accurate, even with oblate spheroid bodies.
 
 - surface speed is accurate, even with oblate sphereoid bodies.
 
-- atmosphere of earth and aerodynamic drag, up to 202,000 km altitude. that's more than half-way to the moon. so even gps satellites experience aerodynamic drag.
+- atmosphere of earth and aerodynamic drag, up to 202,000 km altitude. that's more than half-way to the moon. so even gps and geostationary satellites experience aerodynamic drag.
 
 ## what is not simulated
 
@@ -150,7 +150,7 @@ this setting allows you to change the data output on the screen for the object y
 
 - tidally locked moons do not gyrate properly. they are simply flagged as 'tidally locked' in the code, and behave accordingly.
 
-- surface features such as mountains and valleys are not simulated.
+- surface terrain such as mountains and valleys are not simulated.
 
 ## design choices
 
