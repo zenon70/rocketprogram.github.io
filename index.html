@@ -373,7 +373,7 @@
 <li><p>as a side effect of the way this program was developed, it is possible to bore through planets. this program could also be called &quot;boring program&quot;.</p>
 </li>
 </ul>
-v61
+v62
 
 				</div><!-- end readme -->
 			</div><!-- end contents -->
@@ -903,12 +903,29 @@ for (let i = body.length - 1; i > -1; i--) {
 let rocket = body.push({
 	name: "rocket",
 	focus: earth,
-
+/*
 	mass: 549054, // falcon 9
 	fuelMass: 411000, // falcon 9
 	burnTime: 559,// stage 1 + 2....    162, // falcon 9 stage 1 only
 	thrustVac: 8277000, // falcon 9 data from wikipedia
-	thrustSea: 7605000, // falcon 9 data from spacex
+	thrustSea: 7607000, // falcon 9 data from wikipedia.. not spacex 7607
+*/
+
+	// spaceflightinsider.com/hangar/falcon-9
+/*
+	// stage 1 only
+	mass: 421300, // falcon 9
+	fuelMass: 395700, // falcon 9
+	burnTime: 162,// stage 1 + 2....    162, // falcon 9 stage 1 only
+	thrustVac: 8277000, // falcon 9 data from wikipedia
+	thrustSea: 7607000, // falcon 9 data from wikipedia.. not spacex 7607
+*/
+	// combined stages
+	mass: 517870, // falcon 9
+	fuelMass: 488370, // falcon 9
+	burnTime: 200,// stage 1 + 2....    162, // falcon 9 stage 1 only
+	thrustVac: 8277000, // falcon 9 data from wikipedia
+	thrustSea: 7607000, // falcon 9 data from wikipedia.. not spacex 7607
 
 	sidereal: null,
 
