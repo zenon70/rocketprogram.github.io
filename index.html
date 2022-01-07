@@ -12,7 +12,7 @@
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud" id="hudFuel">0</p>
-		<p class="hud" id="hudThrottle">0</p>
+		<p class="hud" id="hudThrottle">0%<br>off</p>
 		<p class="hud" id="hudStep">1</p>
 		<p class="hud" id="hudView">rocket</p>
 		<p class="hud" id="hudYaw">0<br>yaw</p>
@@ -25,6 +25,7 @@
 		<script src="orbMech61.js"></script>
 		<script src="tilter14.js"></script>
 
+		<button id="throttleOn" onclick="throttleOn()">throttle on</button>
 		<button id="throttleUp" onclick="throttleUp()">throttle up (a)</button>
 		<button id="throttleDown" onclick="throttleDown()">throttle down (z)
 		</button>
@@ -1853,20 +1854,32 @@ function stopSpin() {
 }
 
 
+let throttleSwitch = false;
 let throttle = 0; // 0 to 100
-
+function throttleShow() {
+	if (throttleSwitch) {
+		document.getElementById("hudThrottle").innerHTML = throttle + "%<br>on";
+	} else {
+		document.getElementById("hudThrottle").innerHTML = throttle + "%<br>off";
+	}
+}
+function throttleOn() {
+	throttleSwitch = true;
+	throttleShow();
+}
+function throttleOff() {
+	throttleSwitch = false;
+	throttleShow();
+}
 function throttleUp() {
 	if (throttle < 100) { throttle += 10 }
-	document.getElementById("hudThrottle").innerHTML = throttle + "%";
+	throttleShow();
 }
 function throttleDown() {
 	if (throttle > 0) { throttle -= 10 }
-	document.getElementById("hudThrottle").innerHTML = throttle + "%";
+	throttleShow();
 }
-function throttleOff() {
-	throttle = 0;
-	document.getElementById("hudThrottle").innerHTML = throttle + "%";
-}
+
 
 // keys that will be used must be declared first
 const keyState = {
@@ -1996,7 +2009,7 @@ function rocketControl() {
 	// process thrust
 
 	// free fuel if timewarping on last drop
-	if (throttle > 0 && body[rocket].fuelMass > 0) {
+	if (throttleSwitch && throttle > 0 && body[rocket].fuelMass > 0) {
 		// update the direction vector of rocket
 		body[rocket].pointingM4.extractRotation(body[rocket].mesh.matrix);
 		// get unit vector of direction

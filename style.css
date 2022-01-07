@@ -50,11 +50,12 @@
 
 #hudFuel {
 	left: 1px;
-	bottom: 205px;
+	bottom: 265px;
 	width: 42px;
 }
 #hudThrottle {
 	left: 1px;
+	bottom: 235px;
 }
 #hudStep {
 	left: 61px;
@@ -95,6 +96,10 @@ button {
 	user-select: none;
 }
 
+#throttleOn {
+	left: 1px;
+	bottom: 181px;
+}
 #throttleUp {
 	left: 1px;
 	bottom: 121px;
