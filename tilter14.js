@@ -507,7 +507,3 @@ function earthAtmosphere(altitude) {
 	// outputs air density in kg/m**3
 	return density[i] * Math.exp( - (altitude - height[i]) / scaleHeight[i]);
 }
-
-
-const ver = null;
-

@@ -2,12 +2,14 @@
 
 IN-PROGRESS:
 
-
+thrust not real
+fuel, weight, thrust, deltaV ratios
 
 
 
 
 ISSUES:
+
 
 livestream crashes, need super low-res startup, set hi-resolution maps
   running 9 planets and 3 moons and a sun and rocket.. is slow.. especially
@@ -46,11 +48,10 @@ not appearing on surface
 known & intended hyperbolic "safe crash" needs proper exit
   when iterations > 9999 to solve, NaN occurs
   need proper exit / catch
+crash at center of planet
 
 firefox mobile 96.0.0-beta.5 scrolling to hide address bar
   causes screen to resize wrong
-
-crash at center of planet
 
 rocket goes down when low thrust on surface
 
@@ -86,6 +87,8 @@ LOW PRIORITY FEATURE REQUESTS:
 
 use an actual convention for orbital parameter variable names, like IAU or mpcorb or NASA or UCS.. whichever i want to import from most
 
+improve naming system i.e. earth = 3 .name = 399,  planet4 = 4...
+
 use a json object file for solar system orbit data
 
 segments should be two numbers i.e. 64, 32.. not just 64
@@ -101,7 +104,9 @@ visual clouds
 
 terrain: bump/relief map w/collision detection
   aerodynamics and negative altitude loss of momentum will need to be revised
-  
+
+
+
 GRAPHICS
   sky color during daytime or in thick atmosphere, from camera location
   shadows, especially for planet 6 rings
@@ -110,8 +115,6 @@ GRAPHICS
 "maxq" appears on screen when passed
 
 first person camera
-
-fuel, weight, thrust, deltaV ratios
 
 major moons, asteroids, comets for sure, all ~200 moons hopefully
 

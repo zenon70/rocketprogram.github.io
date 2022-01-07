@@ -904,9 +904,6 @@ let rocket = body.push({
 	focus: earth,
 	mass: 549054,
 
-	thrustVac: 8277000, // falcon 9 data from wikipedia
-	thrustSea: 7605000, // falcon 9 data from spacex
-
 	sidereal: null,
 
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
@@ -1764,10 +1761,13 @@ let now = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
 ////////////////////////////////////////////////////////////////////////////////
 // rocket control (spin and thrust)
 
+// rocket control
 let xSpin = 0;
 let ySpin = 0;
 let zSpin = 0;
 let spinPower = 0.1; // what units?
+let throttle = 0;
+let thrustPower = 15; // m/s**2
 
 // onscreen buttons
 function up() {
@@ -1809,10 +1809,6 @@ function stopSpin() {
 	document.getElementById("hudRoll").innerHTML =
 		Math.round(ySpin*10) + "<br>roll";
 }
-
-
-let throttle = 0; // 0 to 100
-
 function throttleUp() {
 	if (throttle < 100) { throttle += 10 }
 	document.getElementById("hudThrottle").innerHTML = throttle + "%";
@@ -1959,34 +1955,13 @@ function rocketControl() {
 		body[rocket].pointingV3 =
 			body[rocket].mesh.up.clone().applyMatrix4(body[rocket].pointingM4);
 
-
-
-		// get current air pressure
-
-
-		// use this for now
-		const airPressure = 101325;
-
-
-
-		//let thrustAccel = 15; // m/s**2
-		const thrustAccel = (body[rocket].thrustVac - (airPressure *
-			(body[rocket].thrustVac - body[rocket].thrustSea) / 101325))
-			/ body[rocket].mass;
-
-
 		// apply thrust according to direction the rocket is pointing
 		body[rocket].vx +=
-			body[rocket].pointingV3.x * throttle/100 * thrustAccel * timestep;
+			body[rocket].pointingV3.x * throttle/100 * thrustPower * timestep;
 		body[rocket].vy +=
-			body[rocket].pointingV3.y * throttle/100 * thrustAccel * timestep;
+			body[rocket].pointingV3.y * throttle/100 * thrustPower * timestep;
 		body[rocket].vz +=
-			body[rocket].pointingV3.z * throttle/100 * thrustAccel * timestep;
-
-		// decrease mass by fuel used, and reduce fuel amount
-
-
-
+			body[rocket].pointingV3.z * throttle/100 * thrustPower * timestep;
 
 		body[rocket].onSurface = false;
 	}
@@ -2380,11 +2355,9 @@ function keplerPosition() {
 						dragCoefficient = 2.2; // cubesat
 						//dragCoefficient = 0.75; // sphere (for sputnik 1)
 						//body[i].mass = 138054; // falcon 9 without fuel in stage 1
-
-						// DISABLE DUE TO NEW THRUST CODE
-						//body[i].mass = 83.6; // sputnik 1
+						body[i].mass = 83.6; // sputnik 1
 					}
-
+					
 					let drag = dragEquation(density, velocity, body[i].mass,
 						dragCoefficient); 
 
