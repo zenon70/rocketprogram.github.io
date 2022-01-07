@@ -1042,7 +1042,7 @@ let rocket = body.push({
 */
 
 	document.getElementById("hudFuel").innerHTML =
-		body[rocket].fuelMass.toFixed(2) + "<br>kg fuel";
+		body[rocket].fuelMass.toFixed(0) + "<br>kg fuel";
 }
 
 
@@ -2035,7 +2035,7 @@ function rocketControl() {
 		body[rocket].mass -= fuelMassPerSecond * throttle/100 * timestep;
 
 		document.getElementById("hudFuel").innerHTML =
-			body[rocket].fuelMass.toFixed(2) + "<br>kg fuel";
+			body[rocket].fuelMass.toFixed(0) + "<br>kg fuel";
 
 		body[rocket].onSurface = false;
 	}
