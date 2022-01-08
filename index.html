@@ -9,7 +9,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v68</pre>
+		<pre id="version">v69</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud" id="hudFuel">0</p>
@@ -1541,6 +1541,12 @@ let view;
 	body[i].nose.scale.y = 2;
 	body[i].mesh.add(body[i].nose);
 
+	// bottom cap
+	body[i].cap = new THREE.Mesh(new THREE.CylinderGeometry(
+		3.7 * scale, 3.7 * scale, 0.02 * scale, 16),
+		new THREE.MeshLambertMaterial({color:0x333333}));
+	body[i].cap.position.set(0, -23.86 * scale, 0);
+	body[i].mesh.add(body[i].cap);
 
 
 		//body[i].mesh.receiveShadow = true;
