@@ -5,6 +5,13 @@
 	overscroll-behavior: contain;
 }
 
+#version {
+	position: fixed;
+	top: 1px;
+	right: 1px;
+	color: #aaaaaa;
+}
+
 .slideContainer {
 	width: 90%;
 	margin-left: auto !important;
