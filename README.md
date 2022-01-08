@@ -138,6 +138,8 @@ this setting allows you to change the data output on the screen for the object y
 
 ## what is not simulated
 
+- the actual rotation of the spacecraft is more or less lost during and after multiplying the time. this is actually due to the fact that keeping proper rotation over time requires a complex formula that has not yet been built into this simulation. 
+
 - atmosphere for other planets
 
 - the rings of the 6th planet appear unrealistic in a way: they do not receive the shade of the planet, nor do they cast shade. the three.js JavaScript library does not have a good out-of-the-box solution for this. i have experimented with different possible solutions, but they all look worse than just not simulating shade. eclipse shade is also not simulated.
