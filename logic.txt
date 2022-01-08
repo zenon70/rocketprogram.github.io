@@ -31,22 +31,8 @@ initialization-only
 
 
 gui hud numbers wrapping, and going outside of tinted background
-a var
-e 0-1
-i deg
-Ω deg
-ω deg
-M deg
-Ap var
-Pe var
-kms var
 
-lat deg
-lon deg
-alt var
-kms var
-drag exponential fixed
-
+hud overlap on smartphone widescreen not fullscreen
 
 spacecraft rotation from warp is wrong.. requires complicated formula.
 

@@ -373,7 +373,7 @@
 <li><p>as a side effect of the way this program was developed, it is possible to bore through planets. this program could also be called &quot;boring program&quot;.</p>
 </li>
 </ul>
-					<div>v67</div>
+					<div>v66</div>
 				</div><!-- end readme -->
 			</div><!-- end contents -->
 		</div><!-- end popup -->
@@ -1499,10 +1499,13 @@ let view;
 {
 	const i = rocket;
 
-	// stage 1
+
+	// temporary mesh
 	const geometry = new THREE.CylinderGeometry(
-		3.7 * scale, 3.7 * scale, 47.7 * scale, 16);
-	const texture = new THREE.TextureLoader().load("graphics/f9stage1.png");
+		//3.66 * scale, 3.66 * scale, 70 * scale, 8);  // falcon 9
+		9 * scale, 9 * scale, 32 * scale, 12);  // starship
+	//const texture = new THREE.TextureLoader().load("graphics/test.jpg");
+	const texture = new THREE.TextureLoader().load("graphics/rocketDouble.jpg");
 	texture.magFilter = THREE.NearestFilter;
 	texture.minFilter = THREE.NearestFilter;
 	const material = new THREE.MeshLambertMaterial({
@@ -1510,38 +1513,53 @@ let view;
 		});
 	body[i].mesh = new THREE.Mesh(geometry, material);
 
-	// stage 2
+	// extension to balance center of mass
 	const geometry2 = new THREE.CylinderGeometry(
-		3.7 * scale, 3.7 * scale, 13.8 * scale, 16);
-	const material2 = new THREE.MeshLambertMaterial();
-	body[i].stage2 = new THREE.Mesh(geometry2, material2);
-	body[i].stage2.position.set(0, 30.75 * scale, 0);
-	body[i].mesh.add(body[i].stage2);
+		//3.66 * scale, 3.66 * scale, 70 * scale, 8);  // falcon 9
+		9 * scale, 9 * scale, 12 * scale, 12);  // starship
+	//const texture = new THREE.TextureLoader().load("graphics/test.jpg");
+	//const texture = new THREE.TextureLoader().load("graphics/rocketDouble.jpg");
+	//texture.magFilter = THREE.NearestFilter;
+	//texture.minFilter = THREE.NearestFilter;
+	//const material = new THREE.MeshLambertMaterial({
+	//	map: texture
+	//	});
+	body[i].base = new THREE.Mesh(geometry2, material);
+	body[i].base.position.set(0, -22 * scale, 0);
+	body[i].mesh.add(body[i].base);
 
-	// fairing base expansion section
-	body[i].fairingBase = new THREE.Mesh(new THREE.CylinderGeometry(
-		5.2 * scale, 3.7 * scale, 1.4 * scale, 16),
-		new THREE.MeshLambertMaterial());
-	body[i].fairingBase.position.set(0, 38.35 * scale, 0);
-	body[i].mesh.add(body[i].fairingBase);
-
-	// fairing mid section
-	body[i].fairingMid = new THREE.Mesh(new THREE.CylinderGeometry(
-		5.2 * scale, 5.2 * scale, 7.2 * scale, 16),
-		new THREE.MeshLambertMaterial());
-	body[i].fairingMid.position.set(0, 42.65 * scale, 0);
-	body[i].mesh.add(body[i].fairingMid);
-
-	// fairing nose aerodynamic shape
+	// add nosecone to rocket
+/*
+	const texture2 = new THREE.TextureLoader().load("graphics/rocket6.png");
+	texture2.magFilter = THREE.NearestFilter;
+	texture2.minFilter = THREE.NearestFilter;
+*/
 	body[i].nose = new THREE.Mesh(new THREE.SphereGeometry(
-		5.2 * scale, 16, 8, 0, 2 * Math.PI, 0, Math.PI / 2),
-		new THREE.MeshLambertMaterial());
-	body[i].nose.position.set(0, 46.25 * scale, 0);
-	//body[i].nose.rotation.set(0, Math.PI / 2, 0); // for texture
-	body[i].nose.scale.y = 2;
+		9 * scale, 12, 12, 0, 2 * Math.PI, 0, Math.PI / 2),  // starship size
+		new THREE.MeshLambertMaterial({
+			map: texture
+		}));
+	body[i].nose.position.set(0, 16 * scale, 0);
+	body[i].nose.rotation.set(0, Math.PI / 2, 0);
+	body[i].nose.scale.y = 3;
 	body[i].mesh.add(body[i].nose);
 
+/*
+	// BEGIN gltf
+	// load rocket model
+	const gLoader = new THREE.GLTFLoader();
+	//gLoader.load("graphics/starship_mk1r2/scene.gltf", function(gltf) {
+	gLoader.load("graphics/starship/scene.gltf", function(gltf) {
 
+		body[i].mesh = gltf.scene;
+
+		// set scale for gltf model
+		body[i].mesh.scale.set(0.1 * scale, 0.1 * scale, 0.1 * scale);
+		// "starship_mk1" model and starship_mk1r2
+		//body[i].mesh.scale.set(0.1 * scale, 0.1 * scale, 0.1 * scale);
+
+		// END gltf, except closing brackets and sprite size
+*/
 
 		//body[i].mesh.receiveShadow = true;
 
@@ -2624,7 +2642,7 @@ function displayText() {
 				/ 1000).toFixed(3) + " km" +
 			"<br>Lat " + (body[view].gps.lat * 180 / Math.PI).toFixed(6) + "°" +
 			"<br>Lon " + (body[view].gps.lon * 180 / Math.PI).toFixed(6) + "°" +
-			"<br>Alt " + (body[view].gps.alt / 1000).toFixed(6) + " km" +
+			"<br>Alt " + (body[view].gps.alt / 1000).toFixed(6) +
 			"<br>v " + (Math.sqrt(body[view].ecef.vx**2 + body[view].ecef.vy**2 +
 				body[view].ecef.vz**2) / 1000).toFixed(6) + " km/s" +
 			"<br>drag " + dragx.toExponential(2) + " m/s²";
