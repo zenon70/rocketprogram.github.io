@@ -1,40 +1,37 @@
 
 
-IN-PROGRESS:
+# IN-PROGRESS
+-------------
 
 
 
 
 
-ISSUES:
+
+# HARD CRASH
+------------
+known & intended hyperbolic "safe crash" needs proper exit
+  when iterations > 9999 to solve, NaN occurs
+  need proper exit / catch
+crash at center of planet
+8 million timestep + thrust straight up...
 
 
-livestream crashes, need super low-res startup, set hi-resolution maps
-  running 9 planets and 3 moons and a sun and rocket.. is slow.. especially
-  with orbit lines... so efficiency needs to be improved.
-why slow?
-- loading all planets & moons with textures at the same time
-- polygons, gltf models
-- high res textures
-- two scenes
-- orbit lines
-    recalculating some elements (i, lan, w) and redrawing on every frame
-    ellipse with 500 points
-- rockets are part of n-body physics
-- gps velocity unnecessary?
-- general efficiency can probably be drastically improved
-- orbMech settings for transcendental equation
-initialization-only
-- loading the whole threejs instead of just modules
-    but i prefer console use (n/a with modules)
-- processing space data (instead of it being pre-processed)
-
-
+# GUI ISSUES
+------------
 gui hud numbers wrapping, and going outside of tinted background
 
-hud overlap on smartphone widescreen not fullscreen
+hud overlaps on smartphone in widescreen if not fullscreened
 
-spacecraft rotation from warp is wrong.. requires complicated formula.
+firefox mobile 96.0.0-beta.5 scrolling to hide address bar
+  causes screen to resize wrong
+
+
+
+
+
+# PHYSICS
+---------
 
 401 surface and graphics are WAY off
   more than just the dips in polygons
@@ -45,36 +42,36 @@ not appearing on surface
   surface graphics and gps ARE accurate??, if using
   1024 segments... so it just depends on segment
   heights.?? not true for 401!!
-
-known & intended hyperbolic "safe crash" needs proper exit
-  when iterations > 9999 to solve, NaN occurs
-  need proper exit / catch
-crash at center of planet
-
-firefox mobile 96.0.0-beta.5 scrolling to hide address bar
-  causes screen to resize wrong
+terrain: bump/relief map w/collision detection
+  aerodynamics and negative altitude loss of momentum will need to be revised
 
 rocket goes down when low thrust on surface
 
 ecliptic lan parameter is off by almost precisely 90 deg, not sure why
   (ecliptic notes below)
 
-
-HIGH PRIORITY FEATURE REQUESTS:
-
-rotate with surface while landed
+not rotating with surface while landed
   rotate with parent
   attach independent child object at location of landing.
   set with rotation of rocket. copy that rotation.
   if the rocket is rotated manually then rotate the clone.
 
+spacecraft rotation from warp is wrong.. requires complicated formula.
+
+air density on other planets
+  and re-entry heat
+
+add major moons, asteroids, comets for sure, all ~200 moons hopefully
+
+navball prograde, radial, normal markers for eci & ecef
+  target anti-target marker
+  maneuver marker
 
 
-MEDIUM PRIORITY FEATURE REQUESTS:
 
-impulse power for spin controls
-
-camera should start UP, wherever you start
+# CONTROLS & GUI
+----------------
+add impulse power for spin controls
 
 make menu look nice, nicer user interface (menus, info, more options)
   show/hide axes (planets, etc)
@@ -82,80 +79,64 @@ make menu look nice, nicer user interface (menus, info, more options)
   gui buttons sizes mobile (normal) vs desktop etc
   make menu larger for big screens, ok for smaller screens?
 
+have deltaV stats
 
+show "maxq" on screen when passed
 
-LOW PRIORITY FEATURE REQUESTS:
+add orbitcontrols option for large bodies, with min zoom, compatible with tilt
 
-use an actual convention for orbital parameter variable names, like IAU or mpcorb or NASA or UCS.. whichever i want to import from most
-
-improve naming system i.e. earth = 3 .name = 399,  planet4 = 4...
-
-use a json object file for solar system orbit data
-
-select launch location
-
-constellation map
-
-air density on other planets
-  re-entry heat
-visual clouds
-  planets 2, 3, maybe 4, maybe a few moons
-
-terrain: bump/relief map w/collision detection
-  aerodynamics and negative altitude loss of momentum will need to be revised
-
-deltaV display
+add real-time sync (already coded in an old version)
 
 
 
-GRAPHICS
-  sky color during daytime or in thick atmosphere, from camera location
-  shadows, especially for planet 6 rings
-    use DirectionalLight or SpotLight near planet
-
-"maxq" appears on screen when passed
-
+# 3D VISUALS
+------------
 first person camera
 
-major moons, asteroids, comets for sure, all ~200 moons hopefully
-
-assorted rocket models, using stats
-multiple satellites
-track any asteroid or object
-
-adjustable scale
+camera should start UP, wherever you start
 
 restore camera zoom level on view change?
 
+visual clouds on a few planets: 299, 399, maybe 499, a few moons
+
+sky color during daytime or in thick atmosphere, from camera location
+
+shadows, especially for planet 6 rings
+    use DirectionalLight or SpotLight near planet
+
+constellation map
+
+adjustable scale
 
 
 
+# CODE REFACTORING
+------------------
+use an actual convention for orbital parameter variable names
+  like IAU or mpcorb or NASA or UCS.. whichever i want to import from most
+
+improve body array naming system i.e. earth = 3 .name = 399,  planet4 = 4...
+
+use a json object file for solar system orbit data
 
 
-USER INTERFACE
 
-  navball prograde, radial, normal markers for eci & ecef
-    target anti-target marker
-    maneuver marker
+# SAVE / LOAD
+-------------
+select launch location
 
+assorted rocket models, using stats
 
-  orbitcontrols option for large bodies, with min zoom, *angle*
-    solve zoom difficulty issue
-    solve pole angle issue
+multiple satellites
 
-  real-time sync (already coded in an old version)
+track any asteroid or object
 
-
-MULTI
-  multiple satellites, "inFlight" variable
-  save/load state
+save/load state
     landing boosters
     docking & transfer of resources (fuel, etc)
   multiplayer
     send/receive orbit info
     login
-
-
 
 SPACECRAFT
   spacecraft detail
@@ -166,7 +147,6 @@ SPACECRAFT
     rcs
     ignition count
   communications satellites
-  different rockets
   staging
   buildable rockets
     shape, size, engine/fuel types
@@ -176,13 +156,11 @@ SPACECRAFT
 
 
 MULTIPLAYER WEB SERVER
-
 client side
   orbital info is received
     view orbits (including your own)
   launch spacecraft
     orbital info is sent to server
-
 server side
   run simulation 24/7 with thousands of orbits
   send orbit data upon request
@@ -190,8 +168,8 @@ server side
 
 
 
-TRACKING IDEAS
-
+# SATELLITE TRACKING
+--------------------
 spacecraft identifying info:
   country (based on ip address) & number
   launch date & time
@@ -229,6 +207,31 @@ IP ADDRESS
 BROWSER INFO
 
 
+----------------------------------------------------------------
+
+
+# EFFICIENCY
+------------
+
+livestream crashes on 2gb phone, need super low-res startup, set hi-res maps
+  running 9 planets and 3 moons and a sun and rocket.. is slow.. especially
+  with orbit lines... so efficiency needs to be improved.
+why slow?
+- loading all planets & moons with textures at the same time
+- polygons, gltf models
+- high res textures
+- two scenes
+- orbit lines
+    recalculating some elements (i, lan, w) and redrawing on every frame
+    ellipse with 500 points
+- rockets are part of n-body physics
+- gps velocity unnecessary?
+- general efficiency can probably be drastically improved
+- orbMech settings for transcendental equation
+initialization-only
+- loading the whole threejs instead of just modules
+    but i prefer console use (n/a with modules)
+- processing space data (instead of it being pre-processed)
 
 
 
@@ -236,8 +239,11 @@ BROWSER INFO
 
 
 
-PROGRAM FLOW (simplified)
 
+
+
+# PROGRAM FLOW (simplified logic)
+---------------------------------
 
 populate body array, conversions, mostMassiveBody
   cartes (local icrf)
@@ -248,8 +254,7 @@ viewControl
 time
 
 
-
---- main loop ---
+--- begin main loop ---
 
 rocketControl()
 
@@ -283,7 +288,7 @@ systemPosition() LOOP BODY
 time++
 displayText()
 
---- main loop ---
+--- end main loop ---
 
 preAnimate()
   drawEllipse
@@ -295,17 +300,20 @@ preAnimate()
 
 
 
-VARIABLE          POSITION
-body[i].x         universal icrf (solar system barycenter)
-body[i].cartes.x  local icrf (when finished)
-body[i].ecef.x    local ecef
 
-body[i].eci.x     local eci (if not commented out)
+# VARIABLES
+-----------
+
+VARIABLE             FRAME   ORIGIN
+body[i].x            icrf    solar system barycenter
+body[i].cartes.x     icrf    local
+body[i].cartesEci.x  eci     local
+body[i].ecef.x       ecef    local
 
 
 
-BROWSER RENDERING
-
+# BROWSER RENDERING
+-------------------
 firefox mobile setting that changes resolution:
 layout.css.devPixelsPerPx
 preferred resolution: 1.6
@@ -315,51 +323,26 @@ window.devicePixelRatio
 
 
 
-ALTITUDE
-
-- gps tells you MSL: Mean Sea Level at specific location. it's accurate, even with oblate spheroids, but it does NOT tell you the height of actual physical surface features, like mountains and valleys (which are not implemented)...
-- Ap shows MSL of equatorial.
 
 
 
-
-// shadow setup
-if (focus === 0) {
-// setup a DirectionalLight
-// positioned outside if the furthest child
-// in the direction of the sun, facing back
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# NOTES
+-------
 orbital speed at equator when surface speed is zero
 va = 0.0000729211585454431
 vt = va * distance
 vt = 465.10113940155685
 
 
-rings outer radius
+planet6 rings outer radius
 140,180 + 235 = 140415
 
 width 30 - 500?
 (500-30)/2 = 235
 
 
-SKYBOX
-
+# SKYBOX
+--------
 using CubeTextureLoader, to get z-up orientation:
 
 starting with a nasa star map in hdri (sphere) format where: aries is in the center, the northvstar is on top, and orion is on the left:
@@ -389,18 +372,12 @@ slot5 = +z
 slot6 = -z
 
 
-notes on rocket models:
-
-nice model, not centered, cheesy windows:
-https://sketchfab.com/3d-models/spacex-starship-a8a0b69f776841a1a465cd9fb3762fd2
-
-nice model, basically centered, wrong roll
-https://sketchfab.com/3d-models/starship-mk1-5a708af84ef440c6a91f96c2b8284cc4
 
 
 
-ECLIPTIC NOTES
 
+# ECLIPTIC NOTES
+----------------
 to convert from icrf to ecliptic, use icrfToEci() with:
 ra = 270
 dec = 66.56071
@@ -494,11 +471,55 @@ v52
 
 
 
-other notes:
-
+# OTHER NOTES
+-------------
 "space station" commodore 64
 
-https://discourse.threejs.org/t/collision-detection-with-3d-models/16662
 
-https://stackoverflow.com/questions/52271397/centering-and-resizing-gltf-models-automatically-in-three-js
+
+
+falcon 9 spacex.com
+spaceflightinsider.com/hangar/falcon-9
+
+COMPLETE
+70 m
+3.7 m (does NOT include fairing)
+
+
+FAIRING
+13.1 m tall
+5.2 m wide
+
+STAGE 2
+397 burn
+981000 N thrust vac
+845000 N thrust sea
+13.8 m tall
+
+STAGE 1
+162 burn
+8227000 N thrust vac
+7607000 N thrust sea
+47.7 m tall (with inter)
+
+
+
+# SIMULATION 3D MODEL
+---------------------
+
+COMPLETE
+10.4 = 5.2 x 2
+7.2
+1.4
+13.8
+47.7 / 2 = 23.85
+
+
+23.85 + 13.8/2 = 30.75 stage 2 start
+
+23.85 + 13.8 + 1.4/2 = 38.35 fairingBase start
+
+23.85 + 13.8 + 1.4 + 7.2/2 = 42.65 fairingMid start
+
+23.85 + 13.8 + 1.4 + 7.2 = 46.25 nose start
 
