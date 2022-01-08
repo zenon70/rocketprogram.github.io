@@ -9,7 +9,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v69</pre>
+		<pre id="version">v70</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud" id="hudFuel">0</p>
@@ -1999,8 +1999,6 @@ function rocketControl() {
 		body[rocket].pointingV3 =
 			body[rocket].mesh.up.clone().applyMatrix4(body[rocket].pointingM4);
 
-
-
 		let airPressure = 0; // Pascals
 		// get current air pressure
 		if (body[rocket].focus === earth) {
@@ -2010,10 +2008,26 @@ function rocketControl() {
 			}
 		}
 
-		//let thrustAccel = 15; // m/s**2
+		// decrease mass by fuel used, and reduce fuel amount
+		let fuelMassPerSecond = body[rocket].fuelMass / body[rocket].burnTime;
+		
+		let fuelUse = 1;
+		if (body[rocket].fuelMass - (fuelMassPerSecond * throttle/100 * timestep) <
+			0) {
+			// get ratio
+			fuelUse = body[rocket].fuelMass / (fuelMassPerSecond * throttle/100
+				* timestep);
+			body[rocket].fuelMass = 0;
+			body[rocket].burnTime = 0;
+		} else {
+			body[rocket].fuelMass -= fuelMassPerSecond * throttle/100 * timestep;
+			body[rocket].burnTime -= throttle/100 * timestep;
+		}
+		body[rocket].mass -= fuelMassPerSecond * throttle/100 * timestep * fuelUse;
+
 		const thrustAccel = (body[rocket].thrustVac - (airPressure *
 			(body[rocket].thrustVac - body[rocket].thrustSea) / 101325))
-			/ body[rocket].mass;
+			/ body[rocket].mass * fuelUse;
 
 		// apply thrust according to direction the rocket is pointing
 		body[rocket].vx +=
@@ -2022,13 +2036,6 @@ function rocketControl() {
 			body[rocket].pointingV3.y * throttle/100 * thrustAccel * timestep;
 		body[rocket].vz +=
 			body[rocket].pointingV3.z * throttle/100 * thrustAccel * timestep;
-
-		// decrease mass by fuel used, and reduce fuel amount
-		body[rocket].burnTime -= throttle/100 * timestep;
-
-		let fuelMassPerSecond = body[rocket].fuelMass / body[rocket].burnTime;
-		body[rocket].fuelMass -= fuelMassPerSecond * throttle/100 * timestep;
-		body[rocket].mass -= fuelMassPerSecond * throttle/100 * timestep;
 
 		document.getElementById("hudFuel").innerHTML =
 			body[rocket].fuelMass.toFixed(0) + "<br>kg fuel";
