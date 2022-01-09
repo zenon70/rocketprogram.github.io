@@ -3,22 +3,21 @@
 	<head>
 		<title>Rocket</title>
 		<meta charset="UTF-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0,
-			maximum-scale=1.0, user-scalable=no"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 		<link rel="icon" href="favicon.ico" type="image/x-icon"/>
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v70</pre>
+		<pre id="version">v71</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
-		<p class="hud" id="hudFuel">0</p>
-		<p class="hud" id="hudThrottle">0%<br>off</p>
+		<p class="hud" class="rocketPanel" id="hudFuel">0</p>
+		<p class="hud" class="rocketPanel" id="hudThrottle">0%<br>off</p>
 		<p class="hud" id="hudStep">1</p>
 		<p class="hud" id="hudView">rocket</p>
-		<p class="hud" id="hudYaw">0<br>yaw</p>
-		<p class="hud" id="hudPitch">0<br>pitch</p>
-		<p class="hud" id="hudRoll">0<br>roll</p>
+		<p class="hud" class="rocketPanel" id="hudYaw">0<br>yaw</p>
+		<p class="hud" class="rocketPanel" id="hudPitch">0<br>pitch</p>
+		<p class="hud" class="rocketPanel" id="hudRoll">0<br>roll</p>
 
 		<script src="threejs/three129.min.js"></script>
 		<script src="threejs/TrackballControls129.js"></script>
@@ -26,32 +25,32 @@
 		<script src="orbMech61.js"></script>
 		<script src="tilter14.js"></script>
 
-		<button id="throttleOn" onclick="throttleOn()">throttle on</button>
-		<button id="throttleUp" onclick="throttleUp()">throttle up (a)</button>
-		<button id="throttleDown" onclick="throttleDown()">throttle down (z)
-		</button>
-		<button id="throttleOff" onclick="throttleOff()">throttle off (x)</button>
+		<button class="onScreenButton" class="rocketPanel" id="throttleOn" onclick="throttleOn()">throttle on</button>
+		<button class="onScreenButton" class="rocketPanel" id="throttleUp" onclick="throttleUp()">throttle up (a)</button>
+		<button class="onScreenButton" class="rocketPanel" id="throttleDown" onclick="throttleDown()">throttle down (z)</button>
+		<button class="onScreenButton" class="rocketPanel" id="throttleOff" onclick="throttleOff()">throttle off (x)</button>
 
-		<button id="faster" onclick="faster()">double time (t)</button> 
-		<button id="slower" onclick="slower()">halve time (g)</button>
-		<button id="playPause" onclick="playPause()">pause</button>
+		<button class="onScreenButton" id="faster" onclick="faster()">double time (t)</button> 
+		<button class="onScreenButton" id="slower" onclick="slower()">halve time (g)</button>
+		<button class="onScreenButton" id="playPause" onclick="playPause()">pause</button>
+		<button class="onScreenButton" id="viewPrevious" onclick="viewPrevious()">previous view</button>
+		<button class="onScreenButton" id="viewNext" onclick="viewNext()">next view (v)</button>
+		<button class="onScreenButton" id="menuButton" onclick="menu()">menu</button>
+		<button class="onScreenButton" id="toggleFullscreen" onclick="toggleFullscreen()">full screen</button>
 
-		<button id="view" onclick="cycleView()">change view (v)</button>
-		<button id="menuButton" onclick="menu()">menu</button>
-		<button id="toggleFullscreen" onclick="toggleFullscreen()">full screen
-		</button>
-
-		<button id="up" onclick="up()">pitch up (e)</button>
-		<button id="down" onclick="down()">pitch down (d)</button>
-		<button id="left" onclick="left()">yaw left (s)</button>
-		<button id="right" onclick="right()">yaw right (f)</button>
-		<button id="rollLeft" onclick="rollLeft()">roll left (w)</button>
-		<button id="rollRight" onclick="rollRight()">roll right (r)</button>
-		<button id="stopSpin" onclick="stopSpin()">stop rotation (q)</button>
+		<button class="onScreenButton" class="rocketPanel" id="up" onclick="up()">pitch up (e)</button>
+		<button class="onScreenButton" class="rocketPanel" id="down" onclick="down()">pitch down (d)</button>
+		<button class="onScreenButton" class="rocketPanel" id="left" onclick="left()">yaw left (s)</button>
+		<button class="onScreenButton" class="rocketPanel" id="right" onclick="right()">yaw right (f)</button>
+		<button class="onScreenButton" class="rocketPanel" id="rollLeft" onclick="rollLeft()">roll left (w)</button>
+		<button class="onScreenButton" class="rocketPanel" id="rollRight" onclick="rollRight()">roll right (r)</button>
+		<button class="onScreenButton" class="rocketPanel" id="stopSpin" onclick="stopSpin()">stop rotation (q)</button>
 
 		<div class="popup">
 			<div class="blocker" onclick="hidePopup()"></div>
 			<div class="contents">
+				<h3>Multiple Rockets</h3>
+				<button class="menuButton" onclick="addBody()">add rocket</button>
 				<h3>Visual Helpers</h3>
 				<input type="checkbox" id="sprites" onchange="toggleSprites()">
 				<label for="sprites">Sprites</label>
@@ -68,66 +67,52 @@
 				<h3>Starlight Intensity (ambient light)</h3>
 				<div id="starlightOutput" class="slider">300%</div>
 					<div class="slideContainer">
-						<input type="range" min="0" max="100" value="30" class="slider"
-							id="starlight">
+						<input type="range" min="0" max="100" value="30" class="slider" id="starlight">
 					</div>
 				<h3>Sunlight Intensity (point light)</h3>
 				<div id="sunlightOutput" class="slider">100%</div>
 					<div class="slideContainer">
-						<input type="range" min="0" max="100" value="100" class="slider"
-							id="sunlight">
+						<input type="range" min="0" max="100" value="100" class="slider" id="sunlight">
 					</div>
 				<h3>Stars Resolution</h3>
-				<input type="radio" id="noStars" value="0" name="stars"
-					onchange="changeStars(value)">
+				<input type="radio" id="noStars" value="0" name="stars" onchange="changeStars(value)">
 				<label for="noStars">None</label>
 				<br>
-				<input type="radio" id="1kStars" value="1" name="stars"
-					onchange="changeStars(value)">
+				<input type="radio" id="1kStars" value="1" name="stars" onchange="changeStars(value)">
 				<label for="1kStars">1024 x 1024 x 6, Bright</label>
 				<br>
-				<input type="radio" id="2kStars" value="2" name="stars"
-					onchange="changeStars(value)">
+				<input type="radio" id="2kStars" value="2" name="stars" onchange="changeStars(value)">
 				<label for="2kStars">2048 x 2048 x 6, Dark</label>
 				<br>
-				<input type="radio" id="4kStars" value="3" name="stars"
-					onchange="changeStars(value)">
+				<input type="radio" id="4kStars" value="3" name="stars" onchange="changeStars(value)">
 				<label for="4kStars">4096 x 4096 x 6, Dark
 					<span id="warn"><em>high memory required</em></span>
 				</label>
 				<br>
 				<h3>Earth Resolution</h3>
-				<input type="radio" id="noEarth" value="0" name="earth"
-					onchange="changeEarth(value)">
+				<input type="radio" id="noEarth" value="0" name="earth" onchange="changeEarth(value)">
 				<label for="noEarth">None</label>
 				<br>
-				<input type="radio" id="1kEarth" value="1" name="earth"
-					onchange="changeEarth(value)">
+				<input type="radio" id="1kEarth" value="1" name="earth" onchange="changeEarth(value)">
 				<label for="1kEarth">1024 x 512</label>
 				<br>
-				<input type="radio" id="4kEarth" value="2" name="earth"
-					onchange="changeEarth(value)">
+				<input type="radio" id="4kEarth" value="2" name="earth" onchange="changeEarth(value)">
 				<label for="4kEarth">4096 x 2048, Jpeg Quality 90%</label>
 				<br>
 				<h3>Reference Plane for objects orbiting the sun</h3>
-				<input type="radio" id="eclipticPlane" value="ecliptic" name="plane"
-					onchange="setPlane(value)">
+				<input type="radio" id="eclipticPlane" value="ecliptic" name="plane" onchange="setPlane(value)">
 				<label for="eclipticPlane">Ecliptic IAU76/80 & IAU2009 J2000.0</label>
 				<br>
-				<input type="radio" id="sunBodyPlane" value="body" name="plane"
-					onchange="setPlane(value)">
+				<input type="radio" id="sunBodyPlane" value="body" name="plane" onchange="setPlane(value)">
 				<label for="sunBodyPlane">Body - Sun Equator IAU2009 J2000.0</label>
 				<br>
-				<input type="radio" id="invariablePlane" value="invariable" name="plane"
-					onchange="setPlane(value)">
+				<input type="radio" id="invariablePlane" value="invariable" name="plane" onchange="setPlane(value)">
 				<label for="invariablePlane">Invariable Plane IAU2009 J2000.0</label>
 				<br>
-				<input type="radio" id="galacticPlane" value="galactic" name="plane"
-					onchange="setPlane(value)">
+				<input type="radio" id="galacticPlane" value="galactic" name="plane" onchange="setPlane(value)">
 				<label for="galacticPlane">Galactic Plane IAU2009 J2000.0</label>
 				<br>
-				<input type="radio" id="icrfPlane" value="icrf" name="plane"
-					onchange="setPlane(value)">
+				<input type="radio" id="icrfPlane" value="icrf" name="plane" onchange="setPlane(value)">
 				<label for="icrfPlane">ICRF (International Celestial Reference Frame) J2000.0</label>
 				<br>
 				<h3>About</h3>
@@ -378,9 +363,6 @@
 			</div><!-- end contents -->
 		</div><!-- end popup -->
 		<script>"use strict";
-
-//const versionInfo = null;
-let dragx = 0;
 
 
 document.getElementById("starlight").value = 30;
@@ -934,9 +916,15 @@ let rocket = body.push({
 	thrustSea: 7607000,
 
 	sidereal: null,
+	xSpin: 0,
+	ySpin: 0,
+	zSpin: 0,
+	throttleSwitch: false,
+	throttle: 0,
 
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
+	drag: 0,
 
 	pointingV3: new THREE.Vector3(0, 1, 0), // loads y-up
 	pointingM4: new THREE.Matrix4(),
@@ -1041,6 +1029,69 @@ let rocket = body.push({
 		body[rocket].fuelMass.toFixed(0) + "<br>kg fuel";
 }
 
+// add rockets, stage separate, add asteroids, etc.
+let bodyQueue = [];
+function addBody() {
+	let i = bodyQueue.push({
+		name: "rocket" + String(body.length + 1 - 13),
+		focus: earth,
+
+		// combined stages v1 spacex numbers
+		mass: 517870,
+		fuelMass: 488370,
+		burnTime: 200,
+		thrustVac: 8227000,
+		thrustSea: 7607000,
+
+		sidereal: null,
+		xSpin: 0,
+		ySpin: 0,
+		zSpin: 0,
+		throttleSwitch: false,
+		throttle: 0,
+
+		cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
+			vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
+		drag: 0,
+
+		pointingV3: new THREE.Vector3(0, 1, 0), // loads y-up
+		pointingM4: new THREE.Matrix4(),
+	
+		//onSurface: true,
+		type: "Artificial",
+		color: 0xe5e7e7
+	}) - 1;
+	
+	
+	// launch from ground
+	const focus = bodyQueue[i].focus;
+
+	// boca chica, texas
+	bodyQueue[i].gps = {
+		lat: 25.997354305760496 * Math.PI / 180,
+		lon: -97.15698039306052 * Math.PI / 180,
+		alt: 0
+	};
+
+	// convert to ecef then to cartes
+	bodyQueue[i].ecef = gpsToEcef(bodyQueue[i].gps, body[focus].radiusEquator,
+		body[focus].e2);
+	bodyQueue[i].cartesEci = ecefToEci(bodyQueue[i].ecef, body[focus].spun,
+		body[focus].angularVelocity, body[focus].radiusEquator, body[focus].e2);
+
+	// get kepler (will need to be displayed before next loop)
+	bodyQueue[i].mu = GRAVITY * (body[focus].mass + bodyQueue[i].mass);
+	bodyQueue[i].kepler = toKepler(bodyQueue[i].cartesEci, bodyQueue[i].mu);
+
+	// not necessary for earth, but should be standard practice
+	bodyQueue[i].cartes = eciToIcrf(bodyQueue[i].cartesEci,
+		body[focus].rightAscension, body[focus].declination);
+/*
+	document.getElementById("hudFuel").innerHTML =
+		body[i].fuelMass.toFixed(0) + "<br>kg fuel";
+*/
+
+}
 
 
 
@@ -1496,8 +1547,7 @@ body[sun].mesh.add(body[sun].sunlight);
 let view;
 
 // rocket
-{
-	const i = rocket;
+function addRocket(i) {
 
 	// stage 1
 	const geometry = new THREE.CylinderGeometry(
@@ -1608,14 +1658,15 @@ let view;
 
 
 		// post-setup global adjustments
-		view = rocket;
+		view = i;
+		viewFinalize();
 		controls.target = body[view].mesh.position;
-		controls.minDistance = 60 * scale;
+		controls.minDistance = 75 * scale;
 
 	// brackets for gltf
 	//});
 }
-
+addRocket(rocket);
 
 document.querySelector("#sprites").checked = true;
 function toggleSprites() {
@@ -1719,17 +1770,22 @@ systemPosition();
 ////////////////////////////////////////////////////////////////////////////////
 // view control
 view = rocket - 1;
-function cycleView() {
-
+function viewNext() {
 	if (view < body.length - 1) {
 		view++;
-	}
-	else {
-		view = 0;
-	}
-
+	} else { view = 0; }
 	// don't look at the sun
 	//if (view === 0) view++;
+	viewFinalize();
+}
+function viewPrevious() {
+	if (view < 1) {
+		view = body.length - 1;
+	} else { view--; }
+	viewFinalize();
+}
+function viewFinalize() {
+
 
 /*
 	if (body[view].type === "Artificial") {
@@ -1761,9 +1817,32 @@ function cycleView() {
 			body[body[view].focus].name;
 	}
 
+	if (body[view].type === "Artificial") {
+		scene2.visible = true;
+		document.getElementById("hudFuel").innerHTML =
+			body[view].fuelMass.toFixed(0) + "<br>kg fuel";
+		document.getElementById("hudPitch").innerHTML =
+			Math.round(body[view].xSpin * 10) + "<br>pitch";
+		document.getElementById("hudYaw").innerHTML =
+			Math.round(- body[view].ySpin * 10) + "<br>pitch";
+		document.getElementById("hudRoll").innerHTML =
+			Math.round(body[view].zSpin * 10) + "<br>pitch";
+		//document.getElementsByClassName("rocketPanel").style.visibility = "visible";
+		
+	} else {
+		scene2.visible = false;
+		//document.getElementsByClassName("rocketPanel").style.visibility = "hidden";
+		document.getElementById("hudFuel").innerHTML = "";
+		document.getElementById("hudPitch").innerHTML = "";
+		document.getElementById("hudYaw").innerHTML = "";
+		document.getElementById("hudRoll").innerHTML = "";
+	}
+
+	throttleShow();
+
 	//body[view].mesh.attach(camera);
 }
-cycleView();
+viewNext();
 
 
 
@@ -1789,78 +1868,113 @@ let now = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
 
 ////////////////////////////////////////////////////////////////////////////////
 // rocket control (spin and thrust)
-
+/*
 let xSpin = 0;
 let ySpin = 0;
 let zSpin = 0;
-let spinPower = 0.1; // what units?
+*/
+let spinPower = 0.1; // what units? m/s²
 
 // onscreen buttons
 function up() {
-	xSpin += spinPower;
+	if (body[view].type === "Artificial") {
+		body[view].xSpin += spinPower;
+	}
 	document.getElementById("hudPitch").innerHTML =
-		Math.round(xSpin*10) + "<br>pitch";
+		Math.round(body[view].xSpin * 10) + "<br>pitch";
 }
 function down() {
-	xSpin -= spinPower;
+	if (body[view].type === "Artificial") {
+		body[view].xSpin -= spinPower;
+	}
 	document.getElementById("hudPitch").innerHTML =
-		Math.round(xSpin*10) + "<br>pitch";
+		Math.round(body[view].xSpin * 10) + "<br>pitch";
 }
 function left() {
-	zSpin += spinPower;
+	if (body[view].type === "Artificial") {
+		body[view].zSpin += spinPower;
+	}
 	document.getElementById("hudYaw").innerHTML =
-		Math.round(-zSpin*10) + "<br>yaw";
+		Math.round(- body[view].zSpin * 10) + "<br>yaw";
 }
 function right() {
-	zSpin -= spinPower;
+	if (body[view].type === "Artificial") {
+		body[view].zSpin -= spinPower;
+	}
 	document.getElementById("hudYaw").innerHTML =
-		Math.round(-zSpin*10) + "<br>yaw";
+		Math.round(- body[view].zSpin * 10) + "<br>yaw";
 }
 function rollLeft() {
-	ySpin -= spinPower;
+	if (body[view].type === "Artificial") {
+		body[view].ySpin -= spinPower;
+	}
 	document.getElementById("hudRoll").innerHTML =
-		Math.round(ySpin*10) + "<br>roll";
+		Math.round(body[view].ySpin * 10) + "<br>roll";
 }
 function rollRight() {
-	ySpin += spinPower;
+	if (body[view].type === "Artificial") {
+		body[view].ySpin += spinPower;
+	}
 	document.getElementById("hudRoll").innerHTML =
-		Math.round(ySpin*10) + "<br>roll";
+		Math.round(body[view].ySpin * 10) + "<br>roll";
 }
 function stopSpin() {
-	xSpin = 0; ySpin = 0;	zSpin = 0;
+	if (body[view].type === "Artificial") {
+		body[view].xSpin = 0;
+		body[view].ySpin = 0;
+		body[view].zSpin = 0;
+	}
 	document.getElementById("hudPitch").innerHTML =
-		Math.round(xSpin*10) + "<br>pitch";
+		Math.round(body[view].xSpin * 10) + "<br>pitch";
 	document.getElementById("hudYaw").innerHTML =
-		Math.round(-zSpin*10) + "<br>yaw";
+		Math.round(- body[view].zSpin * 10) + "<br>yaw";
 	document.getElementById("hudRoll").innerHTML =
-		Math.round(ySpin*10) + "<br>roll";
+		Math.round(body[view].ySpin * 10) + "<br>roll";
 }
 
 
+// here
+
+/*
 let throttleSwitch = false;
 let throttle = 0; // 0 to 100
+*/
 function throttleShow() {
-	if (throttleSwitch) {
-		document.getElementById("hudThrottle").innerHTML = throttle + "%<br>on";
+	if (body[view].throttleSwitch) {
+		document.getElementById("hudThrottle").innerHTML = body[view].throttle
+			+ "%<br>on";
+	// make sure it's false, not undefined as if a "Natural" body
+	} else if (body[view].throttleSwitch === false) {
+		document.getElementById("hudThrottle").innerHTML = body[view].throttle
+			+ "%<br>off";
 	} else {
-		document.getElementById("hudThrottle").innerHTML = throttle + "%<br>off";
+		document.getElementById("hudThrottle").innerHTML = "";
+		
 	}
 }
 function throttleOn() {
-	throttleSwitch = true;
-	throttleShow();
+	if (body[view].type === "Artificial") {
+		body[view].throttleSwitch = true;
+		throttleShow();
+	}
 }
 function throttleOff() {
-	throttleSwitch = false;
-	throttleShow();
+	if (body[view].type === "Artificial") {
+		body[view].throttleSwitch = false;
+		throttleShow();
+	}
 }
 function throttleUp() {
-	if (throttle < 100) { throttle += 10 }
-	throttleShow();
+	if (body[view].type === "Artificial") {
+		if (body[view].throttle < 100) { body[view].throttle += 10; }
+		throttleShow();
+	}
 }
 function throttleDown() {
-	if (throttle > 0) { throttle -= 10 }
-	throttleShow();
+	if (body[view].type === "Artificial") {
+		if (body[view].throttle > 0) { body[view].throttle -= 10; }
+		throttleShow();
+	}
 }
 
 
@@ -1911,66 +2025,85 @@ window.addEventListener("keyup", function(event) {
 }, true);
 
 function rocketControl() {
-
 	// e (pitch up)
 	if (keyState.KeyE && Date.now() - keyDelay.KeyE > repeatDelay) {
-		xSpin += spinPower;
-		keyDelay.KeyE = Date.now();
+		if (body[view].type === "Artificial") {
+			body[view].xSpin += spinPower;
+			keyDelay.KeyE = Date.now();
+		}
 	}
 
 	// s (yaw left)
 	if (keyState.KeyS && Date.now() - keyDelay.KeyS > repeatDelay) {
-		zSpin += spinPower;
-		keyDelay.KeyS = Date.now();
+		if (body[view].type === "Artificial") {
+			body[view].zSpin += spinPower;
+			keyDelay.KeyS = Date.now();
+		}
 	}
 
 	// d (pitch down)
 	if (keyState.KeyD && Date.now() - keyDelay.KeyD > repeatDelay) {
-		xSpin -= spinPower;
-		keyDelay.KeyD = Date.now();
+		if (body[view].type === "Artificial") {
+			body[view].xSpin -= spinPower;
+			keyDelay.KeyD = Date.now();
+		}
 	}
 
 	// f (yaw right)
 	if (keyState.KeyF && Date.now() - keyDelay.KeyF > repeatDelay) {
-		zSpin -= spinPower;
-		keyDelay.KeyF = Date.now();
+		if (body[view].type === "Artificial") {
+			body[view].zSpin -= spinPower;
+			keyDelay.KeyF = Date.now();
+		}
 	}
 
 	// w (roll left)
 	if (keyState.KeyW && Date.now() - keyDelay.KeyW > repeatDelay) {
-		ySpin -= spinPower;
-		keyDelay.KeyW = Date.now();
+		if (body[view].type === "Artificial") {
+			body[view].ySpin -= spinPower;
+			keyDelay.KeyW = Date.now();
+		}
 	}
 
 	// r (roll right)
 	if (keyState.KeyR && Date.now() - keyDelay.KeyR > repeatDelay) {
-		ySpin += spinPower;
-		keyDelay.KeyR = Date.now();
+		if (body[view].type === "Artificial") {
+			body[view].ySpin += spinPower;
+			keyDelay.KeyR = Date.now();
+		}
 	}
 
 	// freeze all spin and thrust
 	if (keyState.KeyQ && Date.now() - keyDelay.KeyQ > repeatDelay) {
-		xSpin = 0;
-		ySpin = 0;
-		zSpin = 0;
-		keyDelay.KeyQ = Date.now();
+		if (body[view].type === "Artificial") {
+			body[view].xSpin = 0;
+			body[view].ySpin = 0;
+			body[view].zSpin = 0;
+			keyDelay.KeyQ = Date.now();
+		}
 	}
 
 	if (keyState.KeyA && Date.now() - keyDelay.KeyA > repeatDelay) {
-		throttleUp();
-		keyDelay.KeyA = Date.now();
+		if (body[view].type === "Artificial") {
+			throttleUp();
+			keyDelay.KeyA = Date.now();
+		}
 	}
 	if (keyState.KeyZ && Date.now() - keyDelay.KeyZ > repeatDelay) {
-		throttleDown();
-		keyDelay.KeyZ = Date.now();
+		if (body[view].type === "Artificial") {
+			throttleDown();
+			keyDelay.KeyZ = Date.now();
+		}
 	}
 	if (keyState.KeyX && Date.now() - keyDelay.KeyX > repeatDelay) {
-		throttleOff();
-		keyDelay.KeyX = Date.now();
+		if (body[view].type === "Artificial") {
+			throttleOff();
+			keyDelay.KeyX = Date.now();
+		}
 	}
 
 	if (keyState.KeyV && Date.now() - keyDelay.KeyV > repeatDelay) {
-		cycleView();
+		viewNext();
 		keyDelay.KeyV = Date.now();
 	}
 
@@ -1983,64 +2116,77 @@ function rocketControl() {
 		keyDelay.KeyG = Date.now();
 	}
 
-	// rotate rocket
-	body[rocket].mesh.rotateX(xSpin * timestep);
-	body[rocket].mesh.rotateY(ySpin * timestep);
-	body[rocket].mesh.rotateZ(zSpin * timestep);
-
+	// rotate rocket(s)
+	for (let i = body.length - 1; i > -1; i--) {
+		if (body[i].type === "Artificial") {
+			body[i].mesh.rotateX(body[i].xSpin * timestep);
+			body[i].mesh.rotateY(body[i].ySpin * timestep);
+			body[i].mesh.rotateZ(body[i].zSpin * timestep);
+			
+			// use this loop to do all rocket maneuvers, without indenting
+		//}
+	//}
 
 	// process thrust
 
 	// free fuel if timewarping on last drop
-	if (throttleSwitch && throttle > 0 && body[rocket].fuelMass > 0) {
+	if (body[i].fuelMass > 0 && body[i].throttleSwitch && body[i].throttle > 0) {
 		// update the direction vector of rocket
-		body[rocket].pointingM4.extractRotation(body[rocket].mesh.matrix);
+		body[i].pointingM4.extractRotation(body[i].mesh.matrix);
 		// get unit vector of direction
-		body[rocket].pointingV3 =
-			body[rocket].mesh.up.clone().applyMatrix4(body[rocket].pointingM4);
+		body[i].pointingV3 =
+			body[i].mesh.up.clone().applyMatrix4(body[i].pointingM4);
 
 		let airPressure = 0; // Pascals
 		// get current air pressure
-		if (body[rocket].focus === earth) {
-			if (body[rocket].gps.alt < 86000) {
-				let airData = earthAirData(body[rocket].gps.alt);
+		if (body[i].focus === earth) {
+			if (body[i].gps.alt < 86000) {
+				let airData = earthAirData(body[i].gps.alt);
 				airPressure = airData.airPressure;
 			}
 		}
 
 		// decrease mass by fuel used, and reduce fuel amount
-		let fuelMassPerSecond = body[rocket].fuelMass / body[rocket].burnTime;
+		const fuelMassPerSecond = body[i].fuelMass / body[i].burnTime;
 		
 		let fuelUse = 1;
-		if (body[rocket].fuelMass - (fuelMassPerSecond * throttle/100 * timestep) <
-			0) {
+		if (body[i].fuelMass - (fuelMassPerSecond * body[i].throttle/100 * timestep)
+			< 0) {
 			// get ratio
-			fuelUse = body[rocket].fuelMass / (fuelMassPerSecond * throttle/100
+			fuelUse = body[i].fuelMass / (fuelMassPerSecond * body[i].throttle/100
 				* timestep);
-			body[rocket].fuelMass = 0;
-			body[rocket].burnTime = 0;
+			body[i].fuelMass = 0;
+			body[i].burnTime = 0;
 		} else {
-			body[rocket].fuelMass -= fuelMassPerSecond * throttle/100 * timestep;
-			body[rocket].burnTime -= throttle/100 * timestep;
+			body[i].fuelMass -= fuelMassPerSecond * body[i].throttle/100 * timestep;
+			body[i].burnTime -= body[i].throttle/100 * timestep;
 		}
-		body[rocket].mass -= fuelMassPerSecond * throttle/100 * timestep * fuelUse;
+		body[i].mass -= fuelMassPerSecond * body[i].throttle/100 * timestep *
+			fuelUse;
 
-		const thrustAccel = (body[rocket].thrustVac - (airPressure *
-			(body[rocket].thrustVac - body[rocket].thrustSea) / 101325))
-			/ body[rocket].mass * fuelUse;
+		const thrustAccel = (body[i].thrustVac - (airPressure *
+			(body[i].thrustVac - body[i].thrustSea) / 101325))
+			/ body[i].mass * fuelUse;
 
 		// apply thrust according to direction the rocket is pointing
-		body[rocket].vx +=
-			body[rocket].pointingV3.x * throttle/100 * thrustAccel * timestep;
-		body[rocket].vy +=
-			body[rocket].pointingV3.y * throttle/100 * thrustAccel * timestep;
-		body[rocket].vz +=
-			body[rocket].pointingV3.z * throttle/100 * thrustAccel * timestep;
+		body[i].vx +=
+			body[i].pointingV3.x * body[i].throttle/100 * thrustAccel * timestep;
+		body[i].vy +=
+			body[i].pointingV3.y * body[i].throttle/100 * thrustAccel * timestep;
+		body[i].vz +=
+			body[i].pointingV3.z * body[i].throttle/100 * thrustAccel * timestep;
 
-		document.getElementById("hudFuel").innerHTML =
-			body[rocket].fuelMass.toFixed(0) + "<br>kg fuel";
+		if (i === view) {
+			document.getElementById("hudFuel").innerHTML =
+				body[i].fuelMass.toFixed(0) + "<br>kg fuel";
+		}
 
-		body[rocket].onSurface = false;
+		body[i].onSurface = false;
+		
+		// missing closes from non-indentation
+	}
+	}
+	
 	}
 }
 
@@ -2437,28 +2583,25 @@ function keplerPosition() {
 						//body[i].mass = 83.6; // sputnik 1
 					}
 
-					let drag = dragEquation(density, velocity, body[i].mass,
-						dragCoefficient); 
-
-					// was just debug.. actually part of normal display now
-					dragx = drag;
+					body[i].drag = dragEquation(density, velocity, body[i].mass,
+						dragCoefficient);
 
 					// prepare for safety checks (could be optimized)
 					let vxSign = Math.sign(body[i].ecef.vx);
 					let vySign = Math.sign(body[i].ecef.vy);
 					let vzSign = Math.sign(body[i].ecef.vz);
 					let vxDrag = 
-						-body[i].ecef.prograde.x * drag * timestep;
+						-body[i].ecef.prograde.x * body[i].drag * timestep;
 					let vyDrag = 
-						-body[i].ecef.prograde.y * drag * timestep;
+						-body[i].ecef.prograde.y * body[i].drag * timestep;
 					let vzDrag = 
-						-body[i].ecef.prograde.z * drag * timestep;
+						-body[i].ecef.prograde.z * body[i].drag * timestep;
 
 					// if adding drag results in the same direction, apply it
 					if (Math.sign(body[i].ecef.vx + vxDrag) === vxSign) {
 						// apply drag. negative prograde is retrograde.
 						body[i].ecef.vx +=
-							-body[i].ecef.prograde.x * drag * timestep;
+							-body[i].ecef.prograde.x * body[i].drag * timestep;
 						// if it results in going backwards (an issue with timestepping
 						// and/or super fast drag calculated on a 0 or negative altitude),
 						// then just zero the velocity instead
@@ -2469,13 +2612,13 @@ function keplerPosition() {
 					// repeat for y and z
 					if (Math.sign(body[i].ecef.vy + vyDrag) === vySign) {
 						body[i].ecef.vy +=
-							-body[i].ecef.prograde.y * drag * timestep;
+							-body[i].ecef.prograde.y * body[i].drag * timestep;
 					} else {
 						body[i].ecef.vy = 0;
 					}
 					if (Math.sign(body[i].ecef.vz + vzDrag) === vzSign) {
 						body[i].ecef.vz +=
-							-body[i].ecef.prograde.z * drag * timestep;
+							-body[i].ecef.prograde.z * body[i].drag * timestep;
 					} else {
 						body[i].ecef.vz = 0;
 					}
@@ -2492,31 +2635,6 @@ function keplerPosition() {
 		// tilt back, to match icrf frame
 		body[i].cartes = eciToIcrf(body[i].cartesEci,
 			body[focus].rightAscension, body[focus].declination);
-
-		// get elements in ecliptic frame, just for reporting data to user
-		if (i === view && body[i].focus === 0 && reportPlane !== "body") {
-			if (reportPlane === "ecliptic") {
-				const cartesAltPlane = icrfToEci(body[i].cartes,
-				// RA 270 * Math.PI / 180 = 4.71238898038469
-					4.71238898038469,
-				// DEC 90 - 23.43929 = 66.56071, * Math.PI / 180 = 1.161703541965115
-					1.161703541965115);
-				keplerAltPlane = toKepler(cartesAltPlane, body[i].mu);
-			} else if (reportPlane === "icrf") {
-				// currently in icrf frame
-				keplerAltPlane = toKepler(body[i].cartes, body[i].mu);
-			} else if (reportPlane === "galactic") {
-				const cartesAltPlane = icrfToEci(body[i].cartes,
-					0.38147085502186906, // 21.85667 deg
-					0.4735078260660616); // 27.13 deg
-				keplerAltPlane = toKepler(cartesAltPlane, body[i].mu);
-			} else /* invariable */ {
-				const cartesAltPlane = icrfToEci(body[i].cartes,
-					4.779584156586472, // 273.85 deg
-					1.1691960659110012); // 66.99 deg
-				keplerAltPlane = toKepler(cartesAltPlane, body[i].mu);
-			}
-		}
 	} // close for loop
 }
 
@@ -2586,9 +2704,12 @@ function drawEllipse(draw, shade, scale) {
 }
 
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // display data on-screen
+
+function altPlane() {
+
+}
 
 function displayText() {
 	let vFocus = body[view].focus;
@@ -2609,8 +2730,29 @@ function displayText() {
 			1000).toFixed(3) + " km/s";
 	} else {
 		let keplerShow;
-		if (reportPlane !== "body" && body[view].focus === 0) {
-			keplerShow = keplerAltPlane;
+		if (body[view].focus === 0 && reportPlane !== "body") {
+			// get elements in ecliptic etc frame, just for reporting data to user
+			if (reportPlane === "ecliptic") {
+				const cartesAltPlane = icrfToEci(body[view].cartes,
+				// RA 270 * Math.PI / 180 = 4.71238898038469
+					4.71238898038469,
+				// DEC 90 - 23.43929 = 66.56071, * Math.PI / 180 = 1.161703541965115
+					1.161703541965115);
+				keplerShow = toKepler(cartesAltPlane, body[view].mu);
+			} else if (reportPlane === "icrf") {
+				// currently in icrf frame
+				keplerShow = toKepler(body[view].cartes, body[view].mu);
+			} else if (reportPlane === "galactic") {
+				const cartesAltPlane = icrfToEci(body[view].cartes,
+					0.38147085502186906, // 21.85667 deg
+					0.4735078260660616); // 27.13 deg
+				keplerShow = toKepler(cartesAltPlane, body[view].mu);
+			} else { // invariable
+				const cartesAltPlane = icrfToEci(body[view].cartes,
+					4.779584156586472, // 273.85 deg
+					1.1691960659110012); // 66.99 deg
+				keplerShow = toKepler(cartesAltPlane, body[view].mu);
+			}
 		} else {
 			keplerShow = body[view].kepler;
 		}
@@ -2630,7 +2772,7 @@ function displayText() {
 
 	if (body[view].type === "Artificial") {
 		document.getElementById("hudGpsInfo").innerHTML =
-			"Mass " + body[view].mass.toExponential(0) + " kg" +
+			"Mass " + body[view].mass.toExponential(3) + " kg" +
 			"<br>Ap " + ((body[view].kepler.apoapsis - body[vFocus].radiusEquator)
 				/ 1000).toFixed(3) + " km" +
 			"<br>Pe " + ((body[view].kepler.periapsis - body[vFocus].radiusEquator)
@@ -2640,10 +2782,10 @@ function displayText() {
 			"<br>Alt " + (body[view].gps.alt / 1000).toFixed(6) + " km" +
 			"<br>v " + (Math.sqrt(body[view].ecef.vx**2 + body[view].ecef.vy**2 +
 				body[view].ecef.vz**2) / 1000).toFixed(6) + " km/s" +
-			"<br>drag " + dragx.toExponential(2) + " m/s²";
+			"<br>drag " + body[view].drag.toExponential(2) + " m/s²";
 	} else {
 		document.getElementById("hudGpsInfo").innerHTML =
-			"Mass " + body[view].mass.toExponential(0) + " kg" +
+			"Mass " + body[view].mass.toExponential(3) + " kg" +
 			"<br>EqRad " + (body[view].radiusEquator / 1000).toFixed(0) + " km" +
 			"<br>PoRad " + (body[view].radiusPole / 1000).toFixed(0) + " km" +
 			"<br>Sidereel " + body[view].sidereal.toFixed(2) + " hr";
@@ -2689,6 +2831,14 @@ function main() {
 	body[mostMassiveBody].mesh.position.x = body[mostMassiveBody].x * scale;
 	body[mostMassiveBody].mesh.position.y = body[mostMassiveBody].y * scale;
 	body[mostMassiveBody].mesh.position.z = body[mostMassiveBody].z * scale;
+
+
+	while (bodyQueue.length > 0) {
+		let i = body.push(bodyQueue.pop()) - 1;
+		addRocket(i);
+		
+	}
+
 
 	// get everything else's solar system position based on local position
 	systemPosition();
@@ -2782,33 +2932,35 @@ function preAnimate() {
 ////////////////////////////////////////////////////////////////////////////////
 // NAVBALL
 
-	let focus = body[rocket].focus;
-	let enu = getDirections(body[rocket].cartes.x, body[rocket].cartes.y,
-		body[rocket].cartes.z, body[focus].mesh.quaternion);
+	if (body[view].type === "Artificial") {
+		let focus = body[view].focus;
+		let enu = getDirections(body[view].cartes.x, body[view].cartes.y,
+			body[view].cartes.z, body[focus].mesh.quaternion);
 
-	let navM4 = new THREE.Matrix4().makeBasis(
-		enu.northAxisV3, enu.upAxisV3, enu.eastAxisV3);
+		let navM4 = new THREE.Matrix4().makeBasis(
+			enu.northAxisV3, enu.upAxisV3, enu.eastAxisV3);
 
-	navQ.setFromRotationMatrix(navM4);
+		navQ.setFromRotationMatrix(navM4);
 
-	navBall.quaternion.copy(
-		// functional orientation before applying navQ (rotations in world space)
-		new THREE.Quaternion().setFromAxisAngle(zAxis, Math.PI)
-		.multiply(new THREE.Quaternion().setFromAxisAngle(xAxis, -Math.PI / 2))
+		navBall.quaternion.copy(
+			// functional orientation before applying navQ (rotations in world space)
+			new THREE.Quaternion().setFromAxisAngle(zAxis, Math.PI)
+			.multiply(new THREE.Quaternion().setFromAxisAngle(xAxis, -Math.PI / 2))
 
-		// apply nav
-		.multiply(navQ)
+			// apply nav
+			.multiply(navQ)
 
-		// texture orientation after applying nav (rotations in local/object space)
-		.multiply(new THREE.Quaternion().setFromAxisAngle(xAxis, Math.PI))
-		.multiply(new THREE.Quaternion().setFromAxisAngle(yAxis, Math.PI))
-	);
+			// texture orientation after applying nav (rotations in local/object space)
+			.multiply(new THREE.Quaternion().setFromAxisAngle(xAxis, Math.PI))
+			.multiply(new THREE.Quaternion().setFromAxisAngle(yAxis, Math.PI))
+		);
 
-	// apply spacecraft rotation relative to stars
-	// swap y and z. must implement in original order.
-	navBall.rotateOnWorldAxis(xAxis, body[rocket].mesh.rotation.x);
-	navBall.rotateOnWorldAxis(zAxis, body[rocket].mesh.rotation.y);
-	navBall.rotateOnWorldAxis(yAxis, body[rocket].mesh.rotation.z);
+		// apply spacecraft rotation relative to stars
+		// swap y and z. must implement in original order.
+		navBall.rotateOnWorldAxis(xAxis, body[view].mesh.rotation.x);
+		navBall.rotateOnWorldAxis(zAxis, body[view].mesh.rotation.y);
+		navBall.rotateOnWorldAxis(yAxis, body[view].mesh.rotation.z);
+	}
 
 ////////////////////////////////////////////////////////////////////////////////
 // HELPERS

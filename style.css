@@ -5,6 +5,11 @@
 	overscroll-behavior: contain;
 }
 
+/* do i need this here? will be controlled in js */
+.rocketPanel {
+	visible: true;
+}
+
 #version {
 	position: fixed;
 	top: 1px;
@@ -87,7 +92,7 @@
 
 
 
-button {
+.onScreenButton {
 	position: fixed;
 	color: #dddddd;
 	background:rgba(44, 44, 44, .5);
@@ -133,7 +138,7 @@ button {
 }
 
 
-#view {
+#viewPrevious {
 	left: 121px;
 	bottom: 121px;
 }
@@ -145,6 +150,14 @@ button {
 	left: 121px;
 	bottom: 1px;
 }
+
+
+#viewNext {
+	left: 181px;
+	bottom: 121px;
+}
+
+
 
 
 #up {
@@ -221,7 +234,21 @@ div {
 	background:rgba(0, 0, 0, 0);
 }
 
-
+.menuButton {
+	margin: 2%;
+	padding: 2%;
+	color: #dddddd;
+	background:rgba(44, 44, 44, .5);
+	height: 50px;
+	width: 50px;
+	border-radius: 20%;
+	/*font-weight: bold;*/
+/*	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;*/
+}
 
 input {
 	margin: 2%;

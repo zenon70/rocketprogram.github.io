@@ -109,6 +109,13 @@ constellation map
 adjustable scale
 
 
+# AUDIO
+-------
+const audio = new Audio('audio_file.mp3');
+audio.volume = 0.2;
+audio.play();
+
+
 
 # CODE REFACTORING
 ------------------
@@ -245,16 +252,46 @@ initialization-only
 # PROGRAM FLOW (simplified logic)
 ---------------------------------
 
-populate body array, conversions, mostMassiveBody
-  cartes (local icrf)
-threejs setup & objects, resize(), fullscreen()
+starlightSlider.oninput = function()
+sunlightSlider.oninput = function()
+const popup, function menu(), function popup()
 
-systemPosition() LOOP BODY
-viewControl
+const GRAVITY
+
+add planets (cartes: local icrf)
+  process planet data (degrees to radians, flattening, etc)
+add rocket (cartes: local icrf)
+  process rocket data
+
+assign mostMassiveBody (sun)
+
+setup threejs
+  renderer, scenes, cameras, controls
+  add navBall
+  setup resizability, fullscreen
+  stars (changeable textures)
+  earth (changeable textures)
+  starlight
+  add planets
+  sunlight
+  let view
+  function addRocket()
+  addRocket()
+
+toggleSprites()
+toggleRocketAxes()
+
+function systemPosition()
+body[mostMassiveBody].mesh.position.x = body[mostMassiveBody].x * scale;
+systemPosition()
+
+function cycleView()
+cycleView()
 time
 
+rocket control initialization
 
---- begin main loop ---
+--- begin main() loop ---
 
 rocketControl()
 
@@ -284,11 +321,13 @@ keplerPosition() LOOP BODY
           drag equations...                     drag?
     eciToIcrf()                             eciToIcrf
 
+<-- push new objects into body array here, right before systemPosition()
+
 systemPosition() LOOP BODY
 time++
 displayText()
 
---- end main loop ---
+--- end main() loop ---
 
 preAnimate()
   drawEllipse
