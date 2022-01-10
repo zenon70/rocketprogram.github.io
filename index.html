@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v77</pre>
+		<pre id="version">v78</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -2879,32 +2879,35 @@ function displayText() {
 			keplerShow = body[view].kepler;
 		}
 		document.getElementById("hudDateOrbit").innerHTML = now.toISOString() +
+			"<br>period " + secondsToYears(
+				2*Math.PI / Math.sqrt(body[view].mu) * keplerShow.a**(3/2)) +
 			"<br>a " + (keplerShow.a / 1000).toFixed(3) + " km" +
 			"<br>e " + (keplerShow.e).toFixed(9) +
 			"<br>i " + (keplerShow.i * 180 / Math.PI).toFixed(7) + "°" +
 			"<br>Ω " + (keplerShow.lan * 180 / Math.PI).toFixed(5) + "°" +
 			"<br>ω " + (keplerShow.w * 180 / Math.PI).toFixed(7) + "°" +
 			"<br>M " + (keplerShow.meanAnom * 180 / Math.PI).toFixed(5) + "°" +
-			"<br>Ap " + (keplerShow.apoapsis / 1000).toFixed(3) + " km" +
-			"<br>Pe " + (keplerShow.periapsis / 1000).toFixed(3) + " km" +
-			"<br>v " + (keplerShow.v / 1000).toFixed(3) + " km/s" +
-			"<br>period " + secondsToYears(
-				2*Math.PI / Math.sqrt(body[view].mu) * keplerShow.a**(3/2));
+			"<br>v<sub>o</sub> " + (keplerShow.v / 1000).toFixed(3) + " km/s" +
+			"<br>Apo  " + (keplerShow.apoapsis / 1000).toFixed(3) + " km" +
+			"<br>Peri " + (keplerShow.periapsis / 1000).toFixed(3) + " km";
 	}
 
 	if (body[view].type === "Artificial") {
 		document.getElementById("hudGpsInfo").innerHTML =
-			"Mass " + body[view].mass.toExponential(3) + " kg" +
-			"<br>Ap " + ((body[view].kepler.apoapsis - body[vFocus].radiusEquator)
-				/ 1000).toFixed(3) + " km" +
-			"<br>Pe " + ((body[view].kepler.periapsis - body[vFocus].radiusEquator)
-				/ 1000).toFixed(3) + " km" +
+			"Alt " + (body[view].gps.alt / 1000).toFixed(6) + " km" +
+			"<br>v<sub>s</sub> " + (Math.sqrt(body[view].ecef.vx**2 +
+				body[view].ecef.vy**2 +
+				body[view].ecef.vz**2) / 1000).toFixed(6) + " km/s" +
+			"<br>drag " + body[view].drag.toExponential(2) + " m/s²" +
+			"<br>Mass " + body[view].mass.toExponential(3) + " kg" +
 			"<br>Lat " + (body[view].gps.lat * 180 / Math.PI).toFixed(6) + "°" +
 			"<br>Lon " + (body[view].gps.lon * 180 / Math.PI).toFixed(6) + "°" +
-			"<br>Alt " + (body[view].gps.alt / 1000).toFixed(6) + " km" +
-			"<br>v " + (Math.sqrt(body[view].ecef.vx**2 + body[view].ecef.vy**2 +
-				body[view].ecef.vz**2) / 1000).toFixed(6) + " km/s" +
-			"<br>drag " + body[view].drag.toExponential(2) + " m/s²";
+			"<br>Apo<sub>s</sub>  " + ((body[view].kepler.apoapsis -
+				body[vFocus].radiusEquator)
+				/ 1000).toFixed(3) + " km" +
+			"<br>Peri<sub>s</sub> " + ((body[view].kepler.periapsis -
+				body[vFocus].radiusEquator) / 1000).toFixed(3) + " km";
+
 	} else {
 		document.getElementById("hudGpsInfo").innerHTML =
 			"Mass " + body[view].mass.toExponential(3) + " kg" +

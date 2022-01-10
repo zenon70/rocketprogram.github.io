@@ -62,33 +62,38 @@ this program simulates rocket launches, orbits, and interplanetary spaceflight.
 
 symbol|meaning
 ------|-------
+period| orbital period, one year is 365.2422 days
 a     | semi-major axis
 e     | eccentricity
 i     | inclination
 Ω     | longitude of the ascending node
 ω     | argument of periapsis
 M     | mean anomaly
-Ap    | apoapsis altitude from center of mass
-Pe    | periapsis altitude from center of mass
-kms   | kilometers per second*
+vo    | orbital velocity kilometers per second*
+Apo   | apoapsis distance from center of mass
+Peri  | periapsis distance from center of mass
 
 
-\* the kms listed with orbital info is orbital speed. this is the ECI (earth centered inertial) frame, which means it does not consider the spin of the planet/moon/etc.
+
+\* the kms listed with orbital info is orbital speed. this is the ECI (earth centered inertial) frame, which means it does NOT consider the spin of the planet/moon/etc.
 
 **surface info**
 
-abbv|meaning
-----|-------
-mass| total mass of object
-Ap  | apoapsis altitude from MSL (mean sea level) at Equator
-Pe  | periapsis altitude from MSL (mean sea level) at Equator
-Lat | latitude
-Lon | longitude
-Alt | altitude from MSL (mean sea level) at your location
-kms | kilometers per second*
-drag| newtons of force
+abbv |meaning
+-----|-------
+Alt  | altitude from MSL (mean sea level) at your location
+vs   | surface velocity kilometers per second*
+drag | newtons of force
+mass | total mass of object
+Lat  | latitude
+Lon  | longitude
+Apos | surface apoapsis altitude from MSL at Equator
+Peris| surface periapsis altitude from MSL at Equator
 
-\* the kms listed with gps info is surface speed. this is the ECEF (earth-centered earth-fixed) frame, and it does consider the spin of the planet/moon/etc.
+
+\* the kms listed with gps info is surface speed. this is the ECEF (earth-centered earth-fixed) frame, and it DOES consider the spin of the planet/moon/etc.
+
+MSL: Mean Sea Level
 
 ### Reference Plane for objects orbiting the sun
 this setting allows you to change the data output on the screen for the object you are currently viewing.

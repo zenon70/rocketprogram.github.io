@@ -3,9 +3,8 @@
 # IN-PROGRESS
 -------------
 
-view order
-isNaN safety before integration
 stage separation
+isNaN safety before integration
 button layout, throttle sliders (main & spin)
 
 
