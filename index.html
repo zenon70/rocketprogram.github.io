@@ -1095,6 +1095,10 @@ function addBody() {
 }
 
 
+function separate() {
+	
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // prepare for systemPosition()
@@ -1586,28 +1590,56 @@ function addRocket(i) {
 	body[i].stage2.position.set(0, 27.6 * scale, 0);
 	body[i].mesh.add(body[i].stage2);
 
-	// fairing base expansion section
-	body[i].fairingBase = new THREE.Mesh(new THREE.CylinderGeometry(
-		2.6 * scale, 1.83 * scale, 1.3 * scale, 16),
-		new THREE.MeshLambertMaterial());
-	body[i].fairingBase.position.set(0, 34.55 * scale, 0);
-	body[i].mesh.add(body[i].fairingBase);
+	// fairing base expansion section, Nadir +Z
+	body[i].fairingBaseNadir = new THREE.Mesh(new THREE.CylinderGeometry(
+		2.6 * scale, 1.83 * scale, 1.3 * scale, 16, 1, true, Math.PI / 2, Math.PI),
+		new THREE.MeshLambertMaterial({side: THREE.DoubleSide}));
+	body[i].fairingBaseNadir.position.set(0, (13.8/2 + 1.3/2) * scale, 0);
+	body[i].stage2.add(body[i].fairingBaseNadir);
 
-	// fairing mid section
-	body[i].fairingMid = new THREE.Mesh(new THREE.CylinderGeometry(
-		2.6 * scale, 2.6 * scale, 6.7 * scale, 16),
-		new THREE.MeshLambertMaterial());
-	body[i].fairingMid.position.set(0, 38.55 * scale, 0);
-	body[i].mesh.add(body[i].fairingMid);
+	// fairing base expansion section, Zenith -Z
+	body[i].fairingBaseZenith = new THREE.Mesh(new THREE.CylinderGeometry(
+		2.6 * scale, 1.83 * scale, 1.3 * scale, 16, 1, true, Math.PI + Math.PI / 2,
+		Math.PI),
+		new THREE.MeshLambertMaterial({side: THREE.DoubleSide}));
+	body[i].fairingBaseZenith.position.set(0, (13.8/2 + 1.3/2) * scale, 0);
+	body[i].stage2.add(body[i].fairingBaseZenith);
 
-	// fairing nose aerodynamic shape
-	body[i].fairingNose = new THREE.Mesh(new THREE.SphereGeometry(
-		2.6 * scale, 16, 8, 0, 2 * Math.PI, 0, Math.PI / 2),
-		new THREE.MeshLambertMaterial());
-	body[i].fairingNose.position.set(0, 41.9 * scale, 0);
-	//body[i].fairingNose.rotation.set(0, Math.PI / 2, 0); // for texture
-	body[i].fairingNose.scale.y = 2;
-	body[i].mesh.add(body[i].fairingNose);
+
+	// fairing mid section, Nadir
+	body[i].fairingMidNadir = new THREE.Mesh(new THREE.CylinderGeometry(
+		2.6 * scale, 2.6 * scale, 6.7 * scale, 16, 1, true, Math.PI / 2, Math.PI),
+		new THREE.MeshLambertMaterial({side: THREE.DoubleSide}));
+	body[i].fairingMidNadir.position.set(0, (1.3/2 + 6.7/2) * scale, 0);
+	body[i].fairingBaseNadir.add(body[i].fairingMidNadir);
+
+	// fairing mid section, Zenith
+	body[i].fairingMidZenith = new THREE.Mesh(new THREE.CylinderGeometry(
+		2.6 * scale, 2.6 * scale, 6.7 * scale, 16, 1, true, Math.PI + Math.PI / 2,
+		Math.PI),
+		new THREE.MeshLambertMaterial({side: THREE.DoubleSide}));
+	body[i].fairingMidZenith.position.set(0, (1.3/2 + 6.7/2) * scale, 0);
+	body[i].fairingBaseZenith.add(body[i].fairingMidZenith);
+
+
+
+	// fairing nose aerodynamic shape, Nadir
+	body[i].fairingNoseNadir = new THREE.Mesh(new THREE.SphereGeometry(
+		2.6 * scale, 16, 8, Math.PI, Math.PI, 0, Math.PI / 2),
+		new THREE.MeshLambertMaterial({side: THREE.DoubleSide}));
+	body[i].fairingNoseNadir.position.set(0, (6.7/2) * scale, 0);
+	//body[i].fairingNoseNadir.rotation.set(0, Math.PI / 2, 0); // for texture
+	body[i].fairingNoseNadir.scale.y = 2;
+	body[i].fairingMidNadir.add(body[i].fairingNoseNadir);
+
+	// fairing nose aerodynamic shape, Zenith
+	body[i].fairingNoseZenith = new THREE.Mesh(new THREE.SphereGeometry(
+		2.6 * scale, 16, 8, 0, Math.PI, 0, Math.PI / 2),
+		new THREE.MeshLambertMaterial({side: THREE.DoubleSide}));
+	body[i].fairingNoseZenith.position.set(0, (6.7/2) * scale, 0);
+	//body[i].fairingNoseZenith.rotation.set(0, Math.PI / 2, 0); // for texture
+	body[i].fairingNoseZenith.scale.y = 2;
+	body[i].fairingMidZenith.add(body[i].fairingNoseZenith);
 
 
 		//body[i].mesh.receiveShadow = true;
