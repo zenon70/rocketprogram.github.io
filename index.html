@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v78</pre>
+		<pre id="version">v79</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -49,6 +49,8 @@
 		<div class="popup">
 			<div class="blocker" onclick="hidePopup()"></div>
 			<div class="contents">
+				<h3>Stage Separation</h3>
+				<button class="menuButton" onclick="separate()">separate</button>
 				<h3>Multiple Rockets</h3>
 				<button class="menuButton" onclick="addBody()">add rocket</button>
 				<h3>Visual Helpers</h3>
