@@ -10,6 +10,8 @@
 	visible: true;
 }
 
+
+
 #version {
 	position: fixed;
 	top: 1px;
@@ -261,6 +263,11 @@ input {
 	accent-color: gray;
 }
 
+label {
+	margin: 2%;
+	padding: 2%;
+	vertical-align: middle;
+}
 
 
 #readme > * {

@@ -102,6 +102,24 @@ this setting allows you to change the data output on the screen for the object y
 
 - the ICRF frame is fixed to the stars, and is based on the earth's equator. this is not usually used in reference to objects orbiting the sun.
 
+### Axes
+For Spacecraft:
+- Red points in the Forward +X direction (-X is Aft), the axis of roll.
+- Blue points Nadir +Z (and -Z is Zenith), the axis of yaw.
+- Green points Starboard +Y (and -Y is Port), the axis of pitch.
+
+For Natural Bodies:
+- shows ICRF axes (long): Blue is +Z and points roughly to the North star (Polaris). Red is +X and points to the Vernal Point (the imaginary line drawn from Earth to the Sun at the moment of the Spring Equinox). Green is +Y and points to 90° Right Ascension. These axes are used for reference. They are fixed to the stars.
+- and ECEF axes (short): Blue is +Z goes through the positive pole (usually called north, more on that later). Red is +X and goes through the Prime Meridian, and is the center point for most maps. Green is +Y and goes through 90° East.
+
+The IAU convention states that the "north" pole of a planet or moon or object is whichever pole is located on the same side of the solar system's invariable plane as earth's north pole. This usually means that its north pole is its positive pole, but not for 299, 799, and 999, for example.
+
+However, this program does not follow that convention, because it is arbitrary and breaks other definitions like the definitions of east and west.
+
+Therefore, instead, this program considers a planet, moon, or object's "north" pole to be its positive pole, which is defined by its rotation. If standing on a planet facing east, the positive pole will be to the left. This is the convention used for exoplanets, and thus is a uniform standard that has no exceptions, and thus is easier to rely upon and use for navigation. It also does not require redefining east and west. For example, in this program, when launching, pointing east will _always_ be an easier orbit to acheive because it will always be a prograde orbit.
+
+Note that which way the sun rises and sets is another matter. Usually, if a planet's "north" pole is its positive pole, the sun should rise in the east. Yet some planets rotate so slowly that the sunrise and sunset may also be a matter of not just the planet's own rotation, but also its revolution around the sun. For example, 199 has an other-worldly sunrise sunset pattern.
+
 ### navigation tips
 
 - if you feel *upside down*, you can spin the view. tap (or click) and hold and make a circular motion. go clockwise or counter-clockwise to rotate the view. astronauts are always faced with the challenge of determining which way is _up_. if the ISS (International Space Station) had an axes helper, it would show red forward, roughly east, and blue pointing down towards earth, and green to the right, starboard, which is roughly south because it heads east.

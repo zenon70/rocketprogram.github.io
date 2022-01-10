@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v76</pre>
+		<pre id="version">v77</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -55,14 +55,17 @@
 				<input type="checkbox" id="sprites" onchange="toggleSprites()">
 				<label for="sprites">Sprites</label>
 				<br>
-				<input type="checkbox" id="rocketAxes" onchange="toggleRocketAxes()">
-				<label for="rocketAxes">Rocket Axes</label>
-				<br>
 				<input type="checkbox" id="allOrbits" onchange="toggleAllOrbits()">
 				<label for="allOrbits">All Orbits</label>
 				<br>
 				<input type="checkbox" id="localOrbits" onchange="toggleLocalOrbits()">
 				<label for="localOrbits">Local Orbits</label>
+				<br>
+				<button class="menuButton" id="localAxes" onclick="toggleAxes()">Object Axes</button>
+				<label for="localAxes">Toggle axes for currently viewed object</label>
+				<br>
+				<button class="menuButton" id="ssbAxes" onclick="toggleSsbAxes()">SSB Axes</button>
+				<label for="ssbAxes">Toggle Solar System Barycenter ICRF Axes</label>
 				<br>
 				<h3>Starlight Intensity (ambient light)</h3>
 				<div id="starlightOutput" class="slider">300%</div>
@@ -1178,6 +1181,13 @@ controls.noPan = true;
 
 controls.update;
 
+	// create solar system barycenter icrf axes helper
+	let ssbAxesHelperIcrf = new THREE.AxesHelper(
+		body[mostMassiveBody].radiusEquator * 7 * scale);
+	// add to scene so it doesn't rotate with parent. must update position.
+	scene.add(ssbAxesHelperIcrf);
+	ssbAxesHelperIcrf.visible = false;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // gui overlay scene
@@ -1476,24 +1486,27 @@ for (let i = body.length - 1; i > -1; i--) {
 	body[i].mesh.rotateY(Math.PI / 2 + body[i].primeMeridian);
 
 	scene.add(body[i].mesh);
-/*
-	// create planet helper
-	body[i].axesHelper = new THREE.AxesHelper(body[i].radiusEquator * 1.5*scale);
+
+	// create ecef axes helper
+	body[i].axesHelper = new THREE.AxesHelper(body[i].radiusEquator * 1.5 *
+		scale);
 	// same config as spheroid
 	body[i].axesHelper.rotation.set(Math.PI / 2, 0, -Math.PI / 2 +
 		body[i].declination);
 	body[i].axesHelper.rotateOnWorldAxis(zAxis, body[i].rightAscension);
 	body[i].axesHelper.rotateY(Math.PI / 2 + body[i].primeMeridian);
-
 	// rotate to appear as z-up (space axes convention)
 	body[i].axesHelper.rotateX(-Math.PI / 2);
 	body[i].mesh.attach(body[i].axesHelper);
+	body[i].axesHelper.visible = false;
 
-	// axes icrf. set position manually!
-	body[i].axesHelperICRF = new THREE.AxesHelper(
+	// create icrf axes helper
+	body[i].axesHelperIcrf = new THREE.AxesHelper(
 		body[i].radiusEquator * 3 * scale);
-	scene.add(body[i].axesHelperICRF);
-*/
+	// add to scene so it doesn't rotate with parent. must update position.
+	scene.add(body[i].axesHelperIcrf);
+	body[i].axesHelperIcrf.visible = false;
+
 
 
 	{
@@ -1677,14 +1690,32 @@ function toggleSprites() {
 	}
 }
 
-document.querySelector("#rocketAxes").checked = false;
-function toggleRocketAxes() {
-	if (body[rocket].axesHelper.visible === true) {
-		body[rocket].axesHelper.visible = false;
-		body[rocket].thrustArrow.visible = false;
+//document.querySelector("#axes").checked = false;
+function toggleAxes() {
+	if (body[view].type === "Artificial") {
+		if (body[view].axesHelper.visible === true) {
+			body[view].axesHelper.visible = false;
+			body[view].thrustArrow.visible = false;
+		} else {
+			body[view].axesHelper.visible = true;
+			body[view].thrustArrow.visible = true;
+		}
 	} else {
-		body[rocket].axesHelper.visible = true;
-		body[rocket].thrustArrow.visible = true;
+		if (body[view].axesHelper.visible === true) {
+			body[view].axesHelper.visible = false;
+			body[view].axesHelperIcrf.visible = false;
+		} else {
+			body[view].axesHelper.visible = true;
+			body[view].axesHelperIcrf.visible = true;
+		}
+	}
+}
+
+function toggleSsbAxes() {
+	if (ssbAxesHelperIcrf.visible) {
+		ssbAxesHelperIcrf.visible = false;
+	} else {
+		ssbAxesHelperIcrf.visible = true;
 	}
 }
 
@@ -3056,13 +3087,15 @@ function preAnimate() {
 ////////////////////////////////////////////////////////////////////////////////
 // HELPERS
 
-	/*
+
 	// icrf
-	for (let i = 0; i < body.length; i++) {
-		if (!body[i].axesHelperICRF) continue;
-		body[i].axesHelperICRF.position.copy(body[i].mesh.position);
+	for (let i = body.length - 1; i > -1; i--) {
+		if (body[i].axesHelperIcrf) {
+			body[i].axesHelperIcrf.position.copy(body[i].mesh.position);
+		}
 	}
-	*/
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
