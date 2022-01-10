@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v74</pre>
+		<pre id="version">v75</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -1765,28 +1765,12 @@ systemPosition();
 
 ////////////////////////////////////////////////////////////////////////////////
 // view control
-view = rocket - 1;
+view = rocket;
 
-/*
-how to dynamically organize view:
-0, sun
-for all sun orbiters
-	lowest periapsis to highest
-		what if 2+ are same? lowest mass first, highest drag.. etc.. then arbitrary
-for all local orbiters, same thing
-i.e.
-0, 199, 299, solarSatLow, 399, satLow, satHigh, moon, solarSatHigh, 499, 401...
-*/
-function viewSort() {
-	for (let i = body.length - 1; i > -1; i--) {
-		if (body[i].focus === 0) {
-			
-		}
-	}
-}
-
-
-
+// dynamic and intuitive view order, by periapsis
+// periapsis chosen due to higher drag of satellites with low periapsis.
+// 999 seems to appear out of order due to sort by periapsis
+// to "fix", change it to measure by semi-major axis.
 
 function viewNext() {
 
@@ -1855,33 +1839,44 @@ function viewNext() {
 }
 
 
-
-
-
-function viewNext_depricated() {
-	if (view < body.length - 1) {
-		view++;
-	} else { view = 0; }
-	// don't look at the sun
-	//if (view === 0) view++;
-	viewFinalize();
-}
 function viewPrevious() {
-	if (view < 1) {
-		view = body.length - 1;
-	} else { view--; }
+
+	let potentialResult = null;
+	let tooLow = 0;
+	let tooHigh = Infinity; // in case view is sun
+	let focusNow = mostMassiveBody; // in case view is sun
+	if (view !== mostMassiveBody) {
+		tooHigh = body[view].kepler.periapsis;
+		focusNow = body[view].focus;
+	}
+
+	function getLower() {
+		for (let i = body.length - 1; i > 0; i--) { // skip sun
+			if (body[i].focus === focusNow &&
+				body[i].kepler.periapsis < tooHigh &&
+				body[i].kepler.periapsis > tooLow) {
+				potentialResult = i;
+				tooLow = body[i].kepler.periapsis;
+			}
+		}
+	}
+	getLower();
+
+	while (potentialResult !== null) {
+		focusNow = potentialResult;
+		potentialResult = null;
+		tooLow = 0;
+		tooHigh = Infinity;
+		getLower();
+	}
+	
+	view = focusNow;
 	viewFinalize();
 }
+
+
 function viewFinalize() {
 
-
-/*
-	if (body[view].type === "Artificial") {
-		document.getElementById("hudGpsInfo").style.visibility = "visible";
-	} else {
-		document.getElementById("hudGpsInfo").style.visibility = "hidden";
-	}
-*/
 	controls.target = body[view].mesh.position;
 
 	if (body[view].type === "Natural") {
@@ -1938,7 +1933,7 @@ function viewFinalize() {
 
 	//body[view].mesh.attach(camera);
 }
-viewNext_depricated();
+viewFinalize();
 
 
 

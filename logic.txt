@@ -573,3 +573,46 @@ so 1.6 short of 70m.
 21.3 + 12.6 + 1.3 + 6.7/2 = 38.55 core
 21.3 + 12.6 + 1.3 + 6.7 = 41.9 nose
 
+
+# viewNext() logic
+------------------
+
+next is the object that's orbiting the same thing with the next highest periapsis,
+or if there are no such things, the object that's orbiting the focus at the next highest periapsis,
+or if there are no such things, the object that's orbiting THAT focus at the next highest periapsis
+
+(that's actually over-simplified, as i found out.)
+
+next is the object that's orbiting the same thing with the next highest periapsis,
+unless the object being viewed has children, in which case the child with the lowest periapsis, unless THAT has its own children, etc.
+or if there are no such things, the object that's orbiting the focus at the next highest periapsis,
+or if there are no such things, the object that's orbiting THAT focus at the next highest periapsis
+if there are no such things, then the thing that has no focus.
+
+previous is the object that's orbiting the same thing with the next LOWEST periapsis,
+or if that thing with the lower periapsis has children, the child with the highest periapsis,
+or if THAT has children, then its child with the highest periapsis, etc.,
+or if there are no such things, the focus,
+or if there is no focus, then the thing that has the highest periapsis, unless it has children, in which case the child with the highest periapsis, unless it has children, etc.
+
+easier logic for viewPrev():
+
+look for something with the same focus, lower periapsis.
+	if you find 2+ things, select the one with the highest periapsis
+		found anything?
+			yes: check if it has children
+			no: the focus is the answer
+
+checking if it has children:
+repeat the steps above, using the new child object as the focus,
+	with a lower periapsis than Infinity
+
+what if the correct answer is the mostMassiveBody i.e. sun?
+it works because it defaults out
+
+what if the view object is the mostMassiveBody i.e. sun?
+then use that as the focus, with tooHigh = Infinity.
+
+what if there is only 1 thing to view?
+
+what if there are no things to view?
