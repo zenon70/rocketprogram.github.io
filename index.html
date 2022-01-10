@@ -8,16 +8,16 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v72</pre>
+		<pre id="version">v74</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
-		<p class="hud" class="rocketPanel" id="hudFuel">0</p>
-		<p class="hud" class="rocketPanel" id="hudThrottle">0%<br>off</p>
+		<p class="hud rocketPanel" id="hudFuel">0</p>
+		<p class="hud rocketPanel" id="hudThrottle">0%<br>off</p>
 		<p class="hud" id="hudStep">1</p>
 		<p class="hud" id="hudView">rocket</p>
-		<p class="hud" class="rocketPanel" id="hudYaw">0<br>yaw</p>
-		<p class="hud" class="rocketPanel" id="hudPitch">0<br>pitch</p>
-		<p class="hud" class="rocketPanel" id="hudRoll">0<br>roll</p>
+		<p class="hud rocketPanel" id="hudYaw">0<br>yaw</p>
+		<p class="hud rocketPanel" id="hudPitch">0<br>pitch</p>
+		<p class="hud rocketPanel" id="hudRoll">0<br>roll</p>
 
 		<script src="threejs/three129.min.js"></script>
 		<script src="threejs/TrackballControls129.js"></script>
@@ -25,10 +25,10 @@
 		<script src="orbMech61.js"></script>
 		<script src="tilter14.js"></script>
 
-		<button class="onScreenButton" class="rocketPanel" id="throttleOn" onclick="throttleOn()">throttle on</button>
-		<button class="onScreenButton" class="rocketPanel" id="throttleUp" onclick="throttleUp()">throttle up (a)</button>
-		<button class="onScreenButton" class="rocketPanel" id="throttleDown" onclick="throttleDown()">throttle down (z)</button>
-		<button class="onScreenButton" class="rocketPanel" id="throttleOff" onclick="throttleOff()">throttle off (x)</button>
+		<button class="onScreenButton rocketPanel" id="throttleOn" onclick="throttleOn()">throttle on</button>
+		<button class="onScreenButton rocketPanel" id="throttleUp" onclick="throttleUp()">throttle up (a)</button>
+		<button class="onScreenButton rocketPanel" id="throttleDown" onclick="throttleDown()">throttle down (z)</button>
+		<button class="onScreenButton rocketPanel" id="throttleOff" onclick="throttleOff()">throttle off (x)</button>
 
 		<button class="onScreenButton" id="faster" onclick="faster()">double time (t)</button> 
 		<button class="onScreenButton" id="slower" onclick="slower()">halve time (g)</button>
@@ -38,13 +38,13 @@
 		<button class="onScreenButton" id="menuButton" onclick="menu()">menu</button>
 		<button class="onScreenButton" id="toggleFullscreen" onclick="toggleFullscreen()">full screen</button>
 
-		<button class="onScreenButton" class="rocketPanel" id="up" onclick="up()">pitch up (e)</button>
-		<button class="onScreenButton" class="rocketPanel" id="down" onclick="down()">pitch down (d)</button>
-		<button class="onScreenButton" class="rocketPanel" id="left" onclick="left()">yaw left (s)</button>
-		<button class="onScreenButton" class="rocketPanel" id="right" onclick="right()">yaw right (f)</button>
-		<button class="onScreenButton" class="rocketPanel" id="rollLeft" onclick="rollLeft()">roll left (w)</button>
-		<button class="onScreenButton" class="rocketPanel" id="rollRight" onclick="rollRight()">roll right (r)</button>
-		<button class="onScreenButton" class="rocketPanel" id="stopSpin" onclick="stopSpin()">stop rotation (q)</button>
+		<button class="onScreenButton rocketPanel" id="up" onclick="up()">pitch up (e)</button>
+		<button class="onScreenButton rocketPanel" id="down" onclick="down()">pitch down (d)</button>
+		<button class="onScreenButton rocketPanel" id="left" onclick="left()">yaw left (s)</button>
+		<button class="onScreenButton rocketPanel" id="right" onclick="right()">yaw right (f)</button>
+		<button class="onScreenButton rocketPanel" id="rollLeft" onclick="rollLeft()">roll left (w)</button>
+		<button class="onScreenButton rocketPanel" id="rollRight" onclick="rollRight()">roll right (r)</button>
+		<button class="onScreenButton rocketPanel" id="stopSpin" onclick="stopSpin()">stop rotation (q)</button>
 
 		<div class="popup">
 			<div class="blocker" onclick="hidePopup()"></div>
@@ -1766,7 +1766,99 @@ systemPosition();
 ////////////////////////////////////////////////////////////////////////////////
 // view control
 view = rocket - 1;
+
+/*
+how to dynamically organize view:
+0, sun
+for all sun orbiters
+	lowest periapsis to highest
+		what if 2+ are same? lowest mass first, highest drag.. etc.. then arbitrary
+for all local orbiters, same thing
+i.e.
+0, 199, 299, solarSatLow, 399, satLow, satHigh, moon, solarSatHigh, 499, 401...
+*/
+function viewSort() {
+	for (let i = body.length - 1; i > -1; i--) {
+		if (body[i].focus === 0) {
+			
+		}
+	}
+}
+
+
+
+
 function viewNext() {
+
+	let next = null;
+	let highPeri = Infinity;
+	let localView = view;
+
+	let lowPeri = 0; // in case view is sun
+	let localFocus = mostMassiveBody; // in case view is sun
+	if (localView !== mostMassiveBody) {
+		lowPeri = body[localView].kepler.periapsis;
+		localFocus = body[localView].focus;
+	}
+
+	let child = null;
+	let lowOrbit = Infinity;
+
+	let ignoreChildren = false;
+
+
+	function getHigher() {
+		for (let i = body.length - 1; i > 0; i--) { // skip sun
+			// catch things orbiting what is being viewed
+			if (body[i].focus === localView && body[i].kepler.periapsis < lowOrbit &&
+				ignoreChildren === false) {
+				child = i;
+				lowOrbit = body[i].kepler.periapsis;
+				next = null;
+			}
+			// check for things further out
+			else if (child === null && body[i].focus === localFocus &&
+				body[i].kepler.periapsis > lowPeri &&
+				body[i].kepler.periapsis < highPeri) {
+				highPeri = body[i].kepler.periapsis;
+				next = i;
+			}
+		}
+	}
+	getHigher(localFocus);
+
+	while (next === null) {
+		if (child !== null) {
+			// it is the lowest peri, but does it have children? reset and rerun
+			localFocus = localView;
+			localView = child;
+			highPeri = Infinity;
+			lowPeri = 0;
+			child = null;
+			lowOrbit = Infinity;
+			getHigher();
+		}
+		// nothing is further out in this gravity area, so go to its parent system
+		else if (localFocus !== mostMassiveBody) {
+			localView = localFocus;
+			lowPeri = body[localView].kepler.periapsis;
+			localFocus = body[localFocus].focus;
+			ignoreChildren = true;
+			getHigher();
+		} else {
+			next = mostMassiveBody;
+		}
+	}
+
+	view = next;
+	viewFinalize();
+}
+
+
+
+
+
+function viewNext_depricated() {
 	if (view < body.length - 1) {
 		view++;
 	} else { view = 0; }
@@ -1823,22 +1915,30 @@ function viewFinalize() {
 			Math.round(- body[view].ySpin * 10) + "<br>yaw";
 		document.getElementById("hudRoll").innerHTML =
 			Math.round(body[view].zSpin * 10) + "<br>roll";
-		//document.getElementsByClassName("rocketPanel").style.visibility = "visible";
+
+		let panel = document.getElementsByClassName("rocketPanel");
+		for (let i = panel.length - 1; i > -1; i--) {
+			panel[i].style.visibility = "visible";
+		}
 		
 	} else {
 		scene2.visible = false;
-		//document.getElementsByClassName("rocketPanel").style.visibility = "hidden";
+		let panel = document.getElementsByClassName("rocketPanel");
+		for (let i = panel.length - 1; i > -1; i--) {
+			panel[i].style.visibility = "hidden";
+		}/*
 		document.getElementById("hudFuel").innerHTML = "";
 		document.getElementById("hudPitch").innerHTML = "";
 		document.getElementById("hudYaw").innerHTML = "";
 		document.getElementById("hudRoll").innerHTML = "";
+		*/
 	}
 
 	throttleShow();
 
 	//body[view].mesh.attach(camera);
 }
-viewNext();
+viewNext_depricated();
 
 
 

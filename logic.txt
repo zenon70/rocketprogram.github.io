@@ -3,7 +3,10 @@
 # IN-PROGRESS
 -------------
 
-
+view order
+isNaN safety before integration
+stage separation
+button layout, throttle sliders (main & spin)
 
 
 
@@ -543,22 +546,30 @@ STAGE 1
 
 
 
-# SIMULATION 3D MODEL
----------------------
-
-COMPLETE
-10.4 = 5.2 x 2
-7.2
-1.4
-13.8
-47.7 / 2 = 23.85
+# FALCON 9 3D MODELING
+----------------------
 
 
-23.85 + 13.8/2 = 30.75 stage 2 start
+3.66 / 2 = 1.83 rocket width
+5.2  / 2 = 2.6  fairing width
 
-23.85 + 13.8 + 1.4/2 = 38.35 fairingBase start
+FAIRING
+5.2  nose stretched x2
+6.7  core
+1.3  expansion
+----
+13.2
 
-23.85 + 13.8 + 1.4 + 7.2/2 = 42.65 fairingMid start
+ 42.6 stage1
++12.6 stage2
++13.2 fairing
+-----
+ 68.4
+so 1.6 short of 70m.
 
-23.85 + 13.8 + 1.4 + 7.2 = 46.25 nose start
+42.6 / 2 = 21.3 
+21.3 + 6.3 = 27.6 stage 2
+21.3 + 12.6 + 1.3/2 = 34.55 expansion
+21.3 + 12.6 + 1.3 + 6.7/2 = 38.55 core
+21.3 + 12.6 + 1.3 + 6.7 = 41.9 nose
 
