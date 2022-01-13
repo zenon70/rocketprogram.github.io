@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v81</pre>
+		<pre id="version">v82</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -2347,6 +2347,8 @@ function rocketControl() {
 		if (body[view].type === "Artificial") {
 			body[view].xSpin += spinPower;
 			keyDelay.KeyE = Date.now();
+			document.getElementById("hudPitch").innerHTML =
+				Math.round(body[view].xSpin * 10) + "<br>pitch";
 		}
 	}
 
@@ -2355,6 +2357,8 @@ function rocketControl() {
 		if (body[view].type === "Artificial") {
 			body[view].zSpin += spinPower;
 			keyDelay.KeyS = Date.now();
+			document.getElementById("hudYaw").innerHTML =
+				Math.round(- body[view].zSpin * 10) + "<br>yaw";
 		}
 	}
 
@@ -2363,6 +2367,8 @@ function rocketControl() {
 		if (body[view].type === "Artificial") {
 			body[view].xSpin -= spinPower;
 			keyDelay.KeyD = Date.now();
+			document.getElementById("hudPitch").innerHTML =
+				Math.round(body[view].xSpin * 10) + "<br>pitch";
 		}
 	}
 
@@ -2371,6 +2377,8 @@ function rocketControl() {
 		if (body[view].type === "Artificial") {
 			body[view].zSpin -= spinPower;
 			keyDelay.KeyF = Date.now();
+			document.getElementById("hudYaw").innerHTML =
+				Math.round(- body[view].zSpin * 10) + "<br>yaw";
 		}
 	}
 
@@ -2379,6 +2387,8 @@ function rocketControl() {
 		if (body[view].type === "Artificial") {
 			body[view].ySpin -= spinPower;
 			keyDelay.KeyW = Date.now();
+			document.getElementById("hudRoll").innerHTML =
+				Math.round(body[view].ySpin * 10) + "<br>roll";
 		}
 	}
 
@@ -2387,6 +2397,8 @@ function rocketControl() {
 		if (body[view].type === "Artificial") {
 			body[view].ySpin += spinPower;
 			keyDelay.KeyR = Date.now();
+			document.getElementById("hudRoll").innerHTML =
+				Math.round(body[view].ySpin * 10) + "<br>roll";
 		}
 	}
 
@@ -2397,6 +2409,12 @@ function rocketControl() {
 			body[view].ySpin = 0;
 			body[view].zSpin = 0;
 			keyDelay.KeyQ = Date.now();
+			document.getElementById("hudPitch").innerHTML =
+				Math.round(body[view].xSpin * 10) + "<br>pitch";
+			document.getElementById("hudYaw").innerHTML =
+				Math.round(- body[view].zSpin * 10) + "<br>yaw";
+			document.getElementById("hudRoll").innerHTML =
+				Math.round(body[view].ySpin * 10) + "<br>roll";
 		}
 	}
 
@@ -2404,18 +2422,21 @@ function rocketControl() {
 		if (body[view].type === "Artificial") {
 			throttleUp();
 			keyDelay.KeyA = Date.now();
+			throttleShow();
 		}
 	}
 	if (keyState.KeyZ && Date.now() - keyDelay.KeyZ > repeatDelay) {
 		if (body[view].type === "Artificial") {
 			throttleDown();
 			keyDelay.KeyZ = Date.now();
+			throttleShow();
 		}
 	}
 	if (keyState.KeyX && Date.now() - keyDelay.KeyX > repeatDelay) {
 		if (body[view].type === "Artificial") {
 			throttleOff();
 			keyDelay.KeyX = Date.now();
+			throttleShow();
 		}
 	}
 
