@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v79</pre>
+		<pre id="version">v80</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -74,6 +74,9 @@
 				<h3>Earth Graphics</h3>
 				<input type="checkbox" id="clouds" onchange="toggleClouds()">
 				<label for="clouds">Clouds</label>
+				<br>
+				<input type="checkbox" id="lights" onchange="toggleLights()">
+				<label for="lights">City Lights</label>
 				<br>
 				<h3>Starlight Intensity (ambient light)</h3>
 				<div id="starlightOutput" class="slider">300%</div>
@@ -377,13 +380,13 @@
 
 
 document.getElementById("starlight").value = 30;
-document.getElementById("starlightOutput").innerHTML = "300%";
+document.getElementById("starlightOutput").innerHTML = "600%";
 let starlightControl = 0.3;
 let starlightSlider = document.getElementById("starlight");
 let starlightOutput = document.getElementById("starlightOutput");
 // Update the current slider value (each time you drag the slider handle)
 starlightSlider.oninput = function() {
-	starlightOutput.innerHTML = this.value * 10 + "%";
+	starlightOutput.innerHTML = this.value * 20 + "%";
 	starlightControl = this.value / 100;
 	if (body[view].name !== "10") {
 		starlight.intensity = starlightControl;
@@ -1464,7 +1467,18 @@ for (let i = body.length - 1; i > -1; i--) {
 
 	let material;
 
-	if (body[i].map !== undefined && body[i].map !== null) {
+ if (body[i].map !== undefined && body[i].map !== null && i === earth) {
+		material = new THREE.MeshLambertMaterial({
+			map: new THREE.TextureLoader().load(body[i].map),
+			emissive: 0xffffff,
+			emissiveIntensity: 0,
+			emissiveMap: new THREE.TextureLoader().load("graphics/planet3lights_2k.jpg")
+		});
+
+		material.map.magFilter = THREE.NearestFilter;
+		material.map.minFilter = THREE.NearestFilter;
+
+	} else if (body[i].map !== undefined && body[i].map !== null) {
 		material = new THREE.MeshLambertMaterial({
 			map: new THREE.TextureLoader().load(body[i].map)});
 
@@ -1483,14 +1497,21 @@ for (let i = body.length - 1; i > -1; i--) {
 		material);
 	
 	if (i === earth) {
-			
+/*
+		//body[i].mesh.material.emissive = 0xffffff;
+		body[i].mesh.material.emissiveMap =
+			new THREE.TextureLoader().load("graphics/planet3lights_2k.jpg");
+		//body[i].mesh.material.emissiveIntensity = 1;
+		
+*/
+		// clouds
 		let material2 =	new THREE.MeshLambertMaterial({
 			side: THREE.DoubleSide,
 			map: new THREE.TextureLoader().load("graphics/clouds512.png"),
 			transparent: true
 		});
-		material.map.magFilter = THREE.NearestFilter;
-		material.map.minFilter = THREE.NearestFilter;
+		//material2.map.magFilter = THREE.NearestFilter;
+		//material2.map.minFilter = THREE.NearestFilter;
 		
 		// 8500 is scale height, * 3.75 so it doesn't shred (clip) on the boxy globe
 		body[i].clouds = new THREE.Mesh(new THREE.SphereGeometry(
@@ -1502,7 +1523,6 @@ for (let i = body.length - 1; i > -1; i--) {
 		
 		body[i].mesh.add(body[i].clouds);
 		body[i].clouds.visible = false;
-
 	}
 
 	// shadows
@@ -1846,6 +1866,16 @@ function toggleClouds() {
 		body[earth].clouds.visible = true;
 	} else {
 		body[earth].clouds.visible = false;
+	}
+}
+
+
+document.querySelector("#lights").checked = false;
+function toggleLights() {
+	if (body[earth].mesh.material.emissiveIntensity === 0) {
+		body[earth].mesh.material.emissiveIntensity = 0.7;
+	} else {
+		body[earth].mesh.material.emissiveIntensity = 0;
 	}
 }
 
