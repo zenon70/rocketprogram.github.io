@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v80</pre>
+		<pre id="version">v81</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -1190,7 +1190,7 @@ let scale = 1e-4;
 const camera = new THREE.PerspectiveCamera(
 	45,
 	window.innerWidth / window.innerHeight,
-	0.001,
+	0.0000001,
 	1e10
 );
 //camera.position.set(-200 * scale, 0 * scale, -250 * scale); // texas
@@ -1472,7 +1472,8 @@ for (let i = body.length - 1; i > -1; i--) {
 			map: new THREE.TextureLoader().load(body[i].map),
 			emissive: 0xffffff,
 			emissiveIntensity: 0,
-			emissiveMap: new THREE.TextureLoader().load("graphics/planet3lights_2k.jpg")
+			emissiveMap:
+				new THREE.TextureLoader().load("graphics/planet3lights_2k.jpg")
 		});
 
 		material.map.magFilter = THREE.NearestFilter;
@@ -1507,7 +1508,7 @@ for (let i = body.length - 1; i > -1; i--) {
 		// clouds
 		let material2 =	new THREE.MeshLambertMaterial({
 			side: THREE.DoubleSide,
-			map: new THREE.TextureLoader().load("graphics/clouds512.png"),
+			map: new THREE.TextureLoader().load("graphics/planet3clouds_512_b.png"),
 			transparent: true
 		});
 		//material2.map.magFilter = THREE.NearestFilter;
