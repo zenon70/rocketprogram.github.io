@@ -263,7 +263,7 @@ const GRAVITY
 add planets (cartes: local icrf)
   process planet data (degrees to radians, flattening, etc)
 add rocket (cartes: local icrf)
-  process rocket data
+  set rocket location
 
 assign mostMassiveBody (sun)
 
@@ -298,7 +298,6 @@ rocket control initialization
 rocketControl()
 
 nBodyVelocity() LOOP BODY
-  spin planets
     define focus
     accelerate
 
@@ -312,6 +311,7 @@ keplerPosition() LOOP BODY
           meanAnom++
           j2++                              j2
       toCartes()                            toCartes
+      spin planets
       if (Artificial)
         if (!onSurface)
           eciToEcef()                           eciToEcef ecefToGps gpsToEcef getDir
@@ -347,9 +347,9 @@ preAnimate()
 
 VARIABLE             FRAME   ORIGIN
 body[i].x            icrf    solar system barycenter
-body[i].cartes.x     icrf    local
-body[i].cartesEci.x  eci     local
-body[i].ecef.x       ecef    local
+body[i].cartes.x     icrf    center of mass of object being orbited
+body[i].cartesEci.x  eci     center of mass of object being orbited
+body[i].ecef.x       ecef    center of mass of object being orbited
 
 
 

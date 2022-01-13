@@ -50,7 +50,7 @@
 			<div class="blocker" onclick="hidePopup()"></div>
 			<div class="contents">
 				<h3>Stage Separation</h3>
-				<button class="menuButton" onclick="separate()">separate</button>
+				<button class="menuButton rocketPanel" onclick="separate()">separate</button>
 				<h3>Multiple Rockets</h3>
 				<button class="menuButton" onclick="addBody()">add rocket</button>
 				<h3>Visual Helpers</h3>
@@ -892,47 +892,95 @@ for (let i = body.length - 1; i > -1; i--) {
 //VX=0, VY=1e-5, VZ=0
 
 let rocket = body.push({
-	name: "rocket",
+	name: "f9",
 	focus: earth,
-/*
 	mass: 549054,
 	fuelMass: 411000,
-	burnTime: 559,
-*/
-
-	// spaceflightinsider.com/hangar/falcon-9
-/*
-	// stage 1 only
-	mass: 421300,
-	fuelMass: 395700,
 	burnTime: 162,
-*/
-
-	
-	// combined stages v1 spacex numbers
-	mass: 517870,
-	fuelMass: 488370,
-	burnTime: 200,
 	thrustVac: 8227000,
 	thrustSea: 7607000,
-
 	sidereal: null,
 	xSpin: 0,
 	ySpin: 0,
 	zSpin: 0,
 	throttleSwitch: false,
 	throttle: 0,
-
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 	drag: 0,
-
 	pointingV3: new THREE.Vector3(0, 1, 0), // loads y-up
 	pointingM4: new THREE.Matrix4(),
-
-	//onSurface: true,
 	type: "Artificial",
-	color: 0xe5e7e7
+	color: 0xe5e7e7,
+
+	stage2: {
+		name: "f9s2",
+		focus: earth,
+		mass: 75000, // wild guesses
+		fuelMass: 65000,
+		burnTime: 400,
+		thrustVac: 900000,
+		thrustSea: 600000,
+		sidereal: null,
+		xSpin: 0,
+		ySpin: 0,
+		zSpin: 0,
+		throttleSwitch: false,
+		throttle: 0,
+		cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
+			vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
+		drag: 0,
+		pointingV3: new THREE.Vector3(0, 1, 0), // loads y-up
+		pointingM4: new THREE.Matrix4(),
+		type: "Artificial",
+		color: 0xe5e7e7,
+
+		fairingN: {
+			name: "fairingN",
+			focus: earth,
+			mass: 5000,
+			fuelMass: 0,
+			burnTime: 0,
+			thrustVac: 0,
+			thrustSea: 0,
+			sidereal: null,
+			xSpin: 0,
+			ySpin: 1, // will this work? spins when removed
+			zSpin: 0,
+			throttleSwitch: false,
+			throttle: 0,
+			cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
+				vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
+			drag: 0,
+			pointingV3: new THREE.Vector3(0, 1, 0), // loads y-up
+			pointingM4: new THREE.Matrix4(),
+			type: "Artificial",
+			color: 0xe5e7e7,
+		},
+
+		fairingZ: {
+			name: "fairingZ",
+			focus: earth,
+			mass: 5000,
+			fuelMass: 0,
+			burnTime: 0,
+			thrustVac: 0,
+			thrustSea: 0,
+			sidereal: null,
+			xSpin: 0,
+			ySpin: -1, // will this work? spins when removed
+			zSpin: 0,
+			throttleSwitch: false,
+			throttle: 0,
+			cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
+				vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
+			drag: 0,
+			pointingV3: new THREE.Vector3(0, 1, 0), // loads y-up
+			pointingM4: new THREE.Matrix4(),
+			type: "Artificial",
+			color: 0xe5e7e7,
+		}
+	}
 }) - 1;
 
 
@@ -968,13 +1016,14 @@ let rocket = body.push({
 	};
 */
 
-
+/*
 	// guiana space center, kourou, french guiana
 	body[i].gps = {
 		lat: 5.236 * Math.PI / 180,
 		lon: -52.775 * Math.PI / 180,
 		alt: 0  // actual unknown
 	};
+	
 
 
 	// convert to ecef then to cartes
@@ -989,7 +1038,7 @@ let rocket = body.push({
 	// not necessary for earth, but should be standard practice
 	body[i].cartes = eciToIcrf(body[i].cartesEci,
 		body[focus].rightAscension, body[focus].declination);
-
+*/
 /*
 	// OVERWRITE PREVIOUS... do this instead.. sputnik 1 orbit
 	let aTemp = getAxis(947000, 228000, body[focus].radiusEquator);
@@ -1030,9 +1079,10 @@ let rocket = body.push({
 		body[rocket].fuelMass.toFixed(0) + "<br>kg fuel";
 }
 
-// add rockets, stage separate, add asteroids, etc.
+// add rocket
 let bodyQueue = [];
 function addBody() {
+/*
 	let i = bodyQueue.push({
 		name: "rocket" + String(body.length + 1 - 13),
 		focus: earth,
@@ -1087,17 +1137,69 @@ function addBody() {
 	// not necessary for earth, but should be standard practice
 	bodyQueue[i].cartes = eciToIcrf(bodyQueue[i].cartesEci,
 		body[focus].rightAscension, body[focus].declination);
+*/
+
 /*
 	document.getElementById("hudFuel").innerHTML =
 		body[i].fuelMass.toFixed(0) + "<br>kg fuel";
 */
 
+
 }
 
-
+let stageSepReq = null;
 function separate() {
+
+	stageSepReq = view;
 	
+	//body[i].stage2.mesh.removeFromParent();
+	//body[i].mesh.remove(body[i].stage2.mesh);
+
+/*
+	let focus = body[i].focus;
+	body[i].stage2.kepler = body[i].kepler;
+	body[i].stage2.mu = GRAVITY * (body[focus].mass + body[i].stage2.mass);
+	body[i].stage2.cartesEci = toCartes(body[i].stage2.kepler, body[i].stage2.mu);
+	body[i].stage2.ecef = eciToEcef(body[i].stage2.cartesEci,
+		body[focus].spun,
+		body[focus].angularVelocity,
+		body[focus].radiusEquator, body[focus].e2);
+	body[i].stage2.gps = ecefToGps(body[i].stage2.ecef, body[focus].radiusEquator,
+		body[focus].e2);
+	body[i].stage2.cartes = eciToIcrf(body[i].stage2.cartesEci, body[focus].rightAscension,
+		body[focus].declination);
+*/
+
+
+/*
+	body[i].stage2.cartes = body[i].cartes;
+	
+	//body[i].stage2.cartes.y += 100;
+	
+	
+	//body[i].stage2.kepler = toKepler(body[i].stage2.cartes, body[i].stage2.mu)
+	
+	//body[i].stage2.mesh.position.set(0,0,0);
+	//body[i].stage2.mesh.position.x += 70;
+	
+	
+
+	
+	body[i].stage2.pointingV3.copy(body[i].pointingV3);
+	//body[i].stage2.pointingM4.copy(body[i].pointingM4);
+
+	body[i].stage2.mesh.rotation.copy(body[i].mesh.rotation);
+*/
+
+/*
+	body[i].mesh.remove(body[i].fairingBaseNadir.mesh);
+	body[i].mesh.remove(body[i].fairingBaseZenith.mesh);
+*/
 }
+
+	// add stage2 pneumatic separation velocity in pointing direction
+	// subtract stage1 pneumatic separation velocity in pointing direction
+	// and account for fuel slosh
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1561,12 +1663,64 @@ body[sun].mesh.add(body[sun].sunlight);
 
 let view;
 
+
+
+function addHelperGraphics(i) {
+	body[i].axesHelper = new THREE.AxesHelper(250e3 * scale);
+	body[i].axesHelper.position.copy(body[i].mesh.position);
+	body[i].axesHelper.rotation.copy(body[i].mesh.rotation);
+	// rotate to NED (north, east, down) convention for spacecraft
+	// +x forward, -x aft
+	// +y starboard, -y port
+	// +z nadir, -z zenith
+	body[i].axesHelper.rotateX(Math.PI);
+	body[i].axesHelper.rotateZ(-Math.PI / 2);
+	body[i].mesh.attach(body[i].axesHelper);
+	body[i].axesHelper.visible = false;
+
+	body[i].thrustArrow = new THREE.ArrowHelper(
+		body[i].pointingV3,
+		body[i].mesh.position,
+		1000e3 * scale,
+		0xff0000);
+	body[i].mesh.attach(body[i].thrustArrow);
+	body[i].thrustArrow.visible = false;
+
+
+	body[i].sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+		map: new THREE.TextureLoader().load("graphics/triangle-64.png"),
+		color: body[i].color,
+		sizeAttenuation: false}));
+
+	// scale sprite for gltf model mk1r2
+	//body[i].sprite.scale.set(1000, 1000, 1)
+	// scale sprite for cylinder geometry
+	body[i].sprite.scale.set(0.01, 0.01, 1);
+
+	body[i].mesh.add(body[i].sprite);
+}
+
+
 // rocket
-function addRocket(i) {
+
+/*
+requires structure of objects:
+body[i] = {
+	stage2 = {
+		fairingN = {}
+		fairingZ = {}
+		payload = {}
+	}
+}
+
+"mesh" is always the master mesh. sub-meshes that will never be independent are
+called other things like cap, mid, and nose.
+*/
+function addFalconGraphics(i) {
 
 	// stage 1
 	const geometry = new THREE.CylinderGeometry(
-		1.83 * scale, 1.83 * scale, 42.6 * scale, 16);
+		1.83 * scale, 1.83 * scale, 37.88 * scale, 16);
 	const texture = new THREE.TextureLoader().load("graphics/f9stage1.png");
 	texture.magFilter = THREE.NearestFilter;
 	texture.minFilter = THREE.NearestFilter;
@@ -1574,77 +1728,104 @@ function addRocket(i) {
 		map: texture
 		});
 	body[i].mesh = new THREE.Mesh(geometry, material);
-
+	
 	// bottom cap to hide stage 1 graphics wrap
 	body[i].cap = new THREE.Mesh(new THREE.CylinderGeometry(
 		1.83 * scale, 1.83 * scale, 0.02 * scale, 16),
 		new THREE.MeshLambertMaterial({color:0x333333}));
-	body[i].cap.position.set(0, -21.31 * scale, 0);
+	body[i].cap.position.set(0, - (37.88/2 + 0.01) * scale, 0);
 	body[i].mesh.add(body[i].cap);
 
-	// stage 2
+	// top cap to hide stage 1 graphics wrap
+	body[i].cap = new THREE.Mesh(new THREE.CylinderGeometry(
+		1.83 * scale, 1.83 * scale, 0.02 * scale, 16),
+		new THREE.MeshLambertMaterial({color:0x555555}));
+	body[i].cap.position.set(0, (37.88/2 + 0.01) * scale, 0);
+	body[i].mesh.add(body[i].cap);
+	
+	// interstage
+	body[i].cap = new THREE.Mesh(new THREE.CylinderGeometry(
+		1.83 * scale, 1.83 * scale, 4.7 * scale, 16, 1, true),
+		new THREE.MeshLambertMaterial({side: THREE.DoubleSide, color:0x333399}));
+	body[i].cap.position.set(0, (37.88/2 + 0.02 + 4.7/2) * scale, 0);
+	body[i].mesh.add(body[i].cap);
+
+	//let s2 = 37.88/2 + 0.02 + 4.7 + 13.8/2; // 30.56
+
+	// add stage 2 mesh
 	const geometry2 = new THREE.CylinderGeometry(
 		1.83 * scale, 1.83 * scale, 13.8 * scale, 16);
 	const material2 = new THREE.MeshLambertMaterial();
-	body[i].stage2 = new THREE.Mesh(geometry2, material2);
-	body[i].stage2.position.set(0, 27.6 * scale, 0);
-	body[i].mesh.add(body[i].stage2);
+	body[i].stage2.mesh = new THREE.Mesh(geometry2, material2);
+	body[i].stage2.mesh.position.set(0, 30.56 * scale, 0);
+	body[i].mesh.add(body[i].stage2.mesh);
+	
+	body[i].stage2.engine = new THREE.Mesh(new THREE.CylinderGeometry(
+		0.7 * scale, 1.6 * scale, 4 * scale, 16, 1, true),
+		new THREE.MeshLambertMaterial({side: THREE.DoubleSide, color:0x888888}));
+	body[i].stage2.engine.position.set(0, - (13.8/2 + 4/2) * scale, 0);
+	body[i].stage2.mesh.add(body[i].stage2.engine);
 
 	// fairing base expansion section, Nadir +Z
-	body[i].fairingBaseNadir = new THREE.Mesh(new THREE.CylinderGeometry(
+	body[i].stage2.fairingN.mesh = new THREE.Mesh(new THREE.CylinderGeometry(
 		2.6 * scale, 1.83 * scale, 1.3 * scale, 16, 1, true, Math.PI / 2, Math.PI),
 		new THREE.MeshLambertMaterial({side: THREE.DoubleSide}));
-	body[i].fairingBaseNadir.position.set(0, (13.8/2 + 1.3/2) * scale, 0);
-	body[i].stage2.add(body[i].fairingBaseNadir);
+	body[i].stage2.fairingN.mesh.position.set(0, (13.8/2 + 1.3/2) * scale, 0);
+	body[i].stage2.mesh.add(body[i].stage2.fairingN.mesh);
 
 	// fairing base expansion section, Zenith -Z
-	body[i].fairingBaseZenith = new THREE.Mesh(new THREE.CylinderGeometry(
+	body[i].stage2.fairingZ.mesh = new THREE.Mesh(new THREE.CylinderGeometry(
 		2.6 * scale, 1.83 * scale, 1.3 * scale, 16, 1, true, Math.PI + Math.PI / 2,
 		Math.PI),
 		new THREE.MeshLambertMaterial({side: THREE.DoubleSide}));
-	body[i].fairingBaseZenith.position.set(0, (13.8/2 + 1.3/2) * scale, 0);
-	body[i].stage2.add(body[i].fairingBaseZenith);
+	body[i].stage2.fairingZ.mesh.position.set(0, (13.8/2 + 1.3/2) * scale, 0);
+	body[i].stage2.mesh.add(body[i].stage2.fairingZ.mesh);
 
 
 	// fairing mid section, Nadir
-	body[i].fairingMidNadir = new THREE.Mesh(new THREE.CylinderGeometry(
+	body[i].stage2.fairingN.mid = new THREE.Mesh(new THREE.CylinderGeometry(
 		2.6 * scale, 2.6 * scale, 6.7 * scale, 16, 1, true, Math.PI / 2, Math.PI),
-		new THREE.MeshLambertMaterial({side: THREE.DoubleSide}));
-	body[i].fairingMidNadir.position.set(0, (1.3/2 + 6.7/2) * scale, 0);
-	body[i].fairingBaseNadir.add(body[i].fairingMidNadir);
+		new THREE.MeshLambertMaterial({side: THREE.DoubleSide, color:0x009999}));
+	body[i].stage2.fairingN.mid.position.set(0, (1.3/2 + 6.7/2) * scale, 0);
+	body[i].stage2.fairingN.mesh.add(body[i].stage2.fairingN.mid);
 
 	// fairing mid section, Zenith
-	body[i].fairingMidZenith = new THREE.Mesh(new THREE.CylinderGeometry(
+	body[i].stage2.fairingZ.mid = new THREE.Mesh(new THREE.CylinderGeometry(
 		2.6 * scale, 2.6 * scale, 6.7 * scale, 16, 1, true, Math.PI + Math.PI / 2,
 		Math.PI),
 		new THREE.MeshLambertMaterial({side: THREE.DoubleSide}));
-	body[i].fairingMidZenith.position.set(0, (1.3/2 + 6.7/2) * scale, 0);
-	body[i].fairingBaseZenith.add(body[i].fairingMidZenith);
+	body[i].stage2.fairingZ.mid.position.set(0, (1.3/2 + 6.7/2) * scale, 0);
+	body[i].stage2.fairingZ.mesh.add(body[i].stage2.fairingZ.mid);
 
 
 
 	// fairing nose aerodynamic shape, Nadir
-	body[i].fairingNoseNadir = new THREE.Mesh(new THREE.SphereGeometry(
+	body[i].stage2.fairingN.nose = new THREE.Mesh(new THREE.SphereGeometry(
 		2.6 * scale, 16, 8, Math.PI, Math.PI, 0, Math.PI / 2),
 		new THREE.MeshLambertMaterial({side: THREE.DoubleSide}));
-	body[i].fairingNoseNadir.position.set(0, (6.7/2) * scale, 0);
-	//body[i].fairingNoseNadir.rotation.set(0, Math.PI / 2, 0); // for texture
-	body[i].fairingNoseNadir.scale.y = 2;
-	body[i].fairingMidNadir.add(body[i].fairingNoseNadir);
+	body[i].stage2.fairingN.nose.position.set(0, (1.3/2 + 6.7) * scale, 0);
+	//body[i].stage2.fairingN.nose.rotation.set(0, Math.PI / 2, 0); // for texture
+	body[i].stage2.fairingN.nose.scale.y = 2;
+	body[i].stage2.fairingN.mesh.add(body[i].stage2.fairingN.nose);
 
 	// fairing nose aerodynamic shape, Zenith
-	body[i].fairingNoseZenith = new THREE.Mesh(new THREE.SphereGeometry(
+	body[i].stage2.fairingZ.nose = new THREE.Mesh(new THREE.SphereGeometry(
 		2.6 * scale, 16, 8, 0, Math.PI, 0, Math.PI / 2),
 		new THREE.MeshLambertMaterial({side: THREE.DoubleSide}));
-	body[i].fairingNoseZenith.position.set(0, (6.7/2) * scale, 0);
-	//body[i].fairingNoseZenith.rotation.set(0, Math.PI / 2, 0); // for texture
-	body[i].fairingNoseZenith.scale.y = 2;
-	body[i].fairingMidZenith.add(body[i].fairingNoseZenith);
+	body[i].stage2.fairingZ.nose.position.set(0, (1.3/2 + 6.7) * scale, 0);
+	//body[i].stage2.fairingZ.nose.rotation.set(0, Math.PI / 2, 0); // for texture
+	body[i].stage2.fairingZ.nose.scale.y = 2;
+	body[i].stage2.fairingZ.mesh.add(body[i].stage2.fairingZ.nose);
 
 
 		//body[i].mesh.receiveShadow = true;
 
 		body[i].mesh.up.set(0, 1, 0);
+		
+		body[i].stage2.mesh.up.set(0, 1, 0);
+		body[i].stage2.fairingN.mesh.up.set(0, 1, 0);
+		body[i].stage2.fairingZ.mesh.up.set(0, 1, 0);
+		
 
 		// rotate mesh so it's standing up on the ground:
 		// get the direction vector that defines up relative to ground...
@@ -1666,50 +1847,15 @@ function addRocket(i) {
 
 		scene.add(body[i].mesh);
 
-
-		body[i].axesHelper = new THREE.AxesHelper(250e3 * scale);
-		body[i].axesHelper.rotation.copy(body[i].mesh.rotation);
-		// rotate to NED (north, east, down) convention for spacecraft
-		// +x forward, -x aft
-		// +y starboard, -y port
-		// +z nadir, -z zenith
-		body[i].axesHelper.rotateX(Math.PI);
-		body[i].axesHelper.rotateZ(-Math.PI / 2);
-		body[i].mesh.attach(body[i].axesHelper);
-		body[i].axesHelper.visible = false;
-
-		body[i].thrustArrow = new THREE.ArrowHelper(
-			body[i].pointingV3,
-			body[i].mesh.position,
-			1000e3 * scale,
-			0xff0000);
-		body[i].mesh.attach(body[i].thrustArrow);
-		body[i].thrustArrow.visible = false;
-
-
-		body[i].sprite = new THREE.Sprite(new THREE.SpriteMaterial({
-			map: new THREE.TextureLoader().load("graphics/triangle-64.png"),
-			color: body[i].color,
-			sizeAttenuation: false}));
-
-		// scale sprite for gltf model mk1r2
-		//body[i].sprite.scale.set(1000, 1000, 1)
-		// scale sprite for cylinder geometry
-		body[i].sprite.scale.set(0.01, 0.01, 1);
-
-		body[i].mesh.add(body[i].sprite);
-
+		addHelperGraphics(i);
 
 		// post-setup global adjustments
 		view = i;
 		viewFinalize();
 		controls.target = body[view].mesh.position;
 		controls.minDistance = 75 * scale;
-
-	// brackets for gltf
-	//});
 }
-addRocket(rocket);
+addFalconGraphics(rocket);
 
 document.querySelector("#sprites").checked = true;
 function toggleSprites() {
@@ -2024,11 +2170,7 @@ let now = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
 
 ////////////////////////////////////////////////////////////////////////////////
 // rocket control (spin and thrust)
-/*
-let xSpin = 0;
-let ySpin = 0;
-let zSpin = 0;
-*/
+
 let spinPower = 0.1; // what units? m/s²
 
 // onscreen buttons
@@ -2519,33 +2661,10 @@ function keplerPosition() {
 		body[i].cartesEci = icrfToEci(body[i].cartes, body[focus].rightAscension,
 			body[focus].declination);
 
-		/*
-		if (i === 8 && debugLog < 3) {
-			console.log("1. initial eci vectors",
-				body[i].cartesEci.x, body[i].cartesEci.y, body[i].cartesEci.z,
-				body[i].cartesEci.vx, body[i].cartesEci.vy, body[i].cartesEci.vz,
-				body[i].cartesEci.meanAnom + " meanAnom",
-				body[i].cartesEci.eAnom + " eAnom",
-				body[i].cartesEci.truAnom + " truAnom",
-				body[i].cartesEci.truAnomB + " truAnomB",
-				body[i].cartesEci.h + " h");
-		}
-		*/
 		// use the updated vectors and mu to get keplerian elements
 		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
 		body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
-		/*
-		if (i === 8 && debugLog < 3) {
-			console.log("2. initial elements",
-				body[i].kepler.a, body[i].kepler.e, body[i].kepler.i,
-				body[i].kepler.lan, body[i].kepler.w,
-				body[i].kepler.meanAnom + " meanAnom",
-				body[i].kepler.eAnom + " eAnom",
-				body[i].kepler.truAnom + " truAnom",
-				body[i].kepler.vRadial + " vRadial",
-				body[i].kepler.truAnomTest + " truAnomTest");
-		}
-		*/
+
 
 		if (!body[i].onSurface) {
 			// increment position (this code IS compatible with hyperbolic)
@@ -2571,30 +2690,9 @@ function keplerPosition() {
 			}
 		}
 
-		/*
-		if (i === 8 && debugLog < 3) {
-			console.log("post-move elements",
-				body[i].kepler.a, body[i].kepler.e, body[i].kepler.i,
-				body[i].kepler.lan, body[i].kepler.w, body[i].kepler.meanAnom);
-		}
-		*/
-
 		// use the new keplerian elements to get new vectors
 		body[i].cartesEci = toCartes(body[i].kepler, body[i].mu);
 
-
-		/*
-		if (i === 8 && debugLog < 3) {
-			console.log("3. post-move vectors",
-				body[i].cartesEci.x, body[i].cartesEci.y, body[i].cartesEci.z,
-				body[i].cartesEci.vx, body[i].cartesEci.vy, body[i].cartesEci.vz,
-				body[i].cartesEci.meanAnom + " meanAnom",
-				body[i].cartesEci.eAnom + " eAnom",
-				body[i].cartesEci.truAnom + " truAnom",
-				body[i].cartesEci.truAnomB + " truAnomB",
-				body[i].cartesEci.h + " h");
-		}
-		*/
 
 ////////////////////////////////////////////////////////////////////////////////
 // symplectic euler method
@@ -2984,11 +3082,55 @@ function main() {
 	body[mostMassiveBody].mesh.position.z = body[mostMassiveBody].z * scale;
 
 
-	while (bodyQueue.length > 0) {
-		let i = body.push(bodyQueue.pop()) - 1;
-		addRocket(i);
-		
+
+
+
+	// stage separations
+	// use array to process more than 1 if 2+ done during pause
+	//while (stageSepReq.length > 0) {
+	if (stageSepReq !== null /*&& body[stageSepReq].type === "Artificial"*/ &&
+		body[stageSepReq].stage2) {
+
+		let i = stageSepReq;
+
+		// copy
+		body[i].stage2.mesh.rotation.copy(body[i].mesh.rotation);
+		body[i].stage2.pointingV3.copy(body[i].pointingV3);
+		//body[i].stage2.pointingM4.copy(body[i].pointingM4);
+
+		body[i].stage2.cartes.x = body[i].cartes.x;
+		body[i].stage2.cartes.y = body[i].cartes.y;
+		body[i].stage2.cartes.z = body[i].cartes.z;
+		body[i].stage2.cartes.vx = body[i].cartes.vx;
+		body[i].stage2.cartes.vy = body[i].cartes.vy;
+		body[i].stage2.cartes.vz = body[i].cartes.vz;
+
+		// move to graphics offset so it DOESN'T move
+		body[i].stage2.cartes.x += body[i].stage2.pointingV3.x * 30.56;
+		body[i].stage2.cartes.y += body[i].stage2.pointingV3.y * 30.56;
+		body[i].stage2.cartes.z += body[i].stage2.pointingV3.z * 30.56;
+
+		// separate
+		body[i].mesh.remove(body[i].stage2.mesh);
+		let j = body.push(body[i].stage2) - 1;
+		body[i].stage2 = null;
+		scene.add(body[j].mesh);
+		addHelperGraphics(j);
+
+		// pneumatic separation
+		body[j].cartes.vx += body[j].pointingV3.x * 2; // 2 m/s² impulse
+		body[j].cartes.vy += body[j].pointingV3.y * 2;
+		body[j].cartes.vz += body[j].pointingV3.z * 2;
+
+		// pneumatic equal opposite force on stage1
+		body[i].cartes.vx -= body[i].pointingV3.x * 2; // 2 m/s² impulse
+		body[i].cartes.vy -= body[i].pointingV3.y * 2;
+		body[i].cartes.vz -= body[i].pointingV3.z * 2;
 	}
+	stageSepReq = null;
+
+
+
 
 
 	// get everything else's solar system position based on local position
@@ -3001,7 +3143,6 @@ function main() {
 
 	preAnimate();
 }
-
 
 
 document.querySelector("#allOrbits").checked = false;
