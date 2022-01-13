@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v82</pre>
+		<pre id="version">v83</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -74,14 +74,19 @@
 				<h3>Earth Graphics</h3>
 				<input type="checkbox" id="clouds" onchange="toggleClouds()">
 				<label for="clouds">Clouds</label>
-				<br>
+				<br><!--
 				<input type="checkbox" id="lights" onchange="toggleLights()">
 				<label for="lights">City Lights</label>
-				<br>
+				<br>-->
+				<h3>City Lights</h3>
+				<div id="cityLightOutput" class="slider">30%</div>
+					<div class="slideContainer">
+						<input type="range" min="0" max="100" value="30" class="slider" id="cityLight">
+					</div>
 				<h3>Starlight Intensity (ambient light)</h3>
 				<div id="starlightOutput" class="slider">300%</div>
 					<div class="slideContainer">
-						<input type="range" min="0" max="100" value="30" class="slider" id="starlight">
+						<input type="range" min="0" max="100" value="15" class="slider" id="starlight">
 					</div>
 				<h3>Sunlight Intensity (point light)</h3>
 				<div id="sunlightOutput" class="slider">100%</div>
@@ -379,9 +384,19 @@
 		<script>"use strict";
 
 
-document.getElementById("starlight").value = 30;
-document.getElementById("starlightOutput").innerHTML = "600%";
-let starlightControl = 0.3;
+document.getElementById("cityLight").value = 30;
+document.getElementById("cityLightOutput").innerHTML = "30%";
+let cityLightSlider = document.getElementById("cityLight");
+let cityLightOutput = document.getElementById("cityLightOutput");
+// Update the current slider value (each time you drag the slider handle)
+cityLightSlider.oninput = function() {
+	cityLightOutput.innerHTML = this.value + "%";
+	body[earth].mesh.material.emissiveIntensity = this.value / 100;
+}
+
+document.getElementById("starlight").value = 5;
+document.getElementById("starlightOutput").innerHTML = "100%";
+let starlightControl = 0.05;
 let starlightSlider = document.getElementById("starlight");
 let starlightOutput = document.getElementById("starlightOutput");
 // Update the current slider value (each time you drag the slider handle)
@@ -393,14 +408,14 @@ starlightSlider.oninput = function() {
 	}
 }
 
-document.getElementById("sunlight").value = 100;
-document.getElementById("sunlightOutput").innerHTML = "100%";
+document.getElementById("sunlight").value = 75;
+document.getElementById("sunlightOutput").innerHTML = "75%";
 let sunlightSlider = document.getElementById("sunlight");
 let sunlightOutput = document.getElementById("sunlightOutput");
 // Update the current slider value (each time you drag the slider handle)
 sunlightSlider.oninput = function() {
 	sunlightOutput.innerHTML = this.value + "%";
-	body[sun].sunlight.intensity = this.value / 100;
+	body[sun].sunlight.intensity = this.value / 50;
 }
 
 const popup = document.querySelector('.popup');
@@ -1470,14 +1485,14 @@ for (let i = body.length - 1; i > -1; i--) {
  if (body[i].map !== undefined && body[i].map !== null && i === earth) {
 		material = new THREE.MeshLambertMaterial({
 			map: new THREE.TextureLoader().load(body[i].map),
-			emissive: 0xffffff,
-			emissiveIntensity: 0,
+			emissive: 0xffffdd,
+			emissiveIntensity: 0.3,
 			emissiveMap:
-				new THREE.TextureLoader().load("graphics/planet3lights_2k.jpg")
+				new THREE.TextureLoader().load("graphics/planet3lights_2k_dark.jpg")
 		});
 
-		material.map.magFilter = THREE.NearestFilter;
-		material.map.minFilter = THREE.NearestFilter;
+		material.emissiveMap.magFilter = THREE.NearestFilter;
+		material.emissiveMap.minFilter = THREE.NearestFilter;
 
 	} else if (body[i].map !== undefined && body[i].map !== null) {
 		material = new THREE.MeshLambertMaterial({
@@ -1608,7 +1623,7 @@ for (let i = body.length - 1; i > -1; i--) {
 
 
 // sunlight
-body[sun].sunlight = new THREE.PointLight(0xffffff, 1);
+body[sun].sunlight = new THREE.PointLight(0xffffff, 1.5);
 //body[sun].sunlight.castShadow = true;
 
 //Set up shadow properties for the light
@@ -1870,7 +1885,7 @@ function toggleClouds() {
 	}
 }
 
-
+/*
 document.querySelector("#lights").checked = false;
 function toggleLights() {
 	if (body[earth].mesh.material.emissiveIntensity === 0) {
@@ -1879,7 +1894,7 @@ function toggleLights() {
 		body[earth].mesh.material.emissiveIntensity = 0;
 	}
 }
-
+*/
 
 document.querySelector("#sprites").checked = true;
 function toggleSprites() {
