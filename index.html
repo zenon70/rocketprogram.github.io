@@ -463,7 +463,7 @@ body.push({
 	declination: 61.4143,
 	primeMeridian: 329.5469,
 
-	//map: "graphics/planet1_2k.jpg",
+	map: "graphics/planet1_2k.jpg",
 	color: 0x848383
 });
 
@@ -488,7 +488,7 @@ body.push({
 	declination: -67.16,
 	primeMeridian: 160.20 + 180, // iau defines neg as north. adding 180
 
-	//map: "graphics/planet2_2k.jpg",
+	map: "graphics/planet2_2k.jpg",
 	color: 0xe4bd7f
 });
 
@@ -578,7 +578,7 @@ body.push({
 	declination: 64.495393,
 	primeMeridian: 284.95,
 
-	//map: "graphics/planet5_2k.jpg",
+	map: "graphics/planet5_2k.jpg",
 	color: 0xada396
 });
 
@@ -612,7 +612,7 @@ body.push({
 	declination: 83.537,
 	primeMeridian: 38.90,
 
-	//map: "graphics/planet6_2k.jpg",
+	map: "graphics/planet6_2k.jpg",
 	ringsMap: "graphics/planet6rings_1k.png",
 	ringsRadius: 140415 * 1000,
 	color: 0xcfc0a2
@@ -647,7 +647,9 @@ body.push(
 	declination: -15.175,
 	primeMeridian: 203.81,
 
-	//map: "graphics/planet7_1k.jpg",
+	map: "graphics/planet7_1k.jpg",
+	ringsMap: "graphics/planet7rings_512.png",
+	ringsRadius: 51149 * 1000,
 	color: 0x98afb7
 });
 
@@ -678,7 +680,7 @@ body.push({
 	declination: 43.46,
 	primeMeridian: 253.18,
 
-	//map: "graphics/planet8_2k.jpg",
+	map: "graphics/planet8_2k.jpg",
 	color: 0x364fa7
 });
 
@@ -710,7 +712,7 @@ body.push({
 	// 0 longitude on the map is the left edge, so add 180
 	primeMeridian: 237.305 + 180,
 
-	//map: "graphics/planet9_2k.jpg",
+	map: "graphics/planet9_2k.jpg",
 	color: 0x967a63
 });
 
@@ -745,8 +747,8 @@ let moon = body.push({
 	declination: 66.5392,
 	primeMeridian: 38.3213,
 	
-	//map: "graphics/moon301_2k.jpg",
-	map: "graphics/moon301_1k.jpg",
+	map: "graphics/moon301_2k.jpg",
+	//map: "graphics/moon301_1k.jpg",
 	//segments: 64,
 	color: 0x969392
 }) - 1;
@@ -839,7 +841,7 @@ for (let i = body.length - 1; i > -1; i--) {
 
 
 	if (body[i].segments === undefined) {
-		body[i].segments = 16;
+		body[i].segments = 32;
 	}
 
 /*
