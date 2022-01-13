@@ -996,46 +996,35 @@ rocket = body.push({
 	const i = rocket;
 	const focus = body[i].focus;
 
-	if (rocket === 13) {
+	if (rocketCount === 1) {
 		// guiana space center, kourou, french guiana
 		body[i].gps = {
 			lat: 5.236 * Math.PI / 180,
 			lon: -52.775 * Math.PI / 180,
 			alt: 0  // actual unknown
 		};
-	}
-	
-
-	if (rocket === 14) {
+	} else if (rocketCount === 2) {
 		// boca chica, texas
 		body[i].gps = {
 			lat: 25.997354305760496 * Math.PI / 180,
 			lon: -97.15698039306052 * Math.PI / 180,
 			alt: 0
 		};
-	}
-
-	if (rocket === 15) {
+	} else if (rocketCount === 3) {
 		// kennedy launch pad 39a
 		body[i].gps = {
 			lat: 28.60838889 * Math.PI / 180,
 			lon: -80.60444444 * Math.PI / 180,
 			alt: 0
 		};
-	}
-
-
-
-	if (rocket === 16) {
+	} else if (rocketCount === 4) {
 		// baikonur cosmodrome, kazakhstan
 		body[i].gps = {
 			lat: 45.92 * Math.PI / 180,
 			lon: 63.342 * Math.PI / 180,
 			alt: 0  // actually 90 meters, but this program doesn't have terrain yet
 		};
-	}
-	
-	if (rocket > 16) {
+	} else {
 		// anywhere
 		body[i].gps = {
 			lat: (Math.random() * (90 - -90) + -90) * Math.PI / 180,
@@ -1670,6 +1659,19 @@ function addFalconGraphics(i) {
 		new THREE.MeshLambertMaterial({color:0x333333}));
 	body[i].cap.position.set(0, - (37.88/2 + 0.01) * scale, 0);
 	body[i].mesh.add(body[i].cap);
+/*
+	body[i].pad = new THREE.Mesh(new THREE.PlaneGeometry(200 * scale, 200 * scale),
+			new THREE.MeshBasicMaterial({
+				map: new THREE.TextureLoader().load("graphics/ofcpad.png")})
+			);
+	body[i].pad.position.set(0, - (37.88/2 + 0.02) * scale, 0);
+	body[i].pad.rotateX(Math.PI/2+Math.PI);
+	body[i].pad.rotateZ(Math.PI/2);
+	body[i].mesh.add(body[i].pad);
+	
+	let focus = body[i].focus;
+	body[focus].mesh.add(body[i].mesh);
+*/
 
 	// top cap to hide stage 1 graphics wrap
 	body[i].cap = new THREE.Mesh(new THREE.CylinderGeometry(
