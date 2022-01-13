@@ -71,6 +71,10 @@
 				<button class="menuButton" id="ssbAxes" onclick="toggleSsbAxes()">SSB Axes</button>
 				<label for="ssbAxes">Toggle Solar System Barycenter ICRF Axes</label>
 				<br>
+				<h3>Earth Graphics</h3>
+				<input type="checkbox" id="clouds" onchange="toggleClouds()">
+				<label for="clouds">Clouds</label>
+				<br>
 				<h3>Starlight Intensity (ambient light)</h3>
 				<div id="starlightOutput" class="slider">300%</div>
 					<div class="slideContainer">
@@ -1477,6 +1481,29 @@ for (let i = body.length - 1; i > -1; i--) {
 	body[i].mesh = new THREE.Mesh(new THREE.SphereGeometry(
 		body[i].radiusEquator * scale, body[i].segments, body[i].segments / 2),
 		material);
+	
+	if (i === earth) {
+			
+		let material2 =	new THREE.MeshLambertMaterial({
+			side: THREE.DoubleSide,
+			map: new THREE.TextureLoader().load("graphics/clouds512.png"),
+			transparent: true
+		});
+		material.map.magFilter = THREE.NearestFilter;
+		material.map.minFilter = THREE.NearestFilter;
+		
+		// 8500 is scale height, * 3.75 so it doesn't shred (clip) on the boxy globe
+		body[i].clouds = new THREE.Mesh(new THREE.SphereGeometry(
+			body[i].radiusEquator * scale + 8500 * 3.75 * scale, body[i].segments,
+			body[i].segments / 2),
+			material2);
+		
+		body[i].clouds.scale.y = body[i].radiusPole / body[i].radiusEquator;
+		
+		body[i].mesh.add(body[i].clouds);
+		body[i].clouds.visible = false;
+
+	}
 
 	// shadows
 	//body[i].mesh.castShadow = true;
@@ -1811,6 +1838,17 @@ function addFalconGraphics(i) {
 		controls.minDistance = 75 * scale;
 }
 addFalconGraphics(rocket);
+
+
+document.querySelector("#clouds").checked = false;
+function toggleClouds() {
+	if (body[earth].clouds.visible === false) {
+		body[earth].clouds.visible = true;
+	} else {
+		body[earth].clouds.visible = false;
+	}
+}
+
 
 document.querySelector("#sprites").checked = true;
 function toggleSprites() {
@@ -2717,6 +2755,9 @@ function keplerPosition() {
 			if (body[i].tidallyLocked !== true) {
 				body[i].mesh.rotateY(body[i].angularVelocity * timestep);
 				body[i].spun += body[i].angularVelocity * timestep;
+				if (i === earth) {
+					body[i].clouds.rotateY(body[i].angularVelocity * timestep / 12);
+				}
 			} else {
 				// cartes.truAnom is new, kepler.truAnom is old
 				body[i].mesh.rotateY(body[i].cartesEci.truAnom -
