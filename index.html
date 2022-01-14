@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v90</pre>
+		<pre id="version">v91</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -794,7 +794,7 @@ let moon401 = body.push({
 	mass: 10658529896187200,
 	radiusEquator: 13.1e3,
 	radiusPole: 9.3e3,
-	radiusMeridian: 11.1e3,
+	radiusWest: 11.1e3,
 	sidereal: 0.319 * 24,
 	tidallyLocked: true,
 
@@ -823,7 +823,7 @@ let moon402 = body.push({
 	mass: 1476188406600740,
 	radiusEquator: 7.8e3,
 	radiusPole: 6e3,
-	radiusMeridian: 6.0e3,
+	radiusWest: 6.0e3,
 	sidereal: 1.263 * 24,
 	tidallyLocked: true,
 
@@ -1019,7 +1019,7 @@ rocket = body.push({
 // launch from ground
 {
 	const i = rocket;
-	const focus = body[i].focus;
+	let focus = body[i].focus;
 
 	if (rocketCount === 1) {
 		// guiana space center, kourou, french guiana
@@ -1086,7 +1086,8 @@ rocket = body.push({
 		w: 5 * Math.PI / 180,
 		meanAnom: 5 * Math.PI / 180
 	}
-	
+
+	// high orbit
 	let aTemp = getAxis(322000999, 418000999, body[focus].radiusEquator);
 	let eTemp = getEcc(322000999, 418000999, body[focus].radiusEquator);
 	body[i].kepler = {
@@ -1096,6 +1097,20 @@ rocket = body.push({
 		lan: 12 * Math.PI / 180,
 		w: 61 * Math.PI / 180,
 		meanAnom: 146 * Math.PI / 180
+	}
+
+	// 401 orbit
+	body[i].focus = 11;
+	focus = 11;
+	let aTemp = getAxis(300, 200, body[focus].radiusEquator);
+	let eTemp = getEcc(300, 200, body[focus].radiusEquator);
+	body[i].kepler = {
+		a: aTemp,
+		e: eTemp,
+		i: 89.99 * Math.PI / 180,
+		lan: 1 * Math.PI / 180,
+		w: 1 * Math.PI / 180,
+		meanAnom: 1 * Math.PI / 180
 	}
 
 	body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
@@ -1108,6 +1123,7 @@ rocket = body.push({
 		body[focus].e2);
 	body[i].cartes = eciToIcrf(body[i].cartesEci, body[focus].rightAscension,
 		body[focus].declination);
+
 */
 
 	document.getElementById("hudFuel").innerHTML =
@@ -1522,7 +1538,7 @@ function makeSurface() {
 
 	// squish
 	body[i].surface.scale.y = body[i].radiusPole / body[i].radiusEquator;
-	if (body[i].radiusMeridian !== undefined) {
+	if (body[i].radiusWest !== undefined) {
 		body[i].surface.scale.z = body[i].radiusPole / body[i].radiusEquator;
 	}
 
@@ -1635,7 +1651,7 @@ for (let i = body.length - 1; i > -1; i--) {
 	//body[i].mesh.material.opacity = 0.8;
 
 	body[i].mesh.scale.y = body[i].radiusPole / body[i].radiusEquator;
-	if (body[i].radiusMeridian !== undefined) {
+	if (body[i].radiusWest !== undefined) {
 		body[i].mesh.scale.z = body[i].radiusPole / body[i].radiusEquator;
 	}
 
@@ -2180,6 +2196,7 @@ function viewNext() {
 
 	view = next;
 	viewFinalize();
+	displayText();
 }
 
 
@@ -2216,6 +2233,7 @@ function viewPrevious() {
 	
 	view = focusNow;
 	viewFinalize();
+	displayText();
 }
 
 
@@ -3273,7 +3291,7 @@ function main() {
 		let i = stageSepReq;
 
 		// copy
-		body[i].stage2.mesh.rotation.copy(body[i].mesh.rotation);
+		body[i].stage2.focus = body[i].focus;
 
 		body[i].stage2.cartes.x = body[i].cartes.x;
 		body[i].stage2.cartes.y = body[i].cartes.y;
@@ -3281,6 +3299,12 @@ function main() {
 		body[i].stage2.cartes.vx = body[i].cartes.vx;
 		body[i].stage2.cartes.vy = body[i].cartes.vy;
 		body[i].stage2.cartes.vz = body[i].cartes.vz;
+
+		body[i].stage2.mesh.rotation.copy(body[i].mesh.rotation);
+
+		body[i].stage2.xSpin = body[i].xSpin;
+		body[i].stage2.ySpin = body[i].ySpin;
+		body[i].stage2.zSpin = body[i].zSpin;
 
 		// move to graphics offset so it DOESN'T move
 		body[i].pointingM4.extractRotation(body[i].mesh.matrix);
@@ -3336,7 +3360,7 @@ function main() {
 		let i = fairingSepReq;
 
 		// copy
-		body[i].fairingN.mesh.rotation.copy(body[i].mesh.rotation);
+		body[i].fairingN.focus = body[i].focus;
 
 		body[i].fairingN.cartes.x = body[i].cartes.x;
 		body[i].fairingN.cartes.y = body[i].cartes.y;
@@ -3344,6 +3368,12 @@ function main() {
 		body[i].fairingN.cartes.vx = body[i].cartes.vx;
 		body[i].fairingN.cartes.vy = body[i].cartes.vy;
 		body[i].fairingN.cartes.vz = body[i].cartes.vz;
+
+		body[i].fairingN.mesh.rotation.copy(body[i].mesh.rotation);
+
+		body[i].fairingN.xSpin = body[i].xSpin;
+		body[i].fairingN.ySpin = body[i].ySpin;
+		body[i].fairingN.zSpin = body[i].zSpin;
 		
 		// move to graphics offset so it DOESN'T move
 		body[i].pointingM4.extractRotation(body[i].mesh.matrix);
@@ -3382,7 +3412,7 @@ function main() {
 		// repeat for Zenith fairing
 
 		// copy
-		body[i].fairingZ.mesh.rotation.copy(body[i].mesh.rotation);
+		body[i].fairingZ.focus = body[i].focus;
 
 		body[i].fairingZ.cartes.x = body[i].cartes.x;
 		body[i].fairingZ.cartes.y = body[i].cartes.y;
@@ -3390,6 +3420,12 @@ function main() {
 		body[i].fairingZ.cartes.vx = body[i].cartes.vx;
 		body[i].fairingZ.cartes.vy = body[i].cartes.vy;
 		body[i].fairingZ.cartes.vz = body[i].cartes.vz;
+
+		body[i].fairingZ.mesh.rotation.copy(body[i].mesh.rotation);
+
+		body[i].fairingZ.xSpin = body[i].xSpin;
+		body[i].fairingZ.ySpin = body[i].ySpin;
+		body[i].fairingZ.zSpin = body[i].zSpin;
 
 		// move to graphics offset so it DOESN'T move
 		body[i].fairingZ.cartes.x += body[i].pointingV3.x * 7.55;
