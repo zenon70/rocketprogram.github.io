@@ -3,9 +3,9 @@
 # IN-PROGRESS
 -------------
 
-recycle, should use global geometries, materials
-stage separation: correct places
-aerodynamic drag...
+recycle() should use global geometries, materials
+fairing separation: correct directions
+make aerodynamic drag specific to vehicle...
 isNaN safety before integration
 button layout, throttle sliders (main & spin)
 
@@ -30,7 +30,7 @@ hud overlaps on smartphone in widescreen if not fullscreened
 firefox mobile 96.0.0-beta.5 scrolling to hide address bar
   causes screen to resize wrong
 
-epiphany close frustum culling
+epiphany near frustum culling
 
 
 
@@ -38,22 +38,24 @@ epiphany close frustum culling
 # PHYSICS
 ---------
 
-401 surface and graphics are WAY off
+401 surface and graphics are WAY off, oriented oblate wrong way from graphics?
   more than just the dips in polygons
   is it really oblate? landing on 401 makes me think no.
+
 not appearing on surface
   rotate earth mesh so rocket is at peak point?
   collision with surface graphics, with accurate gps
   surface graphics and gps ARE accurate??, if using
   1024 segments... so it just depends on segment
-  heights.?? not true for 401!!
+  heights.. use phi&theta to make sphere portion? how to texture?
+
 terrain: bump/relief map w/collision detection
   aerodynamics and negative altitude loss of momentum will need to be revised
 
 rocket goes down when low thrust on surface
 
 ecliptic lan parameter is off by almost precisely 90 deg, not sure why
-  (ecliptic notes below)
+  (ecliptic notes below) (may be perfectly ok)
 
 not rotating with surface while landed
   rotate with parent

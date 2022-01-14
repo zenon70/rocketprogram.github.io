@@ -1676,6 +1676,19 @@ for (let i = body.length - 1; i > -1; i--) {
 	body[i].mesh.attach(body[i].axesHelper);
 	body[i].axesHelper.visible = false;
 
+	// create eci axes helper
+	body[i].axesHelperEci = new THREE.AxesHelper(body[i].radiusEquator * 2.25 *
+		scale);
+	// same config as spheroid
+	body[i].axesHelperEci.rotation.set(Math.PI / 2, 0, -Math.PI / 2 +
+		body[i].declination);
+	body[i].axesHelperEci.rotateOnWorldAxis(zAxis, body[i].rightAscension);
+	//body[i].axesHelperEci.rotateY(Math.PI / 2 + body[i].primeMeridian);
+	// rotate to appear as z-up (space axes convention)
+	body[i].axesHelperEci.rotateX(-Math.PI / 2);
+	scene.add(body[i].axesHelperEci);
+	body[i].axesHelperEci.visible = false;
+
 	// create icrf axes helper
 	body[i].axesHelperIcrf = new THREE.AxesHelper(
 		body[i].radiusEquator * 3 * scale);
@@ -1994,9 +2007,11 @@ function toggleAxes() {
 		if (body[view].axesHelper.visible === true) {
 			body[view].axesHelper.visible = false;
 			body[view].axesHelperIcrf.visible = false;
+			body[view].axesHelperEci.visible = false;
 		} else {
 			body[view].axesHelper.visible = true;
 			body[view].axesHelperIcrf.visible = true;
+			body[view].axesHelperEci.visible = true;
 		}
 	}
 }
@@ -3596,6 +3611,9 @@ function preAnimate() {
 	for (let i = body.length - 1; i > -1; i--) {
 		if (body[i].axesHelperIcrf) {
 			body[i].axesHelperIcrf.position.copy(body[i].mesh.position);
+		}
+		if (body[i].axesHelperEci) {
+			body[i].axesHelperEci.position.copy(body[i].mesh.position);
 		}
 	}
 
