@@ -1759,6 +1759,12 @@ function addHelperGraphics(i) {
 	body[i].mesh.attach(body[i].axesHelper);
 	body[i].axesHelper.visible = false;
 
+	// update pointing before using
+	body[i].pointingM4.extractRotation(body[i].mesh.matrix);
+	// get unit vector of direction
+	body[i].pointingV3 =
+		body[i].mesh.up.clone().applyMatrix4(body[i].pointingM4);
+
 	body[i].thrustArrow = new THREE.ArrowHelper(
 		body[i].pointingV3,
 		body[i].mesh.position,
@@ -1954,8 +1960,10 @@ function addFalconGraphics(i) {
 		body[i].mesh.rotateY(Math.PI);
 
 		// update thrust vector
-		body[i].pointingV3.set(body[i].cartes.x, body[i].cartes.y, body[i].cartes.z)
-			.normalize();
+		body[i].pointingM4.extractRotation(body[i].mesh.matrix);
+		// get unit vector of direction
+		body[i].pointingV3 =
+			body[i].mesh.up.clone().applyMatrix4(body[i].pointingM4);
 
 		scene.add(body[i].mesh);
 
