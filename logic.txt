@@ -30,6 +30,7 @@ hud overlaps on smartphone in widescreen if not fullscreened
 firefox mobile 96.0.0-beta.5 scrolling to hide address bar
   causes screen to resize wrong
 
+epiphany close frustum culling
 
 
 

@@ -3251,8 +3251,6 @@ function main() {
 
 		// copy
 		body[i].stage2.mesh.rotation.copy(body[i].mesh.rotation);
-		body[i].stage2.pointingV3.copy(body[i].pointingV3);
-		//body[i].stage2.pointingM4.copy(body[i].pointingM4);
 
 		body[i].stage2.cartes.x = body[i].cartes.x;
 		body[i].stage2.cartes.y = body[i].cartes.y;
@@ -3262,9 +3260,14 @@ function main() {
 		body[i].stage2.cartes.vz = body[i].cartes.vz;
 
 		// move to graphics offset so it DOESN'T move
-		body[i].stage2.cartes.x += body[i].stage2.pointingV3.x * 30.56;
-		body[i].stage2.cartes.y += body[i].stage2.pointingV3.y * 30.56;
-		body[i].stage2.cartes.z += body[i].stage2.pointingV3.z * 30.56;
+		body[i].pointingM4.extractRotation(body[i].mesh.matrix);
+		// get unit vector of direction
+		body[i].pointingV3 =
+			body[i].mesh.up.clone().applyMatrix4(body[i].pointingM4);
+
+		body[i].stage2.cartes.x += body[i].pointingV3.x * 30.56;
+		body[i].stage2.cartes.y += body[i].pointingV3.y * 30.56;
+		body[i].stage2.cartes.z += body[i].pointingV3.z * 30.56;
 		
 		if (body[i].refuel) {
 			body[i].stage2.s1refuel = body[i].refuel;
@@ -3281,9 +3284,9 @@ function main() {
 		addHelperGraphics(j);
 
 		// pneumatic separation
-		body[j].cartes.vx += body[j].pointingV3.x * 2; // 2 m/s² impulse
-		body[j].cartes.vy += body[j].pointingV3.y * 2;
-		body[j].cartes.vz += body[j].pointingV3.z * 2;
+		body[j].cartes.vx += body[i].pointingV3.x * 2; // 2 m/s² impulse
+		body[j].cartes.vy += body[i].pointingV3.y * 2;
+		body[j].cartes.vz += body[i].pointingV3.z * 2;
 
 		// pneumatic equal opposite force on stage1
 		body[i].cartes.vx -= body[i].pointingV3.x * 2; // 2 m/s² impulse
@@ -3311,8 +3314,6 @@ function main() {
 
 		// copy
 		body[i].fairingN.mesh.rotation.copy(body[i].mesh.rotation);
-		body[i].fairingN.pointingV3.copy(body[i].pointingV3);
-		//body[i].fairingN.pointingM4.copy(body[i].pointingM4);
 
 		body[i].fairingN.cartes.x = body[i].cartes.x;
 		body[i].fairingN.cartes.y = body[i].cartes.y;
@@ -3320,11 +3321,16 @@ function main() {
 		body[i].fairingN.cartes.vx = body[i].cartes.vx;
 		body[i].fairingN.cartes.vy = body[i].cartes.vy;
 		body[i].fairingN.cartes.vz = body[i].cartes.vz;
-
+		
 		// move to graphics offset so it DOESN'T move
-		body[i].fairingN.cartes.x += body[i].fairingN.pointingV3.x * 7.55;
-		body[i].fairingN.cartes.y += body[i].fairingN.pointingV3.y * 7.55;
-		body[i].fairingN.cartes.z += body[i].fairingN.pointingV3.z * 7.55;
+		body[i].pointingM4.extractRotation(body[i].mesh.matrix);
+		// get unit vector of direction
+		body[i].pointingV3 =
+			body[i].mesh.up.clone().applyMatrix4(body[i].pointingM4);
+
+		body[i].fairingN.cartes.x += body[i].pointingV3.x * 7.55;
+		body[i].fairingN.cartes.y += body[i].pointingV3.y * 7.55;
+		body[i].fairingN.cartes.z += body[i].pointingV3.z * 7.55;
 
 		// separate
 		body[i].mesh.remove(body[i].fairingN.mesh);
@@ -3337,6 +3343,7 @@ function main() {
 
 		// pneumatic separation
 		let pneu = 20; // m/s² impulse
+		let pneuForward = 10;
 		
 		let enu = getDirections(body[j].cartes.x, body[j].cartes.y,
 			body[j].cartes.z, body[j].mesh.quaternion);
@@ -3344,17 +3351,15 @@ function main() {
 		body[j].cartes.vy -= enu.northAxisV3.y * pneu;
 		body[j].cartes.vz -= enu.northAxisV3.z * pneu;
 		
-		body[j].cartes.vx += enu.upAxisV3.x * pneu;
-		body[j].cartes.vy += enu.upAxisV3.y * pneu;
-		body[j].cartes.vz += enu.upAxisV3.z * pneu;
-		body[j].xSpin = - 0.3;
+		body[j].cartes.vx += enu.upAxisV3.x * pneuForward;
+		body[j].cartes.vy += enu.upAxisV3.y * pneuForward;
+		body[j].cartes.vz += enu.upAxisV3.z * pneuForward;
+		body[j].xSpin = - 0.4;
 		
 		// repeat for Zenith fairing
 
 		// copy
 		body[i].fairingZ.mesh.rotation.copy(body[i].mesh.rotation);
-		body[i].fairingZ.pointingV3.copy(body[i].pointingV3);
-		//body[i].fairingZ.pointingM4.copy(body[i].pointingM4);
 
 		body[i].fairingZ.cartes.x = body[i].cartes.x;
 		body[i].fairingZ.cartes.y = body[i].cartes.y;
@@ -3364,9 +3369,9 @@ function main() {
 		body[i].fairingZ.cartes.vz = body[i].cartes.vz;
 
 		// move to graphics offset so it DOESN'T move
-		body[i].fairingZ.cartes.x += body[i].fairingZ.pointingV3.x * 7.55;
-		body[i].fairingZ.cartes.y += body[i].fairingZ.pointingV3.y * 7.55;
-		body[i].fairingZ.cartes.z += body[i].fairingZ.pointingV3.z * 7.55;
+		body[i].fairingZ.cartes.x += body[i].pointingV3.x * 7.55;
+		body[i].fairingZ.cartes.y += body[i].pointingV3.y * 7.55;
+		body[i].fairingZ.cartes.z += body[i].pointingV3.z * 7.55;
 
 		// separate
 		body[i].mesh.remove(body[i].fairingZ.mesh);
@@ -3384,11 +3389,11 @@ function main() {
 		body[j].cartes.vy += enu.northAxisV3.y * pneu;
 		body[j].cartes.vz += enu.northAxisV3.z * pneu;
 
-		body[j].cartes.vx += enu.upAxisV3.x * pneu;
-		body[j].cartes.vy += enu.upAxisV3.y * pneu;
-		body[j].cartes.vz += enu.upAxisV3.z * pneu;
+		body[j].cartes.vx += enu.upAxisV3.x * pneuForward;
+		body[j].cartes.vy += enu.upAxisV3.y * pneuForward;
+		body[j].cartes.vz += enu.upAxisV3.z * pneuForward;
 
-		body[j].xSpin = 0.3;
+		body[j].xSpin = 0.4;
 		
 	}
 	fairingSepReq = null;
