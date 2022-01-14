@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v91</pre>
+		<pre id="version">v92</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -851,7 +851,12 @@ for (let i = body.length - 1; i > -1; i--) {
 	body[i].angularVelocity = 1/(body[i].sidereal * 3600) * 2 * Math.PI;
 
 	if (body[i].flattening === undefined) {
-		body[i].flattening = 0;
+		if (body[i].radiusPole !== undefined) {
+			body[i].flattening = (body[i].radiusEquator - body[i].radiusPole) /
+				body[i].radiusEquator;
+		} else {
+			body[i].flattening = 0;
+		}
 	}
 	body[i].e2 = 2 * body[i].flattening - body[i].flattening**2;
 
