@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v86</pre>
+		<pre id="version">v87</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -65,6 +65,9 @@
 				<br>
 				<input type="checkbox" id="localOrbits" onchange="toggleLocalOrbits()">
 				<label for="localOrbits">Local Orbits</label>
+				<br>
+				<button class="menuButton" id="singleOrbit" onclick="toggleSingleOrbit()">toggle orbit</button>
+				<label for="singleOrbit">Always show the orbit for current object</label>
 				<br>
 				<button class="menuButton" id="localAxes" onclick="toggleAxes()">Object Axes</button>
 				<label for="localAxes">Toggle axes for currently viewed object</label>
@@ -3476,6 +3479,17 @@ function toggleLocalOrbits() {
 	}
 }
 
+function toggleSingleOrbit() {
+	if (view === 0) {
+		return;
+	}
+	if (!body[view].alwaysShowOrbit) {
+		body[view].alwaysShowOrbit = true;
+	} else {
+		body[view].alwaysShowOrbit = false;
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // preAnimate
 
@@ -3520,6 +3534,13 @@ function preAnimate() {
 				if (body[i].ellipse) {
 					body[i].ellipse.visible = false;
 				}
+			}
+		}
+	} else {
+		for (let i = body.length - 1; i > 0; i--) {
+			if (body[i].alwaysShowOrbit) {
+				drawEllipse(i, body[i].color, scale);
+				body[i].ellipse.visible = true;
 			}
 		}
 	}
