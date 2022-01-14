@@ -235,6 +235,8 @@
 
 div {
 	background:rgba(0, 0, 0, 0);
+	margin: 2%;
+	/*padding: 2%;*/
 }
 
 .menuButton {

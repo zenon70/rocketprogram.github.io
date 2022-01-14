@@ -3,7 +3,7 @@
 # IN-PROGRESS
 -------------
 
-recycle, need global geometries, materials
+recycle, should use global geometries, materials
 stage separation: correct places
 aerodynamic drag...
 isNaN safety before integration

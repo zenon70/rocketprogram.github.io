@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v87</pre>
+		<pre id="version">v88</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -54,6 +54,8 @@
 				<button class="menuButton rocketPanel" onclick="separateFairing()">fairing</button>
 				<button class="menuButton rocketPanel" onclick="refuel()">refuel</button>
 				<button class="menuButton rocketPanel" onclick="recycle()">recycle</button>
+				<div>Refuel available when empty</div>
+				<div>Recycle available when grounded</div>
 				<h3>Multiple Rockets</h3>
 				<button class="menuButton" onclick="addBody()">launch</button>
 				<h3>Visual Helpers</h3>
@@ -66,7 +68,7 @@
 				<input type="checkbox" id="localOrbits" onchange="toggleLocalOrbits()">
 				<label for="localOrbits">Local Orbits</label>
 				<br>
-				<button class="menuButton" id="singleOrbit" onclick="toggleSingleOrbit()">toggle orbit</button>
+				<button class="menuButton" id="singleOrbit" onclick="toggleSingleOrbit()">keep orbit</button>
 				<label for="singleOrbit">Always show the orbit for current object</label>
 				<br>
 				<button class="menuButton" id="localAxes" onclick="toggleAxes()">Object Axes</button>
@@ -1065,8 +1067,8 @@ rocket = body.push({
 	body[i].cartesEci = ecefToEci(body[i].ecef, body[focus].spun,
 		body[focus].angularVelocity, body[focus].radiusEquator, body[focus].e2);
 
-	// save eci for orbital prograde etc
-	//body[i].eci = body[i].cartes;
+	body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
+	body[i].kepler = toKepler(body[i].cartesEci, body[i].u);
 
 	// not necessary for earth, but should be standard practice
 	body[i].cartes = eciToIcrf(body[i].cartesEci,
@@ -3487,6 +3489,9 @@ function toggleSingleOrbit() {
 		body[view].alwaysShowOrbit = true;
 	} else {
 		body[view].alwaysShowOrbit = false;
+	}
+	if (!drawOrbits && !drawLocalOrbits && body[view].ellipse) {
+		body[view].ellipse.visible = false;
 	}
 }
 
