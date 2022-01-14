@@ -125,6 +125,11 @@ Therefore, instead, this program considers a planet, moon, or object's "north" p
 
 Note that which way the sun rises and sets is another matter. Usually, if a planet's "north" pole is its positive pole, the sun should rise in the east. Yet some planets rotate so slowly that the sunrise and sunset may also be a matter of not just the planet's own rotation, but also its revolution around the sun. For example, 199 has an other-worldly sunrise sunset pattern.
 
+### Graphics
+
+In reality, the sun is just pure white. It only appears orange when viewing it with special equipment. Therefore, in this program the sun is pure white, unless specifically viewing it.
+The sun does not rotate like planets. Its equator rotates more rapidly than its poles, which is not simulated here, but the general rotation speed is simulated.
+
 ### navigation tips
 
 - if you feel *upside down*, you can spin the view. tap (or click) and hold and make a circular motion. go clockwise or counter-clockwise to rotate the view. astronauts are always faced with the challenge of determining which way is _up_. if the ISS (International Space Station) had an axes helper, it would show red forward, roughly east, and blue pointing down towards earth, and green to the right, starboard, which is roughly south because it heads east.
@@ -133,7 +138,7 @@ Note that which way the sun rises and sets is another matter. Usually, if a plan
 
 - the faster time is simulated, the more unstable and unreaslistic the simulation is. the timestep is limited to ~8 million times, which is about as fast as it can reliably run for without quickly ejecting the fourth planet's moons, which is an artificial artifact of warping time, not a realistic feature of space.
 
-- to test the **nodal precession** effect, get an orbit that has a low periapsis (i.e. 200km-2000km), then switch to earth view, and crank up the time multiplier. you should notice that the orbit does not stay fixed with respect to the stars. this effect is weaker when orbiting the moon because the moon is not as oblate as earth.
+- to test the **nodal precession** effect, get an orbit that has a low periapsis (i.e. 200km-2000km), then switch to earth view, and crank up the time multiplier. you should notice that the orbit does not stay fixed with respect to the stars. this effect is weaker when orbiting the moon because the moon is not as oblate as earth. The 6th planet is very oblate.
 
 - hyperbolic trajectories function accurately, however, helper lines are currently NOT rendered. in previous versions that are not online, code was written to visualize *any* projected trajectory, even lissajous orbits. unfortunately, that code was very processor-intensive, so i have left it out of this version until i get around to it. therefore, transitioning between orbiting one thing and another thing can be very disorienting. use the nav-ball, orbital elements, and gps info to guide you. good luck! 
 

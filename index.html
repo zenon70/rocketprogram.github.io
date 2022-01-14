@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v83</pre>
+		<pre id="version">v84</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -53,6 +53,7 @@
 				<button class="menuButton rocketPanel" onclick="separateStage()">stage</button>
 				<button class="menuButton rocketPanel" onclick="separateFairing()">fairing</button>
 				<button class="menuButton rocketPanel" onclick="refuel()">refuel</button>
+				<button class="menuButton rocketPanel" onclick="recycle()">recycle</button>
 				<h3>Multiple Rockets</h3>
 				<button class="menuButton" onclick="addBody()">add rocket</button>
 				<h3>Visual Helpers</h3>
@@ -74,10 +75,7 @@
 				<h3>Earth Graphics</h3>
 				<input type="checkbox" id="clouds" onchange="toggleClouds()">
 				<label for="clouds">Clouds</label>
-				<br><!--
-				<input type="checkbox" id="lights" onchange="toggleLights()">
-				<label for="lights">City Lights</label>
-				<br>-->
+				<br>
 				<h3>City Lights</h3>
 				<div id="cityLightOutput" class="slider">30%</div>
 					<div class="slideContainer">
@@ -1131,6 +1129,11 @@ function separateFairing() {
 	fairingSepReq = view;
 }
 
+let recycleReq = null;
+function recycle() {
+	recycleReq = view;
+}
+
 function refuel() {
 	if (body[view].type === "Artificial" && !body[view].stage2) {
 		body[view].fuelMass += 92670;
@@ -1491,6 +1494,8 @@ for (let i = body.length - 1; i > -1; i--) {
 				new THREE.TextureLoader().load("graphics/planet3lights_2k_dark.jpg")
 		});
 
+		material.map.magFilter = THREE.NearestFilter;
+		material.map.minFilter = THREE.NearestFilter;
 		material.emissiveMap.magFilter = THREE.NearestFilter;
 		material.emissiveMap.minFilter = THREE.NearestFilter;
 
@@ -1885,16 +1890,6 @@ function toggleClouds() {
 	}
 }
 
-/*
-document.querySelector("#lights").checked = false;
-function toggleLights() {
-	if (body[earth].mesh.material.emissiveIntensity === 0) {
-		body[earth].mesh.material.emissiveIntensity = 0.7;
-	} else {
-		body[earth].mesh.material.emissiveIntensity = 0;
-	}
-}
-*/
 
 document.querySelector("#sprites").checked = true;
 function toggleSprites() {
@@ -3210,6 +3205,7 @@ function main() {
 		body[i].cartes.vx -= body[i].pointingV3.x * 2; // 2 m/s² impulse
 		body[i].cartes.vy -= body[i].pointingV3.y * 2;
 		body[i].cartes.vz -= body[i].pointingV3.z * 2;
+
 	}
 	stageSepReq = null;
 
@@ -3309,13 +3305,43 @@ function main() {
 		body[j].cartes.vz += enu.upAxisV3.z * pneu;
 
 		body[j].xSpin = 0.3;
+		
 	}
 	fairingSepReq = null;
 
 
 
 
+	if (recycleReq !== null && body[recycleReq].onSurface) {
 
+		let i = recycleReq;
+		/*
+		right now it IS a memory leak to keep adding & recycling rockets...
+		but...
+		why dispose? just use global geometries and materials
+
+		// DON'T do this
+		if (body[i].stage2 !== null) {
+			if (body[i].fairin)
+			body[i].stage2.mesh.geometry.dispose();
+			body[i].stage2.mesh.material.dispose();
+			scene.remove(body[i].stage2.mesh);
+		}
+		*/
+		// might as well at least do this until globals are implemented
+		body[i].mesh.geometry.dispose();
+		body[i].mesh.material.dispose();
+		
+
+
+		scene.remove(body[i].mesh);
+
+		view = 3;
+		viewFinalize();
+		body.splice(i, 1);
+
+	}
+	recycleReq = null;
 
 
 

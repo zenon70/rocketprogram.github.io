@@ -3,7 +3,9 @@
 # IN-PROGRESS
 -------------
 
-stage separation
+recycle, need global geometries, materials
+stage separation: correct places
+aerodynamic drag...
 isNaN safety before integration
 button layout, throttle sliders (main & spin)
 
