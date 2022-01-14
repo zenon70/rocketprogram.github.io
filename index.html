@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v84</pre>
+		<pre id="version">v85</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -1135,7 +1135,10 @@ function recycle() {
 }
 
 function refuel() {
-	if (body[view].type === "Artificial" && !body[view].stage2) {
+	if (body[view].type === "Artificial" && !body[view].stage2 &&
+		body[view].stage2 !== null && body[view].fuelMass === 0 &&
+		body[view].mass !== 100) {
+		body[view].mass += 92670;
 		body[view].fuelMass += 92670;
 		body[view].burnTime += 397;
 		if (body[view].refuel) {
