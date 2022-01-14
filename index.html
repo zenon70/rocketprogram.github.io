@@ -55,7 +55,7 @@
 				<button class="menuButton rocketPanel" onclick="refuel()">refuel</button>
 				<button class="menuButton rocketPanel" onclick="recycle()">recycle</button>
 				<h3>Multiple Rockets</h3>
-				<button class="menuButton" onclick="addBody()">add rocket</button>
+				<button class="menuButton" onclick="addBody()">launch</button>
 				<h3>Visual Helpers</h3>
 				<input type="checkbox" id="sprites" onchange="toggleSprites()">
 				<label for="sprites">Sprites</label>
@@ -1135,12 +1135,24 @@ function recycle() {
 }
 
 function refuel() {
+	// is rocket, doesn't have stage 2, didn't have stage 2, is out of fuel...
 	if (body[view].type === "Artificial" && !body[view].stage2 &&
 		body[view].stage2 !== null && body[view].fuelMass === 0 &&
 		body[view].mass !== 100) {
 		body[view].mass += 92670;
 		body[view].fuelMass += 92670;
 		body[view].burnTime += 397;
+		if (body[view].refuel) {
+			body[view].refuel++;
+		} else {
+			body[view].refuel = 1;
+		}
+	}
+	if (body[view].type === "Artificial" && (body[view].stage2 || body[view].stage2 === null) &&
+		body[view].fuelMass === 0) {
+		body[view].mass += 411000;
+		body[view].fuelMass += 411000;
+		body[view].burnTime += 162;
 		if (body[view].refuel) {
 			body[view].refuel++;
 		} else {
@@ -1474,7 +1486,55 @@ function changeEarth(value) {
 }
 
 
+/*
+function makeSurface() {
+	if (body[view].type === "Artificial" && body[view].gps.alt < 50000) {
+	
+	let i = body[view].focus;
+	
+	if (body[i].surface) {
+		body[i].surface.geometry.dispose();
+		body[i].surface.material.dispose();
+	}
 
+	// lat: 5.236 * Math.PI / 180,
+	// lon: -52.775 * Math.PI / 180,
+
+	body[i].surface = new THREE.Mesh(
+		new THREE.SphereGeometry(body[i].radiusEquator * scale, 32, 16,
+		// phi - longitude
+		0,
+		Math.PI * 2,
+
+		// theta - latitude (top to bottom)
+		0,
+		Math.PI
+		),
+		new THREE.MeshLambertMaterial({
+			map: new THREE.TextureLoader().load(body[i].map)}));
+		body[i].surface.material.map.magFilter = THREE.NearestFilter;
+		body[i].surface.material.map.minFilter = THREE.NearestFilter;
+
+	// squish
+	body[i].surface.scale.y = body[i].radiusPole / body[i].radiusEquator;
+	if (body[i].radiusMeridian !== undefined) {
+		body[i].surface.scale.z = body[i].radiusPole / body[i].radiusEquator;
+	}
+
+	// tilt
+	// turn to z-up, then Dec, thrn RA, then W.
+	body[i].surface.rotation.set(Math.PI / 2, 0, -Math.PI / 2 + body[i].declination);
+	body[i].surface.rotateOnWorldAxis(zAxis, body[i].rightAscension);
+	body[i].surface.rotateY(Math.PI / 2 + body[i].primeMeridian);
+
+
+
+
+
+
+	body[i].mesh.add(body[i].surface);
+}
+*/
 
 // ambient light (stars, etc)
 const starlight = new THREE.AmbientLight (0xffffff);
@@ -1497,6 +1557,10 @@ for (let i = body.length - 1; i > -1; i--) {
 				new THREE.TextureLoader().load("graphics/planet3lights_2k_dark.jpg")
 		});
 
+		material.map.wrapS = THREE.RepeatWrapping;
+		
+		//material.map.offset = 0.5;
+
 		material.map.magFilter = THREE.NearestFilter;
 		material.map.minFilter = THREE.NearestFilter;
 		material.emissiveMap.magFilter = THREE.NearestFilter;
@@ -1517,7 +1581,11 @@ for (let i = body.length - 1; i > -1; i--) {
 	}
 
 	body[i].mesh = new THREE.Mesh(new THREE.SphereGeometry(
-		body[i].radiusEquator * scale, body[i].segments, body[i].segments / 2),
+		body[i].radiusEquator * scale, body[i].segments, body[i].segments / 2,
+		0, Math.PI * 2,
+		0, Math.PI
+		
+		),
 		material);
 	
 	if (i === earth) {
@@ -1704,7 +1772,7 @@ body[i] = {
 	stage2 = {
 		fairingN = {}
 		fairingZ = {}
-		payload = {}
+		... and maybe  in the future... payload = {}
 	}
 }
 
@@ -3103,9 +3171,13 @@ function displayText() {
 				/ 1000).toFixed(3) + " km" +
 			"<br>Peri<sub>s</sub> " + ((body[view].kepler.periapsis -
 				body[vFocus].radiusEquator) / 1000).toFixed(3) + " km";
+		if (body[view].s1refuel) {
+			document.getElementById("hudGpsInfo").innerHTML +=
+			"<br>s1 refueled: " + body[view].s1refuel;
+		}
 		if (body[view].refuel) {
 			document.getElementById("hudGpsInfo").innerHTML +=
-			"<br>refuels: " + body[view].refuel;
+			"<br>refueled: " + body[view].refuel;
 		}
 	} else {
 		document.getElementById("hudGpsInfo").innerHTML =
@@ -3188,6 +3260,10 @@ function main() {
 		body[i].stage2.cartes.x += body[i].stage2.pointingV3.x * 30.56;
 		body[i].stage2.cartes.y += body[i].stage2.pointingV3.y * 30.56;
 		body[i].stage2.cartes.z += body[i].stage2.pointingV3.z * 30.56;
+		
+		if (body[i].refuel) {
+			body[i].stage2.s1refuel = body[i].refuel;
+		}
 
 		// separate
 		body[i].mesh.remove(body[i].stage2.mesh);
