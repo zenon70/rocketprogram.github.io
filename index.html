@@ -3408,14 +3408,18 @@ function main() {
 		}
 		*/
 		// might as well at least do this until globals are implemented
-		body[i].mesh.geometry.dispose();
-		body[i].mesh.material.dispose();
-		
-
-
 		scene.remove(body[i].mesh);
 
-		view = 3;
+		body[i].mesh.geometry.dispose();
+		body[i].mesh.material.dispose();
+
+		if (body[i].ellipse) {
+			scene.remove(body[i].ellipse);
+			body[i].ellipse.geometry.dispose();
+			body[i].ellipse.material.dispose();
+		}
+
+		view = earth;
 		viewFinalize();
 		body.splice(i, 1);
 
@@ -3445,7 +3449,7 @@ function toggleAllOrbits() {
 		if (drawLocalOrbits) {
 			// skip sun
 			for (let i = body.length - 1; i > 0; i--) {
-				if (body[i].focus !== body[rocket].focus) {
+				if (body[i].focus !== body[view].focus) {
 					body[i].ellipse.visible = false;
 				}
 			}
@@ -3502,8 +3506,14 @@ function preAnimate() {
 */
 		}
 	} else if (drawLocalOrbits === true) {
+		let local = 0;
+		if (body[view].type === "Artificial") {
+			local = body[view].focus;
+		} else {
+			local = view;
+		}
 		for (let i = body.length - 1; i > 0; i--) {
-			if (body[i].focus === body[rocket].focus) {
+			if (body[i].focus === local) {
 				drawEllipse(i, body[i].color, scale);
 				body[i].ellipse.visible = true;
 			} else {
