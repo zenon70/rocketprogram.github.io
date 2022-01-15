@@ -4,15 +4,14 @@
 -------------
 
 
-401 surface and graphics are WAY off, oriented oblate wrong way from graphics?
-  more than just the dips in polygons
-  is it really oblate? landing on 401 makes me think no.
-
-
 recycle() has mem leak, should reuse global geometries, materials
+
 fairing separation: correct directions
+
 make aerodynamic drag specific to vehicle...
+
 isNaN safety before integration
+
 button layout, throttle sliders (main & spin)
 
 

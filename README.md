@@ -185,6 +185,8 @@ The sun does not rotate like planets. Its equator rotates more rapidly than its 
 
 - surface terrain such as mountains and valleys are not simulated.
 
+- 401 gps surface and graphics are different (beyond normal issue of limited segments) due to non-'oblate-spheroid' shape: radiusWest squishes it along another axis, and there is no gps formula here for that. 401 (and 402) are actually better depicted as complicated 3d models anyway.
+
 ## design choices
 
 - functional programming. wherever possible and practical, *pure* (independent)  functions are written and utilized. this keeps the working pieces of the program separate, and therefore makes the program more reliable and more extensible. it is my goal to make it so that advanced users and programmers can easily understand and use the code.

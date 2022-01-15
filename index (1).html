@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v93</pre>
+		<pre id="version">v92</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -1624,8 +1624,8 @@ for (let i = body.length - 1; i > -1; i--) {
 */
 		// clouds
 		let material2 =	new THREE.MeshLambertMaterial({
-			map: new THREE.TextureLoader().load("graphics/planet3clouds_512_b.png"),
 			side: THREE.DoubleSide,
+			map: new THREE.TextureLoader().load("graphics/planet3clouds_512_b.png"),
 			transparent: true
 		});
 		//material2.map.magFilter = THREE.NearestFilter;
@@ -2013,7 +2013,16 @@ function addLaunchPad(gps, focus) {
 		focus = 3;
 	}
 
-	let p = pad.push(new THREE.Group()) - 1;
+	//let p = pad.push(new THREE.Group()) - 1;
+
+
+	let p = pad.push(new THREE.Mesh(new THREE.PlaneGeometry(200 * scale, 200 * scale),
+		new THREE.MeshBasicMaterial({
+			map: new THREE.TextureLoader().load("graphics/ofcpad.png"),
+			side: THREE.DoubleSide
+		})
+	)) - 1;
+	//pad.position.set(0, - (37.88/2 + 0.02) * scale, 0);
 
 /*
 	let gps = {lat: 0, lon: 0, alt: 0};
@@ -2039,6 +2048,9 @@ function addLaunchPad(gps, focus) {
 		cartes.z * scale
 	);
 
+
+	//pad[p].rotation.copy(body[i].mesh.rotation);
+
 	let enu = getDirections(cartes.x, cartes.y, cartes.z,
 		body[focus].mesh.quaternion);
 	let navM4 = new THREE.Matrix4().makeBasis(
@@ -2048,27 +2060,11 @@ function addLaunchPad(gps, focus) {
 	pad[p].rotateX(Math.PI / 2 + Math.PI);
 	pad[p].rotateZ(- Math.PI / 2);
 
-	let surface = new THREE.Mesh(new THREE.PlaneGeometry(200 * scale, 200 * scale),
-		new THREE.MeshLambertMaterial({
-			map: new THREE.TextureLoader().load("graphics/ofcpadg.png"),
-			side: THREE.DoubleSide,
-			transparent: true
-		})
-	);
-	surface.material.map.magFilter = THREE.NearestFilter;
-	surface.material.map.minFilter = THREE.NearestFilter;
-	surface.position.set(0, 0, - (37.88/2 + 0.02) * scale);
-	pad[p].add(surface);
-/*
-	let mound = new THREE.Mesh(new THREE.BoxGeometry(80000 * scale, 80000 * scale, 80000 * scale),
-		new THREE.MeshLambertMaterial({color:0xb59475}));
-	mound.position.set(0, 0, - 1 * scale + (- 40000) * scale);
-	surface.add(mound);
-*/
+
 	body[focus].mesh.attach(pad[p]);
 	return p;
 }
-body[rocket].pad = addLaunchPad(body[rocket].gps, body[rocket].focus);
+body[rocket].pad = addLaunchPad(body[rocket].gps);
 
 
 
@@ -3356,10 +3352,6 @@ function main() {
 	if (addFalconReq) {
 		let i = addFalcon();
 		addFalconGraphics(i);
-
-		// doesn't work yet..
-		//body[i].pad = addLaunchPad(body[i].gps, body[i].focus);
-
 		addFalconReq = false;
 	}
 
