@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v95</pre>
+		<pre id="version">v96</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -53,11 +53,11 @@
 				<button class="inMenuButton rocketPanel" onclick="separateStage()">stage</button>
 				<button class="inMenuButton rocketPanel" onclick="separateFairing()">fairing</button>
 				<button class="inMenuButton rocketPanel" onclick="refuel()">refuel</button>
-				<button class="inMenuButton rocketPanel" onclick="recycle()">recycle</button>
 				<div class="subtext">Refuel available when empty</div>
-				<div class="subtext">Recycle available when grounded</div>
 				<h3>Multiple Rockets</h3>
-				<button class="inMenuButton" onclick="addBody()">launch</button>
+				<button class="inMenuButton" onclick="addBody()">deploy</button>
+				<button class="inMenuButton rocketPanel" onclick="recycle()">recycle</button>
+				<div class="subtext">Recycle available when grounded</div>
 				<h3>Visual Helpers</h3>
 				<input type="checkbox" id="sprites" onchange="toggleSprites()">
 				<label for="sprites">Sprites</label>
@@ -1056,7 +1056,8 @@ function addFalcon() {
 		} else {
 			// anywhere
 			body[i].gps = {
-				lat: (Math.random() * (90 - -90) + -90) * Math.PI / 180,
+				//lat: (Math.random() * (90 - -90) + -90) * Math.PI / 180,
+				lat: Math.acos(Math.random() * 2 - 1) - Math.PI / 2,
 				lon: (Math.random() * (180 - -180) + -180) * Math.PI / 180,
 				alt: 0
 			};
