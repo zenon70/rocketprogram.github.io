@@ -3,6 +3,7 @@
 # IN-PROGRESS
 -------------
 
+positioning a launch pad
 
 recycle() has mem leak, should reuse global geometries, materials
 
@@ -14,6 +15,7 @@ isNaN safety before integration
 
 button layout, throttle sliders (main & spin)
 
+random launch location is not uniform distribution, more near poles
 
 
 
@@ -26,6 +28,12 @@ crash at center of planet
 8 million timestep + thrust straight up...
 
 
+# ORBITAL MECHANICS
+-------------------
+glitchy when using custom kepler elements with 0 i, 0 lan, 0 w, 0 M.
+
+
+
 # GUI ISSUES
 ------------
 gui hud numbers wrapping, and going outside of tinted background
@@ -36,8 +44,6 @@ firefox mobile 96.0.0-beta.5 scrolling to hide address bar
   causes screen to resize wrong
 
 epiphany near frustum culling
-
-
 
 
 # PHYSICS

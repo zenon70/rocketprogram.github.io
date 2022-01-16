@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v93</pre>
+		<pre id="version">v94</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -541,9 +541,9 @@ let earth = body.push({
 	declination: 90,
 	primeMeridian: 190.147,
 
+	//segments: 64,
 	map: "graphics/planet3_1k.jpg",
-	color: 0x419dd9,
-	segments: 32
+	color: 0x419dd9
 }) - 1;
 
 
@@ -569,7 +569,7 @@ let planet4 = body.push({
 	declination: 52.88650,
 	primeMeridian: 176.630,
 
-	segments: 48,
+	//segments: 48,
 	map: "graphics/planet4_2k.jpg",
 	color: 0xb76247
 }) - 1;
@@ -772,9 +772,9 @@ let moon = body.push({
 	declination: 66.5392,
 	primeMeridian: 38.3213,
 	
+	//segments: 64,
 	map: "graphics/moon301_2k.jpg",
 	//map: "graphics/moon301_1k.jpg",
-	//segments: 64,
 	color: 0x969392
 }) - 1;
 
@@ -803,7 +803,6 @@ let moon401 = body.push({
 	primeMeridian: 35.06,
 
 	map: "graphics/moon401_720x360.jpg",
-	//segments: 32,
 	color: 0x9a8d84
 }) - 1;
 
@@ -927,37 +926,15 @@ for (let i = body.length - 1; i > -1; i--) {
 let rocket;
 let rocketCount = 0;
 function addFalcon() {
-rocketCount++;
-rocket = body.push({
-	name: "f9" + "#" + String(rocketCount),
-	focus: earth,
-	mass: 549054,
-	fuelMass: 411000,
-	burnTime: 162,
-	thrustVac: 8227000,
-	thrustSea: 7607000,
-	sidereal: null,
-	xSpin: 0,
-	ySpin: 0,
-	zSpin: 0,
-	throttleSwitch: false,
-	throttle: 100,
-	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
-		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
-	drag: 0,
-	pointingV3: new THREE.Vector3(0, 1, 0), // loads y-up
-	pointingM4: new THREE.Matrix4(),
-	type: "Artificial",
-	color: 0xe5e7e7,
-
-	stage2: {
-		name: "f9s2" + "#" + String(rocketCount),
+	rocketCount++;
+	rocket = body.push({
+		name: "f9" + "#" + String(rocketCount),
 		focus: earth,
-		mass: 92670 + 3900,
-		fuelMass: 92670,
-		burnTime: 397,
-		thrustVac: 981000,
-		thrustSea: 845000,
+		mass: 549054,
+		fuelMass: 411000,
+		burnTime: 162,
+		thrustVac: 8227000,
+		thrustSea: 7607000,
 		sidereal: null,
 		xSpin: 0,
 		ySpin: 0,
@@ -971,21 +948,21 @@ rocket = body.push({
 		pointingM4: new THREE.Matrix4(),
 		type: "Artificial",
 		color: 0xe5e7e7,
-
-		fairingN: {
-			name: "fairingPZ" + "#" + String(rocketCount),
+	
+		stage2: {
+			name: "f9s2" + "#" + String(rocketCount),
 			focus: earth,
-			mass: 100,
-			fuelMass: 0,
-			burnTime: 0,
-			thrustVac: 0,
-			thrustSea: 0,
+			mass: 92670 + 3900,
+			fuelMass: 92670,
+			burnTime: 397,
+			thrustVac: 981000,
+			thrustSea: 845000,
 			sidereal: null,
 			xSpin: 0,
-			ySpin: 0, // will this work? spins when removed
+			ySpin: 0,
 			zSpin: 0,
 			throttleSwitch: false,
-			throttle: 0,
+			throttle: 100,
 			cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 				vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 			drag: 0,
@@ -993,148 +970,170 @@ rocket = body.push({
 			pointingM4: new THREE.Matrix4(),
 			type: "Artificial",
 			color: 0xe5e7e7,
-		},
-
-		fairingZ: {
-			name: "fairingMZ" + "#" + String(rocketCount),
-			focus: earth,
-			mass: 100,
-			fuelMass: 0,
-			burnTime: 0,
-			thrustVac: 0,
-			thrustSea: 0,
-			sidereal: null,
-			xSpin: 0,
-			ySpin: 0, // will this work? spins when removed
-			zSpin: 0,
-			throttleSwitch: false,
-			throttle: 0,
-			cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
-				vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
-			drag: 0,
-			pointingV3: new THREE.Vector3(0, 1, 0), // loads y-up
-			pointingM4: new THREE.Matrix4(),
-			type: "Artificial",
-			color: 0xe5e7e7,
+	
+			fairingN: {
+				name: "fairingPZ" + "#" + String(rocketCount),
+				focus: earth,
+				mass: 100,
+				fuelMass: 0,
+				burnTime: 0,
+				thrustVac: 0,
+				thrustSea: 0,
+				sidereal: null,
+				xSpin: 0,
+				ySpin: 0, // will this work? spins when removed
+				zSpin: 0,
+				throttleSwitch: false,
+				throttle: 0,
+				cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
+					vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
+				drag: 0,
+				pointingV3: new THREE.Vector3(0, 1, 0), // loads y-up
+				pointingM4: new THREE.Matrix4(),
+				type: "Artificial",
+				color: 0xe5e7e7,
+			},
+	
+			fairingZ: {
+				name: "fairingMZ" + "#" + String(rocketCount),
+				focus: earth,
+				mass: 100,
+				fuelMass: 0,
+				burnTime: 0,
+				thrustVac: 0,
+				thrustSea: 0,
+				sidereal: null,
+				xSpin: 0,
+				ySpin: 0, // will this work? spins when removed
+				zSpin: 0,
+				throttleSwitch: false,
+				throttle: 0,
+				cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
+					vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
+				drag: 0,
+				pointingV3: new THREE.Vector3(0, 1, 0), // loads y-up
+				pointingM4: new THREE.Matrix4(),
+				type: "Artificial",
+				color: 0xe5e7e7,
+			}
 		}
+	}) - 1;
+	
+	
+	// launch from ground
+	{
+		const i = rocket;
+		let focus = body[i].focus;
+	
+		if (rocketCount === 1) {
+			// guiana space center, kourou, french guiana
+			body[i].gps = {
+				lat: 5.236 * Math.PI / 180,
+				lon: -52.775 * Math.PI / 180,
+				alt: 0  // actual unknown
+			};
+		} else if (rocketCount === 2) {
+			// boca chica, texas
+			body[i].gps = {
+				lat: 25.997354305760496 * Math.PI / 180,
+				lon: -97.15698039306052 * Math.PI / 180,
+				alt: 0
+			};
+		} else if (rocketCount === 3) {
+			// kennedy launch pad 39a
+			body[i].gps = {
+				lat: 28.60838889 * Math.PI / 180,
+				lon: -80.60444444 * Math.PI / 180,
+				alt: 0
+			};
+		} else if (rocketCount === 4) {
+			// baikonur cosmodrome, kazakhstan
+			body[i].gps = {
+				lat: 45.92 * Math.PI / 180,
+				lon: 63.342 * Math.PI / 180,
+				alt: 0  // actually 90 meters, but this program doesn't have terrain yet
+			};
+		} else {
+			// anywhere
+			body[i].gps = {
+				lat: (Math.random() * (90 - -90) + -90) * Math.PI / 180,
+				lon: (Math.random() * (180 - -180) + -180) * Math.PI / 180,
+				alt: 0
+			};
+		}
+	
+	
+	
+	
+		// convert to ecef then to cartes
+		body[i].ecef = gpsToEcef(body[i].gps, body[focus].radiusEquator,
+			body[focus].e2);
+		body[i].cartesEci = ecefToEci(body[i].ecef, body[focus].spun,
+			body[focus].angularVelocity, body[focus].radiusEquator, body[focus].e2);
+	
+		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
+		body[i].kepler = toKepler(body[i].cartesEci, body[i].u);
+	
+		// not necessary for earth, but should be standard practice
+		body[i].cartes = eciToIcrf(body[i].cartesEci,
+			body[focus].rightAscension, body[focus].declination);
+	
+	/*
+		// OVERWRITE PREVIOUS... do this instead.. sputnik 1 orbit
+		let aTemp = getAxis(947000, 228000, body[focus].radiusEquator);
+		let eTemp = getEcc(947000, 228000, body[focus].radiusEquator);
+		body[i].kepler = {
+			a: aTemp,
+			e: eTemp,
+			i: 61 * Math.PI / 180,
+			lan: 5 * Math.PI / 180,
+			w: 5 * Math.PI / 180,
+			meanAnom: 5 * Math.PI / 180
+		}
+	
+		// high orbit
+		let aTemp = getAxis(322000999, 418000999, body[focus].radiusEquator);
+		let eTemp = getEcc(322000999, 418000999, body[focus].radiusEquator);
+		body[i].kepler = {
+			a: aTemp,
+			e: eTemp,
+			i: 20 * Math.PI / 180,
+			lan: 12 * Math.PI / 180,
+			w: 61 * Math.PI / 180,
+			meanAnom: 146 * Math.PI / 180
+		}
+	
+		// 401 orbit
+		body[i].focus = 11;
+		focus = 11;
+		let aTemp = getAxis(300, 200, body[focus].radiusEquator);
+		let eTemp = getEcc(300, 200, body[focus].radiusEquator);
+		body[i].kepler = {
+			a: aTemp,
+			e: eTemp,
+			i: 89.99 * Math.PI / 180,
+			lan: 1 * Math.PI / 180,
+			w: 1 * Math.PI / 180,
+			meanAnom: 1 * Math.PI / 180
+		}
+	
+		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
+		body[i].cartesEci = toCartes(body[i].kepler, body[i].mu);
+		body[i].ecef = eciToEcef(body[i].cartesEci,
+			body[focus].spun,
+			body[focus].angularVelocity,
+			body[focus].radiusEquator, body[focus].e2);
+		body[i].gps = ecefToGps(body[i].ecef, body[focus].radiusEquator,
+			body[focus].e2);
+		body[i].cartes = eciToIcrf(body[i].cartesEci, body[focus].rightAscension,
+			body[focus].declination);
+	
+	*/
+	
+		document.getElementById("hudFuel").innerHTML =
+			body[i].fuelMass.toFixed(0) + "<br>kg fuel";
+		return i;
 	}
-}) - 1;
-
-
-// launch from ground
-{
-	const i = rocket;
-	let focus = body[i].focus;
-
-	if (rocketCount === 1) {
-		// guiana space center, kourou, french guiana
-		body[i].gps = {
-			lat: 5.236 * Math.PI / 180,
-			lon: -52.775 * Math.PI / 180,
-			alt: 0  // actual unknown
-		};
-	} else if (rocketCount === 2) {
-		// boca chica, texas
-		body[i].gps = {
-			lat: 25.997354305760496 * Math.PI / 180,
-			lon: -97.15698039306052 * Math.PI / 180,
-			alt: 0
-		};
-	} else if (rocketCount === 3) {
-		// kennedy launch pad 39a
-		body[i].gps = {
-			lat: 28.60838889 * Math.PI / 180,
-			lon: -80.60444444 * Math.PI / 180,
-			alt: 0
-		};
-	} else if (rocketCount === 4) {
-		// baikonur cosmodrome, kazakhstan
-		body[i].gps = {
-			lat: 45.92 * Math.PI / 180,
-			lon: 63.342 * Math.PI / 180,
-			alt: 0  // actually 90 meters, but this program doesn't have terrain yet
-		};
-	} else {
-		// anywhere
-		body[i].gps = {
-			lat: (Math.random() * (90 - -90) + -90) * Math.PI / 180,
-			lon: (Math.random() * (180 - -180) + -180) * Math.PI / 180,
-			alt: 0
-		};
-	}
-
-
-
-
-	// convert to ecef then to cartes
-	body[i].ecef = gpsToEcef(body[i].gps, body[focus].radiusEquator,
-		body[focus].e2);
-	body[i].cartesEci = ecefToEci(body[i].ecef, body[focus].spun,
-		body[focus].angularVelocity, body[focus].radiusEquator, body[focus].e2);
-
-	body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
-	body[i].kepler = toKepler(body[i].cartesEci, body[i].u);
-
-	// not necessary for earth, but should be standard practice
-	body[i].cartes = eciToIcrf(body[i].cartesEci,
-		body[focus].rightAscension, body[focus].declination);
-
-/*
-	// OVERWRITE PREVIOUS... do this instead.. sputnik 1 orbit
-	let aTemp = getAxis(947000, 228000, body[focus].radiusEquator);
-	let eTemp = getEcc(947000, 228000, body[focus].radiusEquator);
-	body[i].kepler = {
-		a: aTemp,
-		e: eTemp,
-		i: 61 * Math.PI / 180,
-		lan: 5 * Math.PI / 180,
-		w: 5 * Math.PI / 180,
-		meanAnom: 5 * Math.PI / 180
-	}
-
-	// high orbit
-	let aTemp = getAxis(322000999, 418000999, body[focus].radiusEquator);
-	let eTemp = getEcc(322000999, 418000999, body[focus].radiusEquator);
-	body[i].kepler = {
-		a: aTemp,
-		e: eTemp,
-		i: 20 * Math.PI / 180,
-		lan: 12 * Math.PI / 180,
-		w: 61 * Math.PI / 180,
-		meanAnom: 146 * Math.PI / 180
-	}
-
-	// 401 orbit
-	body[i].focus = 11;
-	focus = 11;
-	let aTemp = getAxis(300, 200, body[focus].radiusEquator);
-	let eTemp = getEcc(300, 200, body[focus].radiusEquator);
-	body[i].kepler = {
-		a: aTemp,
-		e: eTemp,
-		i: 89.99 * Math.PI / 180,
-		lan: 1 * Math.PI / 180,
-		w: 1 * Math.PI / 180,
-		meanAnom: 1 * Math.PI / 180
-	}
-
-	body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
-	body[i].cartesEci = toCartes(body[i].kepler, body[i].mu);
-	body[i].ecef = eciToEcef(body[i].cartesEci,
-		body[focus].spun,
-		body[focus].angularVelocity,
-		body[focus].radiusEquator, body[focus].e2);
-	body[i].gps = ecefToGps(body[i].ecef, body[focus].radiusEquator,
-		body[focus].e2);
-	body[i].cartes = eciToIcrf(body[i].cartesEci, body[focus].rightAscension,
-		body[focus].declination);
-
-*/
-
-	document.getElementById("hudFuel").innerHTML =
-		body[rocket].fuelMass.toFixed(0) + "<br>kg fuel";
-}
-	return rocket;
 }
 addFalcon();
 
@@ -1512,55 +1511,6 @@ function changeEarth(value) {
 }
 
 
-/*
-function makeSurface() {
-	if (body[view].type === "Artificial" && body[view].gps.alt < 50000) {
-	
-	let i = body[view].focus;
-	
-	if (body[i].surface) {
-		body[i].surface.geometry.dispose();
-		body[i].surface.material.dispose();
-	}
-
-	// lat: 5.236 * Math.PI / 180,
-	// lon: -52.775 * Math.PI / 180,
-
-	body[i].surface = new THREE.Mesh(
-		new THREE.SphereGeometry(body[i].radiusEquator * scale, 32, 16,
-		// phi - longitude
-		0,
-		Math.PI * 2,
-
-		// theta - latitude (top to bottom)
-		0,
-		Math.PI
-		),
-		new THREE.MeshLambertMaterial({
-			map: new THREE.TextureLoader().load(body[i].map)}));
-		body[i].surface.material.map.magFilter = THREE.NearestFilter;
-		body[i].surface.material.map.minFilter = THREE.NearestFilter;
-
-	// squish
-	body[i].surface.scale.y = body[i].radiusPole / body[i].radiusEquator;
-	if (body[i].radiusWest !== undefined) {
-		body[i].surface.scale.z = body[i].radiusPole / body[i].radiusEquator;
-	}
-
-	// tilt
-	// turn to z-up, then Dec, thrn RA, then W.
-	body[i].surface.rotation.set(Math.PI / 2, 0, -Math.PI / 2 + body[i].declination);
-	body[i].surface.rotateOnWorldAxis(zAxis, body[i].rightAscension);
-	body[i].surface.rotateY(Math.PI / 2 + body[i].primeMeridian);
-
-
-
-
-
-
-	body[i].mesh.add(body[i].surface);
-}
-*/
 
 // ambient light (stars, etc)
 const starlight = new THREE.AmbientLight (0xffffff);
@@ -1574,7 +1524,7 @@ for (let i = body.length - 1; i > -1; i--) {
 
 	let material;
 
- if (body[i].map !== undefined && body[i].map !== null && i === earth) {
+	if (body[i].map !== undefined && body[i].map !== null && i === earth) {
 		material = new THREE.MeshLambertMaterial({
 			map: new THREE.TextureLoader().load(body[i].map),
 			emissive: 0xffffdd,
@@ -1582,10 +1532,6 @@ for (let i = body.length - 1; i > -1; i--) {
 			emissiveMap:
 				new THREE.TextureLoader().load("graphics/planet3lights_2k_dark.jpg")
 		});
-
-		material.map.wrapS = THREE.RepeatWrapping;
-		
-		//material.map.offset = 0.5;
 
 		material.map.magFilter = THREE.NearestFilter;
 		material.map.minFilter = THREE.NearestFilter;
@@ -1607,29 +1553,17 @@ for (let i = body.length - 1; i > -1; i--) {
 	}
 
 	body[i].mesh = new THREE.Mesh(new THREE.SphereGeometry(
-		body[i].radiusEquator * scale, body[i].segments, body[i].segments / 2,
-		0, Math.PI * 2,
-		0, Math.PI
-		
-		),
+		body[i].radiusEquator * scale, body[i].segments, body[i].segments / 2),
 		material);
 	
 	if (i === earth) {
-/*
-		//body[i].mesh.material.emissive = 0xffffff;
-		body[i].mesh.material.emissiveMap =
-			new THREE.TextureLoader().load("graphics/planet3lights_2k.jpg");
-		//body[i].mesh.material.emissiveIntensity = 1;
-		
-*/
+
 		// clouds
 		let material2 =	new THREE.MeshLambertMaterial({
 			map: new THREE.TextureLoader().load("graphics/planet3clouds_512_b.png"),
 			side: THREE.DoubleSide,
 			transparent: true
 		});
-		//material2.map.magFilter = THREE.NearestFilter;
-		//material2.map.minFilter = THREE.NearestFilter;
 		
 		// 8500 is scale height, * 3.75 so it doesn't shred (clip) on the boxy globe
 		body[i].clouds = new THREE.Mesh(new THREE.SphereGeometry(
@@ -1974,24 +1908,6 @@ function addFalconGraphics(i) {
 		body[i].pointingV3 =
 			body[i].mesh.up.clone().applyMatrix4(body[i].pointingM4);
 
-
-
-/*
-		body[i].pad = new THREE.Mesh(new THREE.PlaneGeometry(200 * scale, 200 * scale),
-				new THREE.MeshBasicMaterial({
-					map: new THREE.TextureLoader().load("graphics/ofcpad.png")})
-				);
-		body[i].pad.position.set(0, - (37.88/2 + 0.02) * scale, 0);
-		body[i].pad.rotateX(Math.PI/2+Math.PI);
-		body[i].pad.rotateZ(Math.PI/2);
-		body[i].mesh.add(body[i].pad);
-*/
-
-
-
-
-
-
 		scene.add(body[i].mesh);
 
 		addHelperGraphics(i);
@@ -2005,33 +1921,24 @@ function addFalconGraphics(i) {
 addFalconGraphics(rocket);
 
 
-// launch pad...
 let pad = [];
-function addLaunchPad(gps, focus) {
+function addLaunchPad(gps, i) {
 
-	if (focus === undefined) {
-		focus = 3;
+	if (i === undefined) {
+		i = earth;
 	}
 
 	let p = pad.push(new THREE.Group()) - 1;
 
-/*
-	let gps = {lat: 0, lon: 0, alt: 0};
-		gps = {
-			lat: 5.236 * Math.PI / 180,
-			lon: -52.775 * Math.PI / 180,
-			alt: 0  // actual unknown
-		};
-*/
-	let ecef = gpsToEcef(gps, body[focus].radiusEquator,
-		body[focus].e2);
+	let ecef = gpsToEcef(gps, body[i].radiusEquator,
+		body[i].e2);
 
-	let	cartesEci = ecefToEci(ecef, body[focus].spun,
-		body[focus].angularVelocity, body[focus].radiusEquator, body[focus].e2);
+	let	cartesEci = ecefToEci(ecef, body[i].spun,
+		body[i].angularVelocity, body[i].radiusEquator, body[i].e2);
 
 	// not necessary for earth, but should be standard practice
 	let cartes = eciToIcrf(cartesEci,
-		body[focus].rightAscension, body[focus].declination);
+		body[i].rightAscension, body[i].declination);
 
 	pad[p].position.set(
 		cartes.x * scale,
@@ -2040,7 +1947,7 @@ function addLaunchPad(gps, focus) {
 	);
 
 	let enu = getDirections(cartes.x, cartes.y, cartes.z,
-		body[focus].mesh.quaternion);
+		body[i].mesh.quaternion);
 	let navM4 = new THREE.Matrix4().makeBasis(
 		enu.northAxisV3, enu.upAxisV3, enu.eastAxisV3);
 	pad[p].quaternion.setFromRotationMatrix(navM4);
@@ -2048,7 +1955,9 @@ function addLaunchPad(gps, focus) {
 	pad[p].rotateX(Math.PI / 2 + Math.PI);
 	pad[p].rotateZ(- Math.PI / 2);
 
-	let surface = new THREE.Mesh(new THREE.PlaneGeometry(200 * scale, 200 * scale),
+	// should be globalized to share resource
+	let surface = new THREE.Mesh(new THREE.PlaneGeometry(
+		200 * scale, 200 * scale),
 		new THREE.MeshLambertMaterial({
 			map: new THREE.TextureLoader().load("graphics/ofcpadg.png"),
 			side: THREE.DoubleSide,
@@ -2059,13 +1968,19 @@ function addLaunchPad(gps, focus) {
 	surface.material.map.minFilter = THREE.NearestFilter;
 	surface.position.set(0, 0, - (37.88/2 + 0.02) * scale);
 	pad[p].add(surface);
-/*
-	let mound = new THREE.Mesh(new THREE.BoxGeometry(80000 * scale, 80000 * scale, 80000 * scale),
-		new THREE.MeshLambertMaterial({color:0xb59475}));
-	mound.position.set(0, 0, - 1 * scale + (- 40000) * scale);
-	surface.add(mound);
-*/
-	body[focus].mesh.attach(pad[p]);
+
+	// zero-out mesh position so the pad will be added in the right place
+	let x = body[i].mesh.position.x;
+	let y = body[i].mesh.position.y;
+	let z = body[i].mesh.position.z;
+	body[i].mesh.position.set(0, 0, 0);
+
+	// attach (as opposed to add) to retain world transform
+	body[i].mesh.attach(pad[p]);
+
+	// restore original mesh position
+	body[i].mesh.position.set(x, y, z);
+
 	return p;
 }
 body[rocket].pad = addLaunchPad(body[rocket].gps, body[rocket].focus);
@@ -2203,7 +2118,9 @@ systemPosition();
 
 ////////////////////////////////////////////////////////////////////////////////
 // view control
-view = rocket;
+
+//view = rocket;
+//view = earth;
 
 // dynamic and intuitive view order, by periapsis
 // periapsis chosen due to higher drag of satellites with low periapsis.
@@ -3357,9 +3274,9 @@ function main() {
 		let i = addFalcon();
 		addFalconGraphics(i);
 
-		// doesn't work yet..
-		//body[i].pad = addLaunchPad(body[i].gps, body[i].focus);
-
+		// doesn't work yet for subsequent pads
+		body[i].pad = addLaunchPad(body[i].gps, body[i].focus);
+		
 		addFalconReq = false;
 	}
 
