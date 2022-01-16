@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v94</pre>
+		<pre id="version">v95</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -50,14 +50,14 @@
 			<div class="blocker" onclick="hidePopup()"></div>
 			<div class="contents">
 				<h3>Stage Separation & Maintenance</h3>
-				<button class="menuButton rocketPanel" onclick="separateStage()">stage</button>
-				<button class="menuButton rocketPanel" onclick="separateFairing()">fairing</button>
-				<button class="menuButton rocketPanel" onclick="refuel()">refuel</button>
-				<button class="menuButton rocketPanel" onclick="recycle()">recycle</button>
-				<div>Refuel available when empty</div>
-				<div>Recycle available when grounded</div>
+				<button class="inMenuButton rocketPanel" onclick="separateStage()">stage</button>
+				<button class="inMenuButton rocketPanel" onclick="separateFairing()">fairing</button>
+				<button class="inMenuButton rocketPanel" onclick="refuel()">refuel</button>
+				<button class="inMenuButton rocketPanel" onclick="recycle()">recycle</button>
+				<div class="subtext">Refuel available when empty</div>
+				<div class="subtext">Recycle available when grounded</div>
 				<h3>Multiple Rockets</h3>
-				<button class="menuButton" onclick="addBody()">launch</button>
+				<button class="inMenuButton" onclick="addBody()">launch</button>
 				<h3>Visual Helpers</h3>
 				<input type="checkbox" id="sprites" onchange="toggleSprites()">
 				<label for="sprites">Sprites</label>
@@ -68,13 +68,13 @@
 				<input type="checkbox" id="localOrbits" onchange="toggleLocalOrbits()">
 				<label for="localOrbits">Local Orbits</label>
 				<br>
-				<button class="menuButton" id="singleOrbit" onclick="toggleSingleOrbit()">keep orbit</button>
+				<button class="inMenuButton" id="singleOrbit" onclick="toggleSingleOrbit()">keep orbit</button>
 				<label for="singleOrbit">Always show the orbit for current object</label>
 				<br>
-				<button class="menuButton" id="localAxes" onclick="toggleAxes()">Object Axes</button>
+				<button class="inMenuButton" id="localAxes" onclick="toggleAxes()">Object Axes</button>
 				<label for="localAxes">Toggle axes for currently viewed object</label>
 				<br>
-				<button class="menuButton" id="ssbAxes" onclick="toggleSsbAxes()">SSB Axes</button>
+				<button class="inMenuButton" id="ssbAxes" onclick="toggleSsbAxes()">SSB Axes</button>
 				<label for="ssbAxes">Toggle Solar System Barycenter ICRF Axes</label>
 				<br>
 				<h3>Earth Graphics</h3>

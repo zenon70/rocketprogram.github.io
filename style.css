@@ -6,6 +6,7 @@
 }
 
 /* do i need this here? will be controlled in js */
+
 .rocketPanel {
 	visible: true;
 }
@@ -19,17 +20,6 @@
 	color: #aaaaaa;
 }
 
-.slideContainer {
-	width: 90%;
-	margin-left: auto !important;
-	margin-right: auto !important;
-}
-
-.slider {
-	width: 100%;
-	margin: 1%;
-	padding: 1%;
-}
 
 .hud {
 	position: fixed;
@@ -40,14 +30,6 @@
 	bottom: 175px;
 	font-family: monospace;
 	padding: 2px;
-	/*
-	vertical-align: middle;
-	-webkit-user-select: none;
-	-webkit-touch-callout: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	*/
 }
 
 
@@ -103,7 +85,6 @@
 	height: 50px;
 	width: 50px;
 	border-radius: 20%;
-	/*font-weight: bold;*/
 	bottom: 1px;
 	-webkit-user-select: none;
 	-webkit-touch-callout: none;
@@ -192,7 +173,7 @@
 	bottom: 61px;
 }
 
-/* menu */
+
 
 .popup { display: none; }
 .popup.open { display: block; }
@@ -233,13 +214,15 @@
 
 
 
-div {
+.subtext {
 	background:rgba(0, 0, 0, 0);
 	margin: 2%;
-	/*padding: 2%;*/
 }
 
-.menuButton {
+
+
+
+.inMenuButton {
 	margin: 2%;
 	padding: 2%;
 	color: #dddddd;
@@ -247,13 +230,8 @@ div {
 	height: 50px;
 	width: 50px;
 	border-radius: 20%;
-	/*font-weight: bold;*/
-/*	-webkit-user-select: none;
-	-webkit-touch-callout: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;*/
 }
+
 
 input {
 	margin: 2%;
@@ -264,6 +242,19 @@ input {
 	background:rgba(0, 0, 0, 0);
 	vertical-align: middle;
 	accent-color: gray;
+}
+
+
+.slideContainer {
+	width: 90%;
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+.slider {
+	width: 100%;
+	margin: 1%;
+	padding: 1%;
 }
 
 label {
