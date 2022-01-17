@@ -523,17 +523,7 @@ document.getElementById("sunlight").oninput = function() {
 	body[sun].sunlight.intensity = this.value / 50;
 }
 
-// create solar system barycenter icrf axes helper
-let ssbAxesHelperIcrf = new THREE.AxesHelper(25e9 * scale);
-ssbAxesHelperIcrf.visible = false;
-scene.add(ssbAxesHelperIcrf);
-function toggleSsbAxes() {
-	if (ssbAxesHelperIcrf.visible) {
-		ssbAxesHelperIcrf.visible = false;
-	} else {
-		ssbAxesHelperIcrf.visible = true;
-	}
-}
+
 
 
 
@@ -877,7 +867,8 @@ function toggleSprites() {
 	}
 }
 
-//document.querySelector("#axes").checked = false;
+
+document.querySelector("#localAxes").checked = false;
 function toggleAxes() {
 	if (body[view].type === "Artificial") {
 		if (body[view].axesHelper.visible === true) {
@@ -900,6 +891,18 @@ function toggleAxes() {
 	}
 }
 
+// create solar system barycenter icrf axes helper
+document.querySelector("#ssbAxes").checked = false;
+let ssbAxesHelperIcrf = new THREE.AxesHelper(25e9 * scale);
+ssbAxesHelperIcrf.visible = false;
+scene.add(ssbAxesHelperIcrf);
+function toggleSsbAxes() {
+	if (ssbAxesHelperIcrf.visible) {
+		ssbAxesHelperIcrf.visible = false;
+	} else {
+		ssbAxesHelperIcrf.visible = true;
+	}
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // get system positions
@@ -1031,6 +1034,8 @@ function viewFinalize() {
 	} else {
 		document.querySelector("#singleOrbit").checked = body[view].alwaysShowOrbit;
 	}
+	
+	document.querySelector("#localAxes").checked = body[view].axesHelper.visible;
 }
 viewFinalize();
 
