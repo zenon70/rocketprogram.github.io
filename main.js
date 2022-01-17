@@ -1022,7 +1022,15 @@ function viewFinalize() {
 		}
 	}
 	throttleShow();
-	//body[view].mesh.attach(camera);
+
+	//body[view].mesh.attach(camera); // first person?
+
+	// manage check boxes in menu
+	if (body[view].alwaysShowOrbit === undefined) {
+		document.querySelector("#singleOrbit").checked = false;
+	} else {
+		document.querySelector("#singleOrbit").checked = body[view].alwaysShowOrbit;
+	}
 }
 viewFinalize();
 
@@ -2429,6 +2437,8 @@ function toggleLocalOrbits() {
 	}
 }
 
+
+document.querySelector("#singleOrbit").checked = false;
 function toggleSingleOrbit() {
 	if (view === 0) {
 		return;
