@@ -15,7 +15,7 @@
 
 this program simulates rocket launches, orbits, and interplanetary spaceflight.
 
-*orbMech[ver].js can be used to convert between Keplerian Orbital Elements and Cartesian State Vectors*
+*the file orbMech.js can be used to convert between Keplerian Orbital Elements and Cartesian State Vectors*
 
 ## main features ##
 - n-body physics integrated with keplerian physics

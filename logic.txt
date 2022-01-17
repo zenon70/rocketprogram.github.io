@@ -40,10 +40,10 @@ gui hud numbers wrapping, and going outside of tinted background
 
 hud overlaps on smartphone in widescreen if not fullscreened
 
-firefox mobile 96.0.0-beta.5 scrolling to hide address bar
+firefox mobile 96.0.0-beta.5: scrolling to hide address bar
   causes screen to resize wrong
 
-epiphany near frustum culling
+epiphany browser: near frustum culling
 
 
 # PHYSICS
