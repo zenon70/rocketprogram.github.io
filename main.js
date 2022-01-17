@@ -14,25 +14,6 @@ function closePopUpMenu() {
 
 
 
-let addFalconReq = false;
-function addBody() {
-	addFalconReq = true;
-}
-
-let stageSepReq = null;
-function separateStage() {
-	stageSepReq = view;
-}
-
-let fairingSepReq = null;
-function separateFairing() {
-	fairingSepReq = view;
-}
-
-let recycleReq = null;
-function recycle() {
-	recycleReq = view;
-}
 
 function refuel() {
 	// is rocket, doesn't have stage 2, didn't have stage 2, is out of fuel...
@@ -122,9 +103,11 @@ let scale = 1e-4;
 const camera = new THREE.PerspectiveCamera(
 	45,
 	window.innerWidth / window.innerHeight,
-	0.0000001,
+	1e-7,
 	1e10
 );
+
+// shouldn't set yet, or like this, but this works for now
 //camera.position.set(-200 * scale, 0 * scale, -250 * scale); // texas
 //camera.position.set(0 * scale, -300 * scale, 0 * scale); // kazakhstan
 camera.position.set(-200 * scale, 0 * scale, -350 * scale); // kourou
@@ -155,23 +138,22 @@ const camera2 = new THREE.OrthographicCamera(
 // gui overlay scene
 
 const ambientLight2 = new THREE.AmbientLight (0xffffff, 0.7);
-scene2.add(ambientLight2);
 
 // give navball nice appearance, with bright shine exactly in the center
 const pointLight2 = new THREE.PointLight(0xffffff, 0.5);
-scene2.add(pointLight2);
 
-let navBall;
-{
-	// sphere geometry north pole is always +y
-	const geometry = new THREE.SphereGeometry(50, 32, 32);
-	// the center of image is mapped to +x, with the north pole as +y
-	const texture =
-		new THREE.TextureLoader().load("graphics/navball_blackgrey.png");
-	const material = new THREE.MeshPhongMaterial({map: texture});
-	navBall = new THREE.Mesh(geometry, material);
-	scene2.add(navBall);
-}
+// sphere geometry north pole is always +y
+// the center of image is mapped to +x, with the north pole as +y
+let navBall = new THREE.Mesh(new THREE.SphereGeometry(50, 32, 16),
+	new THREE.MeshPhongMaterial({map:
+	new THREE.TextureLoader().load("graphics/navball_blackgrey.png")}));
+
+// should add to scene2 later, after navBall rotation is set
+// add here for now
+scene2.add(ambientLight2);
+scene2.add(pointLight2);
+scene2.add(navBall);
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // resize 3d graphics setup as needed
@@ -191,6 +173,7 @@ function setResizable() {
 }
 setResizable();
 
+
 window.addEventListener("resize", () => {
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
@@ -204,14 +187,12 @@ window.addEventListener("resize", () => {
 	setResizable();
 });
 
-
-
 function openFullscreen() {
 	if (document.documentElement.requestFullscreen) {
 		document.documentElement.requestFullscreen();
-	} else if (document.documentElement.webkitRequestFullscreen) { /* Safari */
+	} else if (document.documentElement.webkitRequestFullscreen) { // Safari
 		document.documentElement.webkitRequestFullscreen();
-	} else if (document.documentElement.msRequestFullscreen) { /* IE11 */
+	} else if (document.documentElement.msRequestFullscreen) { // IE11
 		document.documentElement.msRequestFullscreen();
 	}
 }
@@ -219,9 +200,9 @@ function openFullscreen() {
 function closeFullscreen() {
 	if (document.exitFullscreen) {
 		document.exitFullscreen();
-	} else if (document.webkitExitFullscreen) { /* Safari */
+	} else if (document.webkitExitFullscreen) { // Safari
 		document.webkitExitFullscreen();
-	} else if (document.msExitFullscreen) { /* IE11 */
+	} else if (document.msExitFullscreen) { // IE11
 		document.msExitFullscreen();
 	}
 }
@@ -246,12 +227,6 @@ function toggleFullscreen() {
 const xAxis = new THREE.Vector3(1, 0, 0);
 const yAxis = new THREE.Vector3(0, 1, 0);
 const zAxis = new THREE.Vector3(0, 0, 1);
-
-/*
-// scene axes at origin
-const axesHelper = new THREE.AxesHelper(25e9 * scale);
-scene.add(axesHelper);
-*/
 
 document.getElementById("1kStars").checked = true;
 function changeStars(value) {
@@ -579,11 +554,9 @@ document.getElementById("sunlight").oninput = function() {
 }
 
 // create solar system barycenter icrf axes helper
-let ssbAxesHelperIcrf = new THREE.AxesHelper(
-	body[mostMassiveBody].radiusEquator * 7 * scale);
-// add to scene so it doesn't rotate with parent. must update position.
-scene.add(ssbAxesHelperIcrf);
+let ssbAxesHelperIcrf = new THREE.AxesHelper(25e9 * scale);
 ssbAxesHelperIcrf.visible = false;
+scene.add(ssbAxesHelperIcrf);
 
 
 
@@ -774,7 +747,6 @@ function addFalconGraphics(i) {
 		//body[i].mesh.receiveShadow = true;
 
 		body[i].mesh.up.set(0, 1, 0);
-		
 		body[i].stage2.mesh.up.set(0, 1, 0);
 		body[i].stage2.fairingN.mesh.up.set(0, 1, 0);
 		body[i].stage2.fairingZ.mesh.up.set(0, 1, 0);
@@ -811,6 +783,32 @@ function addFalconGraphics(i) {
 		controls.minDistance = 75 * scale;
 }
 addFalconGraphics(rocket);
+
+
+
+// save requests to process when ready
+let addFalconReq = false;
+function addRocket() {
+	addFalconReq = true;
+}
+
+// define function after view variable is set
+let stageSepReq = null;
+function separateStage() {
+	stageSepReq = view;
+}
+
+let fairingSepReq = null;
+function separateFairing() {
+	fairingSepReq = view;
+}
+
+let recycleReq = null;
+function recycle() {
+	recycleReq = view;
+}
+
+
 
 
 let pad = [];
