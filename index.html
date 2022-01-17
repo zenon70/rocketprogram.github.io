@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v98</pre>
+		<pre id="version">v99</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -426,47 +426,42 @@ The sun does not rotate like planets. Its equator rotates more rapidly than its 
 		</div><!-- end popup -->
 		<script>"use strict";
 
-
+// initialize in case of refresh
 document.getElementById("cityLight").value = 30;
 document.getElementById("cityLightOutput").innerHTML = "30%";
-let cityLightSlider = document.getElementById("cityLight");
-let cityLightOutput = document.getElementById("cityLightOutput");
 // Update the current slider value (each time you drag the slider handle)
-cityLightSlider.oninput = function() {
-	cityLightOutput.innerHTML = this.value + "%";
+document.getElementById("cityLight").oninput = function() {
+	document.getElementById("cityLightOutput").innerHTML = this.value + "%";
 	body[earth].mesh.material.emissiveIntensity = this.value / 100;
 }
 
+// initialize in case of refresh
+let starlightControl = 0.05;
 document.getElementById("starlight").value = 5;
 document.getElementById("starlightOutput").innerHTML = "100%";
-let starlightControl = 0.05;
-let starlightSlider = document.getElementById("starlight");
-let starlightOutput = document.getElementById("starlightOutput");
 // Update the current slider value (each time you drag the slider handle)
-starlightSlider.oninput = function() {
-	starlightOutput.innerHTML = this.value * 20 + "%";
+document.getElementById("starlight").oninput = function() {
+	document.getElementById("starlightOutput").innerHTML = this.value * 20 + "%";
 	starlightControl = this.value / 100;
 	if (body[view].name !== "10") {
 		starlight.intensity = starlightControl;
 	}
 }
 
+// initialize in case of refresh
 document.getElementById("sunlight").value = 75;
 document.getElementById("sunlightOutput").innerHTML = "75%";
-let sunlightSlider = document.getElementById("sunlight");
-let sunlightOutput = document.getElementById("sunlightOutput");
 // Update the current slider value (each time you drag the slider handle)
-sunlightSlider.oninput = function() {
-	sunlightOutput.innerHTML = this.value + "%";
+document.getElementById("sunlight").oninput = function() {
+	document.getElementById("sunlightOutput").innerHTML = this.value + "%";
 	body[sun].sunlight.intensity = this.value / 50;
 }
 
-const popup = document.querySelector('.popup');
 function menu() {
-	popup.classList.add('open');
+	document.querySelector(".popup").classList.add("open");
 }
 function hidePopup() {
-	popup.classList.remove('open');
+	document.querySelector(".popup").classList.remove("open");
 }
 
 
