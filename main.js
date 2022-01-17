@@ -1,7 +1,5 @@
 "use strict";
 
-
-
 function openPopUpMenu() {
 	document.querySelector(".popup").classList.add("open");
 }
@@ -11,42 +9,9 @@ function closePopUpMenu() {
 
 
 
-
-
-
-
-function refuel() {
-	// is rocket, doesn't have stage 2, didn't have stage 2, is out of fuel...
-	if (body[view].type === "Artificial" && !body[view].stage2 &&
-		body[view].stage2 !== null && body[view].fuelMass === 0 &&
-		body[view].mass !== 100) {
-		body[view].mass += 92670;
-		body[view].fuelMass += 92670;
-		body[view].burnTime += 397;
-		if (body[view].refuel) {
-			body[view].refuel++;
-		} else {
-			body[view].refuel = 1;
-		}
-	}
-	if (body[view].type === "Artificial" && (body[view].stage2 || body[view].stage2 === null) &&
-		body[view].fuelMass === 0) {
-		body[view].mass += 411000;
-		body[view].fuelMass += 411000;
-		body[view].burnTime += 162;
-		if (body[view].refuel) {
-			body[view].refuel++;
-		} else {
-			body[view].refuel = 1;
-		}
-	}
-}
-
-	// add stage2 pneumatic separation velocity in pointing direction
-	// subtract stage1 pneumatic separation velocity in pointing direction
-	// and account for fuel slosh
-
-
+// viewFinalize() depends on mostMassiveBody
+// and it gets called at the end of addFalconGraphics()
+// and addFalconGraphics() gets called immediately after being defined
 ////////////////////////////////////////////////////////////////////////////////
 // prepare for systemPosition()
 // assign the most massive body and make it relative to system origin
@@ -298,57 +263,6 @@ function changeStars(value) {
 }
 changeStars("1");
 
-document.getElementById("1kEarth").checked = true;
-function changeEarth(value) {
-	if (body[earth].mesh.material.map) {
-		body[earth].mesh.material.map.dispose();
-		body[earth].mesh.material.map = null;
-	}
-	switch (value) {
-		case "0":
-			body[earth].map = null;
-			//body[earth].mesh.material.map = null;
-			if (body[earth].color) {
-				body[earth].mesh.material.color.setHex(body[earth].color);
-			}
-			body[earth].mesh.material.needsUpdate = true;
-			break;
-		case "1":
-			body[earth].mesh.material.color.setHex(0xffffff);
-			body[earth].map = "graphics/planet3_1k.jpg";
-			body[earth].mesh.material.map =
-				new THREE.TextureLoader().load(body[earth].map);
-
-			// pixelated and more efficient
-			body[earth].mesh.material.map.magFilter = THREE.NearestFilter;
-			body[earth].mesh.material.map.minFilter = THREE.NearestFilter;
-
-			body[earth].mesh.material.needsUpdate = true;
-			break;
-		case "2":
-			body[earth].mesh.material.color.setHex(0xffffff);
-			body[earth].map = "graphics/planet3_4k.jpg";
-			body[earth].mesh.material.map =
-				new THREE.TextureLoader().load(body[earth].map);
-
-			// pixelated and more efficient
-			body[earth].mesh.material.map.magFilter = THREE.NearestFilter;
-			body[earth].mesh.material.map.minFilter = THREE.NearestFilter;
-
-			body[earth].mesh.material.needsUpdate = true;
-			break;
-		default:
-			body[earth].map = null;
-			body[earth].mesh.material.map = null;
-			if (body[earth].color) {
-				body[earth].mesh.material.color.setHex(body[earth].color);
-			}
-			body[earth].mesh.material.needsUpdate = true;
-	} 
-}
-
-
-
 // ambient light (stars, etc)
 const starlight = new THREE.AmbientLight (0xffffff);
 scene.add(starlight);
@@ -367,7 +281,11 @@ document.getElementById("starlight").oninput = function() {
 
 
 
+// THIS IS THE SECOND PLACE THAT body[] IS REQUIRED
+
 // planets, moons, etc: oblate spheroids (with helpers)
+function makeNaturalBodyGraphics() {
+
 for (let i = body.length - 1; i > -1; i--) {
 	if (body[i].type === "Artificial") continue;
 
@@ -404,7 +322,7 @@ for (let i = body.length - 1; i > -1; i--) {
 	body[i].mesh = new THREE.Mesh(new THREE.SphereGeometry(
 		body[i].radiusEquator * scale, body[i].segments, body[i].segments / 2),
 		material);
-	
+
 	if (i === earth) {
 
 		// clouds
@@ -413,15 +331,16 @@ for (let i = body.length - 1; i > -1; i--) {
 			side: THREE.DoubleSide,
 			transparent: true
 		});
-		
-		// 8500 is scale height, * 3.75 so it doesn't shred (clip) on the boxy globe
+
+		// 8500 is scale height, * 3.75 so it doesn't appear shredded (clip),
+		// due to limited segments.
 		body[i].clouds = new THREE.Mesh(new THREE.SphereGeometry(
-			body[i].radiusEquator * scale + 8500 * 3.75 * scale, body[i].segments,
-			body[i].segments / 2),
+			body[i].radiusEquator * scale + 8500 * 3.75 * scale,
+			body[i].segments, body[i].segments / 2),
 			material2);
-		
+
 		body[i].clouds.scale.y = body[i].radiusPole / body[i].radiusEquator;
-		
+
 		body[i].mesh.add(body[i].clouds);
 		body[i].clouds.visible = false;
 	}
@@ -513,6 +432,57 @@ for (let i = body.length - 1; i > -1; i--) {
 	}
 }
 
+} // end makeNaturalBodyGraphics()
+makeNaturalBodyGraphics();
+
+document.getElementById("1kEarth").checked = true;
+function changeEarth(value) {
+	if (body[earth].mesh.material.map) {
+		body[earth].mesh.material.map.dispose();
+		body[earth].mesh.material.map = null;
+	}
+	switch (value) {
+		case "0":
+			body[earth].map = null;
+			//body[earth].mesh.material.map = null;
+			if (body[earth].color) {
+				body[earth].mesh.material.color.setHex(body[earth].color);
+			}
+			body[earth].mesh.material.needsUpdate = true;
+			break;
+		case "1":
+			body[earth].mesh.material.color.setHex(0xffffff);
+			body[earth].map = "graphics/planet3_1k.jpg";
+			body[earth].mesh.material.map =
+				new THREE.TextureLoader().load(body[earth].map);
+
+			// pixelated and more efficient
+			body[earth].mesh.material.map.magFilter = THREE.NearestFilter;
+			body[earth].mesh.material.map.minFilter = THREE.NearestFilter;
+
+			body[earth].mesh.material.needsUpdate = true;
+			break;
+		case "2":
+			body[earth].mesh.material.color.setHex(0xffffff);
+			body[earth].map = "graphics/planet3_4k.jpg";
+			body[earth].mesh.material.map =
+				new THREE.TextureLoader().load(body[earth].map);
+
+			// pixelated and more efficient
+			body[earth].mesh.material.map.magFilter = THREE.NearestFilter;
+			body[earth].mesh.material.map.minFilter = THREE.NearestFilter;
+
+			body[earth].mesh.material.needsUpdate = true;
+			break;
+		default:
+			body[earth].map = null;
+			body[earth].mesh.material.map = null;
+			if (body[earth].color) {
+				body[earth].mesh.material.color.setHex(body[earth].color);
+			}
+			body[earth].mesh.material.needsUpdate = true;
+	} 
+}
 
 // initialize in case of refresh
 document.getElementById("cityLight").value = 30;
@@ -557,16 +527,22 @@ document.getElementById("sunlight").oninput = function() {
 let ssbAxesHelperIcrf = new THREE.AxesHelper(25e9 * scale);
 ssbAxesHelperIcrf.visible = false;
 scene.add(ssbAxesHelperIcrf);
+function toggleSsbAxes() {
+	if (ssbAxesHelperIcrf.visible) {
+		ssbAxesHelperIcrf.visible = false;
+	} else {
+		ssbAxesHelperIcrf.visible = true;
+	}
+}
 
 
 
+// integer
+let view = 0;
 
 
-let view;
 
-
-
-function addHelperGraphics(i) {
+function addRocketHelpers(i) {
 	body[i].axesHelper = new THREE.AxesHelper(250e3 * scale);
 	body[i].axesHelper.position.copy(body[i].mesh.position);
 	body[i].axesHelper.rotation.copy(body[i].mesh.rotation);
@@ -678,7 +654,8 @@ function addFalconGraphics(i) {
 		new THREE.MeshLambertMaterial({side: THREE.DoubleSide, color:0x888888}));
 	body[i].stage2.engine.position.set(0, - (13.8/2 + 4/2) * scale, 0);
 	body[i].stage2.mesh.add(body[i].stage2.engine);
-	
+
+	// payload attachment fitting
 	body[i].stage2.paf = new THREE.Mesh(new THREE.CylinderGeometry(
 		1 * scale, 1.83 * scale, 1.3 * scale, 16),
 		new THREE.MeshLambertMaterial({side: THREE.DoubleSide, color:0xaaaaaa}));
@@ -774,7 +751,7 @@ function addFalconGraphics(i) {
 
 		scene.add(body[i].mesh);
 
-		addHelperGraphics(i);
+		addRocketHelpers(i);
 
 		// post-setup global adjustments
 		view = i;
@@ -923,13 +900,6 @@ function toggleAxes() {
 	}
 }
 
-function toggleSsbAxes() {
-	if (ssbAxesHelperIcrf.visible) {
-		ssbAxesHelperIcrf.visible = false;
-	} else {
-		ssbAxesHelperIcrf.visible = true;
-	}
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 // get system positions
@@ -948,7 +918,6 @@ function toggleSsbAxes() {
 		.x positions
 		.mesh.position.x positions
 */
-
 
 function systemPosition() {
 	// skip sun. order is important. increment to move focii before satellites
@@ -1009,130 +978,15 @@ systemPosition();
 ////////////////////////////////////////////////////////////////////////////////
 // view control
 
-//view = rocket;
-//view = earth;
-
-// dynamic and intuitive view order, by periapsis
-// periapsis chosen due to higher drag of satellites with low periapsis.
-// 999 seems to appear out of order due to sort by periapsis
-// to "fix", change it to measure by semi-major axis.
-
-function viewNext() {
-
-	let next = null;
-	let highPeri = Infinity;
-	let localView = view;
-
-	let lowPeri = 0; // in case view is sun
-	let localFocus = mostMassiveBody; // in case view is sun
-	if (localView !== mostMassiveBody) {
-		lowPeri = body[localView].kepler.periapsis;
-		localFocus = body[localView].focus;
-	}
-
-	let child = null;
-	let lowOrbit = Infinity;
-
-	let ignoreChildren = false;
-
-
-	function getHigher() {
-		for (let i = body.length - 1; i > 0; i--) { // skip sun
-			// catch things orbiting what is being viewed
-			if (body[i].focus === localView && body[i].kepler.periapsis < lowOrbit &&
-				ignoreChildren === false) {
-				child = i;
-				lowOrbit = body[i].kepler.periapsis;
-				next = null;
-			}
-			// check for things further out
-			else if (child === null && body[i].focus === localFocus &&
-				body[i].kepler.periapsis > lowPeri &&
-				body[i].kepler.periapsis < highPeri) {
-				highPeri = body[i].kepler.periapsis;
-				next = i;
-			}
-		}
-	}
-	getHigher(localFocus);
-
-	while (next === null) {
-		if (child !== null) {
-			// it is the lowest peri, but does it have children? reset and rerun
-			localFocus = localView;
-			localView = child;
-			highPeri = Infinity;
-			lowPeri = 0;
-			child = null;
-			lowOrbit = Infinity;
-			getHigher();
-		}
-		// nothing is further out in this gravity area, so go to its parent system
-		else if (localFocus !== mostMassiveBody) {
-			localView = localFocus;
-			lowPeri = body[localView].kepler.periapsis;
-			localFocus = body[localFocus].focus;
-			ignoreChildren = true;
-			getHigher();
-		} else {
-			next = mostMassiveBody;
-		}
-	}
-
-	view = next;
-	viewFinalize();
-	displayText();
-}
-
-
-function viewPrevious() {
-
-	let potentialResult = null;
-	let tooLow = 0;
-	let tooHigh = Infinity; // in case view is sun
-	let focusNow = mostMassiveBody; // in case view is sun
-	if (view !== mostMassiveBody) {
-		tooHigh = body[view].kepler.periapsis;
-		focusNow = body[view].focus;
-	}
-
-	function getLower() {
-		for (let i = body.length - 1; i > 0; i--) { // skip sun
-			if (body[i].focus === focusNow &&
-				body[i].kepler.periapsis < tooHigh &&
-				body[i].kepler.periapsis > tooLow) {
-				potentialResult = i;
-				tooLow = body[i].kepler.periapsis;
-			}
-		}
-	}
-	getLower();
-
-	while (potentialResult !== null) {
-		focusNow = potentialResult;
-		potentialResult = null;
-		tooLow = 0;
-		tooHigh = Infinity;
-		getLower();
-	}
-	
-	view = focusNow;
-	viewFinalize();
-	displayText();
-}
-
 
 function viewFinalize() {
-
 	controls.target = body[view].mesh.position;
-
 	if (body[view].type === "Natural") {
 		controls.minDistance = body[view].radiusEquator * 1.2 * scale;
 	}
 	else {
 		controls.minDistance = 60 * scale;
 	}
-
 	// sun view
 	if (view === 0) {
 		body[view].mesh.material.emissiveIntensity = 0;
@@ -1146,7 +1000,6 @@ function viewFinalize() {
 		document.getElementById("hudView").innerHTML = body[view].name + "<br>@ " +
 			body[body[view].focus].name;
 	}
-
 	if (body[view].type === "Artificial") {
 		scene2.visible = true;
 		document.getElementById("hudFuel").innerHTML =
@@ -1157,30 +1010,27 @@ function viewFinalize() {
 			Math.round(- body[view].ySpin * 10) + "<br>yaw";
 		document.getElementById("hudRoll").innerHTML =
 			Math.round(body[view].zSpin * 10) + "<br>roll";
-
 		let panel = document.getElementsByClassName("rocketPanel");
 		for (let i = panel.length - 1; i > -1; i--) {
 			panel[i].style.visibility = "visible";
 		}
-		
 	} else {
 		scene2.visible = false;
 		let panel = document.getElementsByClassName("rocketPanel");
 		for (let i = panel.length - 1; i > -1; i--) {
 			panel[i].style.visibility = "hidden";
-		}/*
-		document.getElementById("hudFuel").innerHTML = "";
-		document.getElementById("hudPitch").innerHTML = "";
-		document.getElementById("hudYaw").innerHTML = "";
-		document.getElementById("hudRoll").innerHTML = "";
-		*/
+		}
 	}
-
 	throttleShow();
-
 	//body[view].mesh.attach(camera);
 }
 viewFinalize();
+
+
+
+
+
+
 
 
 
@@ -1207,7 +1057,7 @@ let now = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
 ////////////////////////////////////////////////////////////////////////////////
 // rocket control (spin and thrust)
 
-let spinPower = 0.1; // what units? m/s²
+let spinPower = 0.1; // m/s²
 
 // onscreen buttons
 function up() {
@@ -1537,6 +1387,36 @@ function rocketControl() {
 	}
 	}
 	
+	}
+}
+
+function refuel() {
+	// is rocket, doesn't have stage 2, didn't have stage 2, then it is stage 2
+	// and is out of fuel...
+	if (body[view].type === "Artificial" && !body[view].stage2 &&
+		body[view].stage2 !== null && body[view].fuelMass === 0 &&
+		body[view].mass !== 100) {
+		body[view].mass += 92670;
+		body[view].fuelMass += 92670;
+		body[view].burnTime += 397;
+		if (body[view].refuel) {
+			body[view].refuel++;
+		} else {
+			body[view].refuel = 1;
+		}
+	}
+	// if it has or had stage 2, then it is stage 1
+	if (body[view].type === "Artificial" &&
+		(body[view].stage2 || body[view].stage2 === null) &&
+		body[view].fuelMass === 0) {
+		body[view].mass += 411000;
+		body[view].fuelMass += 411000;
+		body[view].burnTime += 162;
+		if (body[view].refuel) {
+			body[view].refuel++;
+		} else {
+			body[view].refuel = 1;
+		}
 	}
 }
 
@@ -2128,6 +2008,118 @@ function displayText() {
 	}
 }
 
+// dynamic and intuitive view order, by periapsis
+// periapsis chosen due to higher drag of satellites with low periapsis.
+// 999 seems to appear out of order due to sort by periapsis
+// to "fix", change it to measure by semi-major axis.
+// i.e. replace "periapsis" with "a".
+
+function viewNext() {
+
+	let next = null;
+	let highPeri = Infinity;
+	let localView = view;
+
+	let lowPeri = 0; // in case view is sun
+	let localFocus = mostMassiveBody; // in case view is sun
+	if (localView !== mostMassiveBody) {
+		lowPeri = body[localView].kepler.periapsis;
+		localFocus = body[localView].focus;
+	}
+
+	let child = null;
+	let lowOrbit = Infinity;
+
+	let ignoreChildren = false;
+
+
+	function getHigher() {
+		for (let i = body.length - 1; i > 0; i--) { // skip sun
+			// catch things orbiting what is being viewed
+			if (body[i].focus === localView && body[i].kepler.periapsis < lowOrbit &&
+				ignoreChildren === false) {
+				child = i;
+				lowOrbit = body[i].kepler.periapsis;
+				next = null;
+			}
+			// check for things further out
+			else if (child === null && body[i].focus === localFocus &&
+				body[i].kepler.periapsis > lowPeri &&
+				body[i].kepler.periapsis < highPeri) {
+				highPeri = body[i].kepler.periapsis;
+				next = i;
+			}
+		}
+	}
+	getHigher(localFocus);
+
+	while (next === null) {
+		if (child !== null) {
+			// it is the lowest peri, but does it have children? reset and rerun
+			localFocus = localView;
+			localView = child;
+			highPeri = Infinity;
+			lowPeri = 0;
+			child = null;
+			lowOrbit = Infinity;
+			getHigher();
+		}
+		// nothing is further out in this gravity area, so go to its parent system
+		else if (localFocus !== mostMassiveBody) {
+			localView = localFocus;
+			lowPeri = body[localView].kepler.periapsis;
+			localFocus = body[localFocus].focus;
+			ignoreChildren = true;
+			getHigher();
+		} else {
+			next = mostMassiveBody;
+		}
+	}
+
+	view = next;
+	viewFinalize();
+	displayText();
+}
+
+
+function viewPrevious() {
+
+	let potentialResult = null;
+	let tooLow = 0;
+	let tooHigh = Infinity; // in case view is sun
+	let focusNow = mostMassiveBody; // in case view is sun
+	if (view !== mostMassiveBody) {
+		tooHigh = body[view].kepler.periapsis;
+		focusNow = body[view].focus;
+	}
+
+	function getLower() {
+		for (let i = body.length - 1; i > 0; i--) { // skip sun
+			if (body[i].focus === focusNow &&
+				body[i].kepler.periapsis < tooHigh &&
+				body[i].kepler.periapsis > tooLow) {
+				potentialResult = i;
+				tooLow = body[i].kepler.periapsis;
+			}
+		}
+	}
+	getLower();
+
+	while (potentialResult !== null) {
+		focusNow = potentialResult;
+		potentialResult = null;
+		tooLow = 0;
+		tooHigh = Infinity;
+		getLower();
+	}
+	
+	view = focusNow;
+	viewFinalize();
+	displayText();
+}
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // main loop
@@ -2216,9 +2208,10 @@ function main() {
 		scene.add(body[j].mesh);
 
 		body[i].mass -= body[j].mass;
+		addRocketHelpers(j);
 
-		addHelperGraphics(j);
-
+		// separation velocities should be distributed by mass
+		// do this for now
 		// pneumatic separation
 		body[j].cartes.vx += body[i].pointingV3.x * 2; // 2 m/s² impulse
 		body[j].cartes.vy += body[i].pointingV3.y * 2;
@@ -2281,9 +2274,9 @@ function main() {
 		let j = body.push(body[i].fairingN) - 1;
 		body[i].fairingN = null;
 		scene.add(body[j].mesh);
-		addHelperGraphics(j);
 
 		body[i].mass -= body[j].mass;
+		addRocketHelpers(j);
 
 		// pneumatic separation
 		let pneu = 20; // m/s² impulse
@@ -2328,9 +2321,9 @@ function main() {
 		j = body.push(body[i].fairingZ) - 1;
 		body[i].fairingZ = null;
 		scene.add(body[j].mesh);
-		addHelperGraphics(j);
 
 		body[i].mass -= body[j].mass;
+		addRocketHelpers(j);
 
 		// pneumatic separation
 		//let enu = getDirections(body[view].cartes.x, body[view].cartes.y,

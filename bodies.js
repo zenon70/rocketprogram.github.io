@@ -4,6 +4,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 // n-body initialization
 
+// IMPORTANT! order is important! parent bodies must by given an index lower
+// than satellite bodies, for each level. i.e., first the sun, then planets and
+// asteroids and comets (sun orbiters), then all moons, then all satellites of
+// moons, then (if possible), anything orbiting that, etc. so do not add a
+// planet, then its moons, then another planet. and do not add a moon, its
+// satellites, then another moon. systemPosition() requires this structure.
+
 const GRAVITY = 6.6743e-11;
 let body = [];
 let X, Y, Z, VX, VY, VZ;

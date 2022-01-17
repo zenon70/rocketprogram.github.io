@@ -3,7 +3,7 @@
 # IN-PROGRESS
 -------------
 
-
+major refactoring
 
 recycle() has mem leak, should reuse global geometries, materials
 
@@ -148,8 +148,6 @@ use a json object file for solar system orbit data
 select launch location
 
 assorted rocket models, using stats
-
-multiple satellites
 
 track any asteroid or object
 
@@ -628,3 +626,48 @@ then use that as the focus, with tooHigh = Infinity.
 what if there is only 1 thing to view?
 
 what if there are no things to view?
+
+
+
+# refactoring
+-------------
+things that use body and/or should be reloadable and/or i want to delay:
+
+
+// viewFinalize() depends on mostMassiveBody
+// and it gets called at the end of addFalconGraphics()
+// and addFalconGraphics() gets called immediately after being defined
+
+
+
+
+let mostMassiveBody = 0;
+  and subsequent code
+
+makeNaturalBodyGraphics();
+
+body[sun].sunlight = new THREE.PointLight(0xffffff, 1.5);
+body[sun].mesh.add(body[sun].sunlight);
+
+let view = 0;
+
+addFalconGraphics(rocket);
+
+body[rocket].pad = addLaunchPad(body[rocket].gps, body[rocket].focus);
+
+body[mostMassiveBody].mesh.position.x = body[mostMassiveBody].x * scale;
+body[mostMassiveBody].mesh.position.y = body[mostMassiveBody].y * scale;
+body[mostMassiveBody].mesh.position.z = body[mostMassiveBody].z * scale;
+systemPosition();
+
+viewFinalize();
+
+
+
+
+
+
+
+
+
+
