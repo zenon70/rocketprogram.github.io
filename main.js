@@ -1119,11 +1119,11 @@ function stopSpin() {
 
 
 function throttleShow() {
-	if (body[view].throttleSwitch) {
+	if (body[view].throttleOn) {
 		document.getElementById("hudThrottle").innerHTML = body[view].throttle
 			+ "%<br>on";
 	// make sure it's false, not undefined as if a "Natural" body
-	} else if (body[view].throttleSwitch === false) {
+	} else if (body[view].throttleOn === false) {
 		document.getElementById("hudThrottle").innerHTML = body[view].throttle
 			+ "%<br>off";
 	} else {
@@ -1133,13 +1133,13 @@ function throttleShow() {
 }
 function throttleOn() {
 	if (body[view].type === "Artificial") {
-		body[view].throttleSwitch = true;
+		body[view].throttleOn = true;
 		throttleShow();
 	}
 }
 function throttleOff() {
 	if (body[view].type === "Artificial") {
-		body[view].throttleSwitch = false;
+		body[view].throttleOn = false;
 		throttleShow();
 	}
 }
@@ -1330,7 +1330,7 @@ function rocketControl() {
 	// process thrust
 
 	// free fuel if timewarping on last drop
-	if (body[i].fuelMass > 0 && body[i].throttleSwitch && body[i].throttle > 0) {
+	if (body[i].fuelMass > 0 && body[i].throttleOn && body[i].throttle > 0) {
 		// update the direction vector of rocket
 		body[i].pointingM4.extractRotation(body[i].mesh.matrix);
 		// get unit vector of direction

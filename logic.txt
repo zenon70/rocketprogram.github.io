@@ -662,7 +662,11 @@ systemPosition();
 
 viewFinalize();
 
+let timestep = 0.01;
 
+let now = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
+
+let spinPower = 0.1; // m/s²
 
 
 
