@@ -651,7 +651,7 @@ function addFalcon() {
 			body[focus].angularVelocity, body[focus].radiusEquator, body[focus].e2);
 	
 		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
-		body[i].kepler = toKepler(body[i].cartesEci, body[i].u);
+		body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
 	
 		// not necessary for earth, but should be standard practice
 		body[i].cartes = eciToIcrf(body[i].cartesEci,

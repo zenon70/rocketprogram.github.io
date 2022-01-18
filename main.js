@@ -779,30 +779,6 @@ addFalconGraphics(rocket);
 
 
 
-// save requests to process when ready
-let addFalconReq = false;
-function addRocket() {
-	addFalconReq = true;
-}
-
-// define function after view variable is set
-let stageSepReq = null;
-function separateStage() {
-	stageSepReq = view;
-}
-
-let fairingSepReq = null;
-function separateFairing() {
-	fairingSepReq = view;
-}
-
-let recycleReq = null;
-function recycle() {
-	recycleReq = view;
-}
-
-
-
 
 let pad = [];
 function addLaunchPad(gps, i) {
@@ -1022,12 +998,14 @@ function viewFinalize() {
 		starlight.intensity = 1;
 		document.getElementById("hudView").innerHTML = body[view].name + "<br>@ " +
 			"mlky";
+		document.querySelector("#singleOrbit").disabled = true;
 	}
 	else {
 		body[mostMassiveBody].mesh.material.emissiveIntensity = 1;
 		starlight.intensity = starlightControl;
 		document.getElementById("hudView").innerHTML = body[view].name + "<br>@ " +
 			body[body[view].focus].name;
+		document.querySelector("#singleOrbit").disabled = false;
 	}
 	if (body[view].type === "Artificial") {
 		scene2.visible = true;
@@ -1429,6 +1407,7 @@ function rocketControl() {
 	}
 }
 
+//document.getElementById("refuel").disabled = true;
 function refuel() {
 	// is rocket, doesn't have stage 2, didn't have stage 2, then it is stage 2
 	// and is out of fuel...
@@ -1549,35 +1528,10 @@ function nBodyVelocity(/*body, GRAVITY, timestep*/) {
 			body[8].x +", "+ body[8].y +", "+ body[8].z);
 	}
 	*/
-	return body;
+	//return body;
 }
 
 
-document.getElementById("eclipticPlane").checked = true;
-let reportPlane = "ecliptic";
-let keplerAltPlane; // alternative plane, object for reportPlane
-
-function setPlane(value) {
-	switch (value) {
-		case "ecliptic":
-			reportPlane = "ecliptic";
-			break;
-		case "body":
-			reportPlane = "body";
-			break;
-		case "invariable":
-			reportPlane = "invariable";
-			break;
-		case "galactic":
-			reportPlane = "galactic";
-			break;
-		case "icrf":
-			reportPlane = "icrf";
-			break;
-		default:
-			reportPlane = "ecliptic";
-	}
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 // keplerian physics
@@ -1947,6 +1901,31 @@ function drawEllipse(draw, shade, scale) {
 // display data on-screen
 
 
+document.getElementById("eclipticPlane").checked = true;
+let reportPlane = "ecliptic";
+
+function setPlane(value) {
+	switch (value) {
+		case "ecliptic":
+			reportPlane = "ecliptic";
+			break;
+		case "body":
+			reportPlane = "body";
+			break;
+		case "invariable":
+			reportPlane = "invariable";
+			break;
+		case "galactic":
+			reportPlane = "galactic";
+			break;
+		case "icrf":
+			reportPlane = "icrf";
+			break;
+		default:
+			reportPlane = "ecliptic";
+	}
+}
+
 function displayText() {
 	let vFocus = body[view].focus;
 
@@ -2047,6 +2026,8 @@ function displayText() {
 	}
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
 // dynamic and intuitive view order, by periapsis
 // periapsis chosen due to higher drag of satellites with low periapsis.
 // 999 seems to appear out of order due to sort by periapsis
@@ -2158,6 +2139,192 @@ function viewPrevious() {
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// add rocket, stage separation, fairing separation, recycle
+
+// save requests to process when ready. limit 1 during pause.
+let addFalconReq = false;
+function addRocket() {
+	addFalconReq = true;
+}
+
+// stage separation request. array in case multiple separations during pause
+let stageSepReq = [];
+function separateStage() {
+	stageSepReq.push(view);
+}
+function performStageSep(i) {
+	// copy
+	body[i].stage2.focus = body[i].focus;
+
+	body[i].stage2.cartes.x = body[i].cartes.x;
+	body[i].stage2.cartes.y = body[i].cartes.y;
+	body[i].stage2.cartes.z = body[i].cartes.z;
+	body[i].stage2.cartes.vx = body[i].cartes.vx;
+	body[i].stage2.cartes.vy = body[i].cartes.vy;
+	body[i].stage2.cartes.vz = body[i].cartes.vz;
+
+	body[i].stage2.mesh.rotation.copy(body[i].mesh.rotation);
+
+	body[i].stage2.xSpin = body[i].xSpin;
+	body[i].stage2.ySpin = body[i].ySpin;
+	body[i].stage2.zSpin = body[i].zSpin;
+
+	// move to graphics offset so it DOESN'T move
+	body[i].pointingM4.extractRotation(body[i].mesh.matrix);
+	// get unit vector of direction
+	body[i].pointingV3 =
+		body[i].mesh.up.clone().applyMatrix4(body[i].pointingM4);
+
+	body[i].stage2.cartes.x += body[i].pointingV3.x * 30.56;
+	body[i].stage2.cartes.y += body[i].pointingV3.y * 30.56;
+	body[i].stage2.cartes.z += body[i].pointingV3.z * 30.56;
+	
+	if (body[i].refuel) {
+		body[i].stage2.s1refuel = body[i].refuel;
+	}
+
+	// separate
+	body[i].mesh.remove(body[i].stage2.mesh);
+	let j = body.push(body[i].stage2) - 1;
+	body[i].stage2 = null;
+	scene.add(body[j].mesh);
+
+	body[i].mass -= body[j].mass;
+	addRocketHelpers(j);
+
+	// separation velocities should be distributed by mass
+	// do this for now
+	// pneumatic separation
+	body[j].cartes.vx += body[i].pointingV3.x * 2; // 2 m/s² impulse
+	body[j].cartes.vy += body[i].pointingV3.y * 2;
+	body[j].cartes.vz += body[i].pointingV3.z * 2;
+
+	// pneumatic equal opposite force on stage1
+	body[i].cartes.vx -= body[i].pointingV3.x * 2; // 2 m/s² impulse
+	body[i].cartes.vy -= body[i].pointingV3.y * 2;
+	body[i].cartes.vz -= body[i].pointingV3.z * 2;
+
+	// prep stats for displayText
+	let focus = body[j].focus;
+	body[j].cartesEci = icrfToEci(body[j].cartes, body[focus].rightAscension,
+		body[focus].declination);
+	body[j].mu = GRAVITY * (body[focus].mass + body[j].mass);
+	body[j].kepler = toKepler(body[j].cartesEci, body[j].mu);
+	body[j].ecef = eciToEcef(body[j].cartesEci,
+		body[focus].spun,
+		body[focus].angularVelocity,
+		body[focus].radiusEquator, body[focus].e2);
+	body[j].gps = ecefToGps(body[j].ecef, body[focus].radiusEquator,
+		body[focus].e2);
+
+	view = j;
+	viewFinalize();
+}
+
+let fairingSepReq = [];
+function separateFairing() {
+	fairingSepReq.push(view);
+}
+function performFairingSep(i) {
+	// copy
+	body[i].fairingN.focus = body[i].focus;
+
+	body[i].fairingN.cartes.x = body[i].cartes.x;
+	body[i].fairingN.cartes.y = body[i].cartes.y;
+	body[i].fairingN.cartes.z = body[i].cartes.z;
+	body[i].fairingN.cartes.vx = body[i].cartes.vx;
+	body[i].fairingN.cartes.vy = body[i].cartes.vy;
+	body[i].fairingN.cartes.vz = body[i].cartes.vz;
+
+	body[i].fairingN.mesh.rotation.copy(body[i].mesh.rotation);
+
+	body[i].fairingN.xSpin = body[i].xSpin;
+	body[i].fairingN.ySpin = body[i].ySpin;
+	body[i].fairingN.zSpin = body[i].zSpin;
+	
+	// move to graphics offset so it DOESN'T move
+	body[i].pointingM4.extractRotation(body[i].mesh.matrix);
+	// get unit vector of direction
+	body[i].pointingV3 =
+		body[i].mesh.up.clone().applyMatrix4(body[i].pointingM4);
+
+	body[i].fairingN.cartes.x += body[i].pointingV3.x * 7.55;
+	body[i].fairingN.cartes.y += body[i].pointingV3.y * 7.55;
+	body[i].fairingN.cartes.z += body[i].pointingV3.z * 7.55;
+
+	// separate
+	body[i].mesh.remove(body[i].fairingN.mesh);
+	let j = body.push(body[i].fairingN) - 1;
+	body[i].fairingN = null;
+	scene.add(body[j].mesh);
+
+	body[i].mass -= body[j].mass;
+	addRocketHelpers(j);
+
+	// pneumatic separation
+	let pneu = 20; // m/s² impulse
+	let pneuForward = 10;
+	
+	let enu = getDirections(body[j].cartes.x, body[j].cartes.y,
+		body[j].cartes.z, body[j].mesh.quaternion);
+	body[j].cartes.vx -= enu.northAxisV3.x * pneu;
+	body[j].cartes.vy -= enu.northAxisV3.y * pneu;
+	body[j].cartes.vz -= enu.northAxisV3.z * pneu;
+	
+	body[j].cartes.vx += enu.upAxisV3.x * pneuForward;
+	body[j].cartes.vy += enu.upAxisV3.y * pneuForward;
+	body[j].cartes.vz += enu.upAxisV3.z * pneuForward;
+	body[j].xSpin = - 0.4;
+	
+	// repeat for Zenith fairing
+
+	// copy
+	body[i].fairingZ.focus = body[i].focus;
+
+	body[i].fairingZ.cartes.x = body[i].cartes.x;
+	body[i].fairingZ.cartes.y = body[i].cartes.y;
+	body[i].fairingZ.cartes.z = body[i].cartes.z;
+	body[i].fairingZ.cartes.vx = body[i].cartes.vx;
+	body[i].fairingZ.cartes.vy = body[i].cartes.vy;
+	body[i].fairingZ.cartes.vz = body[i].cartes.vz;
+
+	body[i].fairingZ.mesh.rotation.copy(body[i].mesh.rotation);
+
+	body[i].fairingZ.xSpin = body[i].xSpin;
+	body[i].fairingZ.ySpin = body[i].ySpin;
+	body[i].fairingZ.zSpin = body[i].zSpin;
+
+	// move to graphics offset so it DOESN'T move
+	body[i].fairingZ.cartes.x += body[i].pointingV3.x * 7.55;
+	body[i].fairingZ.cartes.y += body[i].pointingV3.y * 7.55;
+	body[i].fairingZ.cartes.z += body[i].pointingV3.z * 7.55;
+
+	// separate
+	body[i].mesh.remove(body[i].fairingZ.mesh);
+	j = body.push(body[i].fairingZ) - 1;
+	body[i].fairingZ = null;
+	scene.add(body[j].mesh);
+
+	body[i].mass -= body[j].mass;
+	addRocketHelpers(j);
+
+	// pneumatic separation
+	body[j].cartes.vx += enu.northAxisV3.x * pneu;
+	body[j].cartes.vy += enu.northAxisV3.y * pneu;
+	body[j].cartes.vz += enu.northAxisV3.z * pneu;
+
+	body[j].cartes.vx += enu.upAxisV3.x * pneuForward;
+	body[j].cartes.vy += enu.upAxisV3.y * pneuForward;
+	body[j].cartes.vz += enu.upAxisV3.z * pneuForward;
+
+	body[j].xSpin = 0.4;
+}
+
+let recycleReq = null;
+function recycle() {
+	recycleReq = view;
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2190,197 +2357,29 @@ function main() {
 	body[mostMassiveBody].mesh.position.y = body[mostMassiveBody].y * scale;
 	body[mostMassiveBody].mesh.position.z = body[mostMassiveBody].z * scale;
 
-
+	// new rocket
 	if (addFalconReq) {
 		let i = addFalcon();
 		addFalconGraphics(i);
-
-		// doesn't work yet for subsequent pads
 		body[i].pad = addLaunchPad(body[i].gps, body[i].focus);
-		
 		addFalconReq = false;
 	}
 
-
-	// stage separations
-	// use array to process more than 1 if 2+ done during pause
-	//while (stageSepReq.length > 0) {
-	if (stageSepReq !== null /*&& body[stageSepReq].type === "Artificial"*/ &&
-		body[stageSepReq].stage2) {
-
-		let i = stageSepReq;
-
-		// copy
-		body[i].stage2.focus = body[i].focus;
-
-		body[i].stage2.cartes.x = body[i].cartes.x;
-		body[i].stage2.cartes.y = body[i].cartes.y;
-		body[i].stage2.cartes.z = body[i].cartes.z;
-		body[i].stage2.cartes.vx = body[i].cartes.vx;
-		body[i].stage2.cartes.vy = body[i].cartes.vy;
-		body[i].stage2.cartes.vz = body[i].cartes.vz;
-
-		body[i].stage2.mesh.rotation.copy(body[i].mesh.rotation);
-
-		body[i].stage2.xSpin = body[i].xSpin;
-		body[i].stage2.ySpin = body[i].ySpin;
-		body[i].stage2.zSpin = body[i].zSpin;
-
-		// move to graphics offset so it DOESN'T move
-		body[i].pointingM4.extractRotation(body[i].mesh.matrix);
-		// get unit vector of direction
-		body[i].pointingV3 =
-			body[i].mesh.up.clone().applyMatrix4(body[i].pointingM4);
-
-		body[i].stage2.cartes.x += body[i].pointingV3.x * 30.56;
-		body[i].stage2.cartes.y += body[i].pointingV3.y * 30.56;
-		body[i].stage2.cartes.z += body[i].pointingV3.z * 30.56;
-		
-		if (body[i].refuel) {
-			body[i].stage2.s1refuel = body[i].refuel;
+	// stage separation
+	while (stageSepReq.length > 0) {
+		let i = stageSepReq.pop(); // the first will be last, and the last, first
+		if (body[i].stage2) {
+			performStageSep(i);
 		}
-
-		// separate
-		body[i].mesh.remove(body[i].stage2.mesh);
-		let j = body.push(body[i].stage2) - 1;
-		body[i].stage2 = null;
-		scene.add(body[j].mesh);
-
-		body[i].mass -= body[j].mass;
-		addRocketHelpers(j);
-
-		// separation velocities should be distributed by mass
-		// do this for now
-		// pneumatic separation
-		body[j].cartes.vx += body[i].pointingV3.x * 2; // 2 m/s² impulse
-		body[j].cartes.vy += body[i].pointingV3.y * 2;
-		body[j].cartes.vz += body[i].pointingV3.z * 2;
-
-		// pneumatic equal opposite force on stage1
-		body[i].cartes.vx -= body[i].pointingV3.x * 2; // 2 m/s² impulse
-		body[i].cartes.vy -= body[i].pointingV3.y * 2;
-		body[i].cartes.vz -= body[i].pointingV3.z * 2;
-
-		view = j;
-		viewFinalize();
 	}
-	stageSepReq = null;
 
-
-
-
-
-
-
-
-
-
-	// fairings
-
-	if (fairingSepReq !== null /*&& body[stageSepReq].type === "Artificial"*/ &&
-		body[fairingSepReq].fairingN) {
-
-		let i = fairingSepReq;
-
-		// copy
-		body[i].fairingN.focus = body[i].focus;
-
-		body[i].fairingN.cartes.x = body[i].cartes.x;
-		body[i].fairingN.cartes.y = body[i].cartes.y;
-		body[i].fairingN.cartes.z = body[i].cartes.z;
-		body[i].fairingN.cartes.vx = body[i].cartes.vx;
-		body[i].fairingN.cartes.vy = body[i].cartes.vy;
-		body[i].fairingN.cartes.vz = body[i].cartes.vz;
-
-		body[i].fairingN.mesh.rotation.copy(body[i].mesh.rotation);
-
-		body[i].fairingN.xSpin = body[i].xSpin;
-		body[i].fairingN.ySpin = body[i].ySpin;
-		body[i].fairingN.zSpin = body[i].zSpin;
-		
-		// move to graphics offset so it DOESN'T move
-		body[i].pointingM4.extractRotation(body[i].mesh.matrix);
-		// get unit vector of direction
-		body[i].pointingV3 =
-			body[i].mesh.up.clone().applyMatrix4(body[i].pointingM4);
-
-		body[i].fairingN.cartes.x += body[i].pointingV3.x * 7.55;
-		body[i].fairingN.cartes.y += body[i].pointingV3.y * 7.55;
-		body[i].fairingN.cartes.z += body[i].pointingV3.z * 7.55;
-
-		// separate
-		body[i].mesh.remove(body[i].fairingN.mesh);
-		let j = body.push(body[i].fairingN) - 1;
-		body[i].fairingN = null;
-		scene.add(body[j].mesh);
-
-		body[i].mass -= body[j].mass;
-		addRocketHelpers(j);
-
-		// pneumatic separation
-		let pneu = 20; // m/s² impulse
-		let pneuForward = 10;
-		
-		let enu = getDirections(body[j].cartes.x, body[j].cartes.y,
-			body[j].cartes.z, body[j].mesh.quaternion);
-		body[j].cartes.vx -= enu.northAxisV3.x * pneu;
-		body[j].cartes.vy -= enu.northAxisV3.y * pneu;
-		body[j].cartes.vz -= enu.northAxisV3.z * pneu;
-		
-		body[j].cartes.vx += enu.upAxisV3.x * pneuForward;
-		body[j].cartes.vy += enu.upAxisV3.y * pneuForward;
-		body[j].cartes.vz += enu.upAxisV3.z * pneuForward;
-		body[j].xSpin = - 0.4;
-		
-		// repeat for Zenith fairing
-
-		// copy
-		body[i].fairingZ.focus = body[i].focus;
-
-		body[i].fairingZ.cartes.x = body[i].cartes.x;
-		body[i].fairingZ.cartes.y = body[i].cartes.y;
-		body[i].fairingZ.cartes.z = body[i].cartes.z;
-		body[i].fairingZ.cartes.vx = body[i].cartes.vx;
-		body[i].fairingZ.cartes.vy = body[i].cartes.vy;
-		body[i].fairingZ.cartes.vz = body[i].cartes.vz;
-
-		body[i].fairingZ.mesh.rotation.copy(body[i].mesh.rotation);
-
-		body[i].fairingZ.xSpin = body[i].xSpin;
-		body[i].fairingZ.ySpin = body[i].ySpin;
-		body[i].fairingZ.zSpin = body[i].zSpin;
-
-		// move to graphics offset so it DOESN'T move
-		body[i].fairingZ.cartes.x += body[i].pointingV3.x * 7.55;
-		body[i].fairingZ.cartes.y += body[i].pointingV3.y * 7.55;
-		body[i].fairingZ.cartes.z += body[i].pointingV3.z * 7.55;
-
-		// separate
-		body[i].mesh.remove(body[i].fairingZ.mesh);
-		j = body.push(body[i].fairingZ) - 1;
-		body[i].fairingZ = null;
-		scene.add(body[j].mesh);
-
-		body[i].mass -= body[j].mass;
-		addRocketHelpers(j);
-
-		// pneumatic separation
-		//let enu = getDirections(body[view].cartes.x, body[view].cartes.y,
-		//	body[view].cartes.z, body[j].mesh.quaternion);
-		body[j].cartes.vx += enu.northAxisV3.x * pneu;
-		body[j].cartes.vy += enu.northAxisV3.y * pneu;
-		body[j].cartes.vz += enu.northAxisV3.z * pneu;
-
-		body[j].cartes.vx += enu.upAxisV3.x * pneuForward;
-		body[j].cartes.vy += enu.upAxisV3.y * pneuForward;
-		body[j].cartes.vz += enu.upAxisV3.z * pneuForward;
-
-		body[j].xSpin = 0.4;
-		
+	// fairing separation
+	while (fairingSepReq.length > 0) {
+		let i = fairingSepReq.pop();
+		if (body[i].fairingN) {
+			performFairingSep(i);
+		}
 	}
-	fairingSepReq = null;
-
-
 
 
 	if (recycleReq !== null && body[recycleReq].onSurface) {
@@ -2417,8 +2416,6 @@ function main() {
 
 	}
 	recycleReq = null;
-
-
 
 
 
