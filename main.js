@@ -268,6 +268,7 @@ const starlight = new THREE.AmbientLight (0xffffff);
 scene.add(starlight);
 // initialize in case of refresh
 let starlightControl = 0.05;
+document.getElementById("starlight").disabled = true;
 document.getElementById("starlight").value = 5;
 document.getElementById("starlightOutput").innerHTML = "100%";
 // Update the current slider value (each time you drag the slider handle)
@@ -278,7 +279,14 @@ document.getElementById("starlight").oninput = function() {
 		starlight.intensity = starlightControl;
 	}
 }
-
+document.getElementById("starlightLock").checked = true;
+function starlightLock() {
+	if (document.getElementById("starlight").disabled === true) {
+		document.getElementById("starlight").disabled = false;
+	} else {
+		document.getElementById("starlight").disabled = true;
+	}
+}
 
 
 // THIS IS THE SECOND PLACE THAT body[] IS REQUIRED
@@ -485,14 +493,23 @@ function changeEarth(value) {
 }
 
 // initialize in case of refresh
+document.getElementById("cityLight").disabled = true;
 document.getElementById("cityLight").value = 30;
-document.getElementById("cityLightOutput").innerHTML = "30%";
+document.getElementById("cityLightOutput").innerHTML = "100%";
 // Update the current slider value (each time you drag the slider handle)
 document.getElementById("cityLight").oninput = function() {
-	document.getElementById("cityLightOutput").innerHTML = this.value + "%";
+	document.getElementById("cityLightOutput").innerHTML =
+	Math.round(this.value * 3.3333) + "%";
 	body[earth].mesh.material.emissiveIntensity = this.value / 100;
 }
-
+document.getElementById("cityLightLock").checked = true;
+function cityLightLock() {
+	if (document.getElementById("cityLight").disabled === true) {
+		document.getElementById("cityLight").disabled = false;
+	} else {
+		document.getElementById("cityLight").disabled = true;
+	}
+}
 
 // disable sun shadow
 //body[sun].mesh.castShadow = false;
@@ -515,14 +532,23 @@ body[sun].mesh.add(body[sun].sunlight);
 //scene.add(shadowHelper);
 
 // initialize in case of refresh
+document.getElementById("sunlight").disabled = true;
 document.getElementById("sunlight").value = 75;
-document.getElementById("sunlightOutput").innerHTML = "75%";
+document.getElementById("sunlightOutput").innerHTML = "100%";
 // Update the current slider value (each time you drag the slider handle)
 document.getElementById("sunlight").oninput = function() {
-	document.getElementById("sunlightOutput").innerHTML = this.value + "%";
-	body[sun].sunlight.intensity = this.value / 50;
+	document.getElementById("sunlightOutput").innerHTML =
+	Math.round(this.value * 1.3333) + "%";
+	body[sun].sunlight.intensity = this.value / 50; // range 0 to 2
 }
-
+document.getElementById("sunlightLock").checked = true;
+function sunlightLock() {
+	if (document.getElementById("sunlight").disabled === true) {
+		document.getElementById("sunlight").disabled = false;
+	} else {
+		document.getElementById("sunlight").disabled = true;
+	}
+}
 
 
 

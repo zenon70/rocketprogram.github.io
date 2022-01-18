@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v100</pre>
+		<pre id="version">v102</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -77,26 +77,35 @@
 				<input type="checkbox" id="ssbAxes" onchange="toggleSsbAxes()">
 				<label for="ssbAxes">Toggle Solar System Barycenter ICRF Axes</label>
 				<br>
-				<h3>Earth Graphics</h3>
+				<h3>Earth Atmosphere</h3>
 				<input type="checkbox" id="clouds" onchange="toggleClouds()">
-				<label for="clouds">Clouds</label>
+				<label for="clouds">Show Clouds</label>
 				<br>
 				<h3>City Lights</h3>
-				<div id="cityLightOutput" class="slider">30%</div>
+				<div id="cityLightOutput" class="slider"></div>
 					<div class="slideContainer">
-						<input type="range" min="0" max="100" value="30" class="slider" id="cityLight">
+						<input type="range" min="0" max="100" value="0" class="slider" id="cityLight">
 					</div>
+				<br>
+				<input type="checkbox" id="cityLightLock" onchange="cityLightLock()">
+				<label for="cityLightLock">Locked</label>
 				<h3>Starlight Intensity (ambient light)</h3>
-				<div id="starlightOutput" class="slider">300%</div>
+				<div id="starlightOutput" class="slider"></div>
 					<div class="slideContainer">
-						<input type="range" min="0" max="100" value="15" class="slider" id="starlight">
+						<input type="range" min="0" max="100" value="0" class="slider" id="starlight">
 					</div>
+				<br>
+				<input type="checkbox" id="starlightLock" onchange="starlightLock()">
+				<label for="starlightLock">Locked</label>
 				<h3>Sunlight Intensity (point light)</h3>
-				<div id="sunlightOutput" class="slider">100%</div>
+				<div id="sunlightOutput" class="slider"></div>
 					<div class="slideContainer">
-						<input type="range" min="0" max="100" value="100" class="slider" id="sunlight">
+						<input type="range" min="0" max="100" value="0" class="slider" id="sunlight">
 					</div>
-				<h3>Stars Resolution</h3>
+				<br>
+				<input type="checkbox" id="sunlightLock" onchange="sunlightLock()">
+				<label for="sunlightLock">Locked</label>
+				<h3>Starfield Resolution</h3>
 				<input type="radio" id="noStars" value="0" name="stars" onchange="changeStars(value)">
 				<label for="noStars">None</label>
 				<br>
