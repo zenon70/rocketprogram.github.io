@@ -2321,9 +2321,11 @@ function performFairingSep(i) {
 	body[j].xSpin = 0.4;
 }
 
-let recycleReq = null;
+//let recycleReq = null;
+let recycleReq = [];
 function recycle() {
-	recycleReq = view;
+	//recycleReq = view;
+	recycleReq.push(view);
 }
 
 
@@ -2381,10 +2383,16 @@ function main() {
 		}
 	}
 
+	while (recycleReq.length > 0) {
+		let i = recycleReq.pop();
+		if (body[i] !== undefined && body[i].onSurface === true) {
 
+/*
 	if (recycleReq !== null && body[recycleReq].onSurface) {
-
 		let i = recycleReq;
+*/
+
+
 		/*
 		right now it IS a memory leak to keep adding & recycling rockets...
 		but...
@@ -2410,13 +2418,18 @@ function main() {
 			body[i].ellipse.material.dispose();
 		}
 
-		view = earth;
+		view = earth; // not very graceful. would like next or prev, but issues..
 		viewFinalize();
 		body.splice(i, 1);
 
+
+/*
 	}
 	recycleReq = null;
+*/
 
+		}
+	}
 
 
 	// get everything else's solar system position based on local position

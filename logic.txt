@@ -11,9 +11,8 @@ planet texture should always be below spacecraft
 
 shouldn't be able to rotate while landed
 
-show Ap[Eq] and Pe[Eq] not Apo[s]
-
-all orbits toggle messed up by pause
+orbits toggles (all 3) can be toggled off when paused BUT not back on...
+  seems like inconsistent behavior
 
 spin fairing
 
