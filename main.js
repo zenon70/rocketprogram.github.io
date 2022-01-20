@@ -616,58 +616,122 @@ body[i] = {
 "mesh" is always the master mesh. sub-meshes that will never be independent are
 called other things like cap, mid, and nose.
 */
+
+// stage 1
+const f9s1_geo = new THREE.CylinderGeometry(
+	1.83 * scale, 1.83 * scale, 37.88 * scale, 16);
+const f9s1_texture = new THREE.TextureLoader().load("graphics/f9s1.png");
+f9s1_texture.magFilter = THREE.NearestFilter;
+f9s1_texture.minFilter = THREE.NearestFilter;
+const f9s1_mat = new THREE.MeshLambertMaterial({
+	map: f9s1_texture});
+
+// bottom cap to hide stage 1 graphics wrap
+const f9s1_bCapGeo = new THREE.CylinderGeometry(
+	1.83 * scale, 1.83 * scale, 0.02 * scale, 16);
+const f9s1_bCapMat = new THREE.MeshLambertMaterial({color:0x333333});
+
+// top cap to hide stage 1 graphics wrap
+const f9s1_tCapGeo = new THREE.CylinderGeometry(
+	1.83 * scale, 1.83 * scale, 0.02 * scale, 16);
+const f9s1_tCapMat = new THREE.MeshLambertMaterial({color:0x555555});
+
+// interstage
+const f9s1_intGeo = new THREE.CylinderGeometry(
+	1.83 * scale, 1.83 * scale, 4.7 * scale, 16, 1, true);
+const f9s1_intMat = new THREE.MeshLambertMaterial({
+	side: THREE.DoubleSide, color:0x000000});
+
+
+// add stage 2 mesh
+const f9s2_geo = new THREE.CylinderGeometry(
+	1.83 * scale, 1.83 * scale, 13.8 * scale, 16);
+const f9s2_texture = new THREE.TextureLoader().load("graphics/f9stage2.png");
+f9s2_texture.magFilter = THREE.NearestFilter;
+f9s2_texture.minFilter = THREE.NearestFilter;
+const f9s2_mat = new THREE.MeshLambertMaterial({map: f9s2_texture});
+
+// stage 2 engine
+const f9s2_engGeo = new THREE.CylinderGeometry(
+	0.7 * scale, 1.6 * scale, 4 * scale, 16, 1, true);
+const f9s2_engMat = new THREE.MeshLambertMaterial({
+	side: THREE.DoubleSide, color:0x888888});
+
+// payload attachment fitting
+const f9s2_pafGeo = new THREE.CylinderGeometry(
+	1 * scale, 1.83 * scale, 1.3 * scale, 16);
+const f9s2_pafMat = new THREE.MeshLambertMaterial({
+	side: THREE.DoubleSide, color:0xaaaaaa});
+
+
+// fairing base expansion section, Nadir +Z
+const f9fn_baseGeo = new THREE.CylinderGeometry(
+	2.6 * scale, 1.83 * scale, 1.3 * scale, 16, 1, true, Math.PI / 2, Math.PI);
+const f9fn_baseMat = new THREE.MeshLambertMaterial({side: THREE.DoubleSide});
+
+// fairing base expansion section, Zenith -Z
+const f9fz_baseGeo = new THREE.CylinderGeometry(2.6 * scale, 1.83 * scale,
+	1.3 * scale, 16, 1, true, Math.PI + Math.PI / 2, Math.PI);
+const f9fz_baseMat = new THREE.MeshLambertMaterial({side: THREE.DoubleSide});
+
+const f9fn_texture = new THREE.TextureLoader().load("graphics/f9fairingN.png");
+f9fn_texture.magFilter = THREE.NearestFilter;
+f9fn_texture.minFilter = THREE.NearestFilter;
+const f9fn_midGeo = new THREE.CylinderGeometry(
+	2.6 * scale, 2.6 * scale, 6.7 * scale, 16, 1, true, Math.PI / 2, Math.PI);
+const f9fn_midMat = new THREE.MeshLambertMaterial({
+	side: THREE.DoubleSide, map: f9fn_texture});
+
+// fairing mid section, Zenith
+const f9fz_texture = new THREE.TextureLoader().load("graphics/f9fairingZ.png");
+f9fz_texture.magFilter = THREE.NearestFilter;
+f9fz_texture.minFilter = THREE.NearestFilter;
+const f9fz_midGeo = new THREE.CylinderGeometry(2.6 * scale, 2.6 * scale,
+	6.7 * scale, 16, 1, true, Math.PI + Math.PI / 2, Math.PI);
+const f9fz_midMat = new THREE.MeshLambertMaterial({
+	side: THREE.DoubleSide, map: f9fz_texture});
+
+
+// fairing nose aerodynamic shape, Nadir
+const f9fn_noseGeo = new THREE.SphereGeometry(
+	2.6 * scale, 16, 8, Math.PI, Math.PI, 0, Math.PI / 2);
+const f9fn_noseMat = new THREE.MeshLambertMaterial({side: THREE.DoubleSide});
+
+// fairing nose aerodynamic shape, Zenith
+const f9fz_noseGeo = new THREE.SphereGeometry(
+	2.6 * scale, 16, 8, 0, Math.PI, 0, Math.PI / 2);
+const f9fz_noseMat = new THREE.MeshLambertMaterial({side: THREE.DoubleSide});
+
+
 function addFalconGraphics(i) {
 
 	// stage 1
-	const geometry = new THREE.CylinderGeometry(
-		1.83 * scale, 1.83 * scale, 37.88 * scale, 16);
-	const texture = new THREE.TextureLoader().load("graphics/f9s1.png");
-	texture.magFilter = THREE.NearestFilter;
-	texture.minFilter = THREE.NearestFilter;
-	const material = new THREE.MeshLambertMaterial({
-		map: texture
-		});
-	body[i].mesh = new THREE.Mesh(geometry, material);
-	
+	body[i].mesh = new THREE.Mesh(f9s1_geo, f9s1_mat);
+
 	// bottom cap to hide stage 1 graphics wrap
-	body[i].cap = new THREE.Mesh(new THREE.CylinderGeometry(
-		1.83 * scale, 1.83 * scale, 0.02 * scale, 16),
-		new THREE.MeshLambertMaterial({color:0x333333}));
-	body[i].cap.position.set(0, - (37.88/2 + 0.01) * scale, 0);
-	body[i].mesh.add(body[i].cap);
+	body[i].bCap = new THREE.Mesh(f9s1_bCapGeo, f9s1_bCapMat);
+	body[i].bCap.position.set(0, - (37.88/2 + 0.01) * scale, 0);
+	body[i].mesh.add(body[i].bCap);
 
 	// top cap to hide stage 1 graphics wrap
-	body[i].cap = new THREE.Mesh(new THREE.CylinderGeometry(
-		1.83 * scale, 1.83 * scale, 0.02 * scale, 16),
-		new THREE.MeshLambertMaterial({color:0x555555}));
-	body[i].cap.position.set(0, (37.88/2 + 0.01) * scale, 0);
-	body[i].mesh.add(body[i].cap);
-	
+	body[i].tCap = new THREE.Mesh(f9s1_tCapGeo, f9s1_tCapMat);
+	body[i].tCap.position.set(0, (37.88/2 + 0.01) * scale, 0);
+	body[i].mesh.add(body[i].tCap);
+
 	// interstage
-	body[i].cap = new THREE.Mesh(new THREE.CylinderGeometry(
-		1.83 * scale, 1.83 * scale, 4.7 * scale, 16, 1, true),
-		new THREE.MeshLambertMaterial({side: THREE.DoubleSide, color:0x000000}));
-	body[i].cap.position.set(0, (37.88/2 + 0.02 + 4.7/2) * scale, 0);
-	body[i].mesh.add(body[i].cap);
+	body[i].interstage = new THREE.Mesh(f9s1_intGeo, f9s1_intMat);
+	body[i].interstage.position.set(0, (37.88/2 + 0.02 + 4.7/2) * scale, 0);
+	body[i].mesh.add(body[i].interstage);
+
 
 	//let s2 = 37.88/2 + 0.02 + 4.7 + 13.8/2; // 30.56
-
 	// add stage 2 mesh
-	const geometry2 = new THREE.CylinderGeometry(
-		1.83 * scale, 1.83 * scale, 13.8 * scale, 16);
-	const texture2 = new THREE.TextureLoader().load("graphics/f9stage2.png");
-	texture2.magFilter = THREE.NearestFilter;
-	texture2.minFilter = THREE.NearestFilter;
-	const material2 = new THREE.MeshLambertMaterial({
-		map: texture2
-		});
-	body[i].stage2.mesh = new THREE.Mesh(geometry2, material2);
+	body[i].stage2.mesh = new THREE.Mesh(f9s2_geo, f9s2_mat);
 	body[i].stage2.mesh.position.set(0, 30.56 * scale, 0);
 	body[i].mesh.add(body[i].stage2.mesh);
-	
-	body[i].stage2.engine = new THREE.Mesh(new THREE.CylinderGeometry(
-		0.7 * scale, 1.6 * scale, 4 * scale, 16, 1, true),
-		new THREE.MeshLambertMaterial({side: THREE.DoubleSide, color:0x888888}));
+
+	// stage 2 engine
+	body[i].stage2.engine = new THREE.Mesh(f9s2_engGeo, f9s2_engMat);
 	body[i].stage2.engine.position.set(0, - (13.8/2 + 4/2) * scale, 0);
 	body[i].stage2.mesh.add(body[i].stage2.engine);
 
@@ -678,102 +742,79 @@ function addFalconGraphics(i) {
 	body[i].stage2.paf.position.set(0, (13.8/2 + 1.3/2) * scale, 0);
 	body[i].stage2.mesh.add(body[i].stage2.paf);
 
+
 	// fairing base expansion section, Nadir +Z
-	body[i].stage2.fairingN.mesh = new THREE.Mesh(new THREE.CylinderGeometry(
-		2.6 * scale, 1.83 * scale, 1.3 * scale, 16, 1, true, Math.PI / 2, Math.PI),
-		new THREE.MeshLambertMaterial({side: THREE.DoubleSide}));
+	body[i].stage2.fairingN.mesh = new THREE.Mesh(f9fn_baseGeo, f9fn_baseMat);
 	body[i].stage2.fairingN.mesh.position.set(0, (13.8/2 + 1.3/2) * scale, 0);
 	body[i].stage2.mesh.add(body[i].stage2.fairingN.mesh);
 
 	// fairing base expansion section, Zenith -Z
-	body[i].stage2.fairingZ.mesh = new THREE.Mesh(new THREE.CylinderGeometry(
-		2.6 * scale, 1.83 * scale, 1.3 * scale, 16, 1, true, Math.PI + Math.PI / 2,
-		Math.PI),
-		new THREE.MeshLambertMaterial({side: THREE.DoubleSide}));
+	body[i].stage2.fairingZ.mesh = new THREE.Mesh(f9fz_baseGeo, f9fz_baseMat);
 	body[i].stage2.fairingZ.mesh.position.set(0, (13.8/2 + 1.3/2) * scale, 0);
 	body[i].stage2.mesh.add(body[i].stage2.fairingZ.mesh);
 
-
 	// fairing mid section, Nadir
-
-	const texture3 = new THREE.TextureLoader().load("graphics/f9fairingN.png");
-	texture3.magFilter = THREE.NearestFilter;
-	texture3.minFilter = THREE.NearestFilter;
-	body[i].stage2.fairingN.mid = new THREE.Mesh(new THREE.CylinderGeometry(
-		2.6 * scale, 2.6 * scale, 6.7 * scale, 16, 1, true, Math.PI / 2, Math.PI),
-		new THREE.MeshLambertMaterial({side: THREE.DoubleSide, map: texture3}));
+	body[i].stage2.fairingN.mid = new THREE.Mesh(f9fn_midGeo, f9fn_midMat);
 	body[i].stage2.fairingN.mid.position.set(0, (1.3/2 + 6.7/2) * scale, 0);
 	body[i].stage2.fairingN.mesh.add(body[i].stage2.fairingN.mid);
 
 	// fairing mid section, Zenith
-	const texture4 = new THREE.TextureLoader().load("graphics/f9fairingZ.png");
-	texture4.magFilter = THREE.NearestFilter;
-	texture4.minFilter = THREE.NearestFilter;
-	body[i].stage2.fairingZ.mid = new THREE.Mesh(new THREE.CylinderGeometry(
-		2.6 * scale, 2.6 * scale, 6.7 * scale, 16, 1, true, Math.PI + Math.PI / 2,
-		Math.PI),
-		new THREE.MeshLambertMaterial({side: THREE.DoubleSide, map: texture4}));
+	body[i].stage2.fairingZ.mid = new THREE.Mesh(f9fz_midGeo, f9fz_midMat);
 	body[i].stage2.fairingZ.mid.position.set(0, (1.3/2 + 6.7/2) * scale, 0);
 	body[i].stage2.fairingZ.mesh.add(body[i].stage2.fairingZ.mid);
 
-
-
 	// fairing nose aerodynamic shape, Nadir
-	body[i].stage2.fairingN.nose = new THREE.Mesh(new THREE.SphereGeometry(
-		2.6 * scale, 16, 8, Math.PI, Math.PI, 0, Math.PI / 2),
-		new THREE.MeshLambertMaterial({side: THREE.DoubleSide}));
+	body[i].stage2.fairingN.nose = new THREE.Mesh(f9fn_noseGeo, f9fn_noseMat);
 	body[i].stage2.fairingN.nose.position.set(0, (1.3/2 + 6.7) * scale, 0);
 	//body[i].stage2.fairingN.nose.rotation.set(0, Math.PI / 2, 0); // for texture
 	body[i].stage2.fairingN.nose.scale.y = 2;
 	body[i].stage2.fairingN.mesh.add(body[i].stage2.fairingN.nose);
 
 	// fairing nose aerodynamic shape, Zenith
-	body[i].stage2.fairingZ.nose = new THREE.Mesh(new THREE.SphereGeometry(
-		2.6 * scale, 16, 8, 0, Math.PI, 0, Math.PI / 2),
-		new THREE.MeshLambertMaterial({side: THREE.DoubleSide}));
+	body[i].stage2.fairingZ.nose = new THREE.Mesh(f9fz_noseGeo, f9fz_noseMat);
 	body[i].stage2.fairingZ.nose.position.set(0, (1.3/2 + 6.7) * scale, 0);
 	//body[i].stage2.fairingZ.nose.rotation.set(0, Math.PI / 2, 0); // for texture
 	body[i].stage2.fairingZ.nose.scale.y = 2;
 	body[i].stage2.fairingZ.mesh.add(body[i].stage2.fairingZ.nose);
 
 
-		//body[i].mesh.receiveShadow = true;
+	//body[i].mesh.receiveShadow = true;
 
-		body[i].mesh.up.set(0, 1, 0);
-		body[i].stage2.mesh.up.set(0, 1, 0);
-		body[i].stage2.fairingN.mesh.up.set(0, 1, 0);
-		body[i].stage2.fairingZ.mesh.up.set(0, 1, 0);
-		
+	body[i].mesh.up.set(0, 1, 0);
+	body[i].stage2.mesh.up.set(0, 1, 0);
+	body[i].stage2.fairingN.mesh.up.set(0, 1, 0);
+	body[i].stage2.fairingZ.mesh.up.set(0, 1, 0);
+	
 
-		// rotate mesh so it's standing up on the ground:
-		// get the direction vector that defines up relative to ground...
-		// the cheap and easy way is for a sphere, not oblate spheroid
-		// and this way also aligns with the navball
-		const focus = body[i].focus;
-		let enu = getDirections(body[i].cartes.x, body[i].cartes.y, body[i].cartes.z,
-			body[focus].mesh.quaternion);
-		let navM4 = new THREE.Matrix4().makeBasis(
-			enu.northAxisV3, enu.upAxisV3, enu.eastAxisV3);
-		body[i].mesh.quaternion.setFromRotationMatrix(navM4);
+	// rotate mesh so it's standing up on the ground:
+	// get the direction vector that defines up relative to ground...
+	// the cheap and easy way is for a sphere, not oblate spheroid
+	// and this way also aligns with the navball
+	const focus = body[i].focus;
+	let enu = getDirections(body[i].cartes.x, body[i].cartes.y, body[i].cartes.z,
+		body[focus].mesh.quaternion);
+	let navM4 = new THREE.Matrix4().makeBasis(
+		enu.northAxisV3, enu.upAxisV3, enu.eastAxisV3);
+	body[i].mesh.quaternion.setFromRotationMatrix(navM4);
 
-		// set so pitching down points east
-		body[i].mesh.rotateY(Math.PI);
+	// set so pitching down points east
+	body[i].mesh.rotateY(Math.PI);
 
-		// update thrust vector
-		body[i].pointingM4.extractRotation(body[i].mesh.matrix);
-		// get unit vector of direction
-		body[i].pointingV3 =
-			body[i].mesh.up.clone().applyMatrix4(body[i].pointingM4);
+	// update thrust vector
+	body[i].pointingM4.extractRotation(body[i].mesh.matrix);
+	// get unit vector of direction
+	body[i].pointingV3 =
+		body[i].mesh.up.clone().applyMatrix4(body[i].pointingM4);
 
-		scene.add(body[i].mesh);
+	scene.add(body[i].mesh);
 
-		addRocketHelpers(i);
+	addRocketHelpers(i);
 
-		// post-setup global adjustments
-		view = i;
-		viewFinalize();
-		controls.target = body[view].mesh.position;
-		controls.minDistance = 75 * scale;
+	// post-setup global adjustments
+	view = i;
+	viewFinalize();
+	controls.target = body[view].mesh.position;
+	controls.minDistance = 75 * scale;
 }
 addFalconGraphics(rocket);
 
@@ -2328,22 +2369,115 @@ function recycle() {
 	recycleReq.push(view);
 }
 function performRecycle(i) {
+	scene.remove(body[i].mesh);
 
-	/*
-	right now it IS a memory leak to keep adding & recycling rockets...
-	but...
-	why dispose? just use global geometries and materials
+	// what if it's fairingN? or fairingZ?
+	if (body[i].mid) {
+		body[i].mesh.remove(body[i].mid);
+		body[i].mid.geometry.dispose();
+		body[i].mid.material.dispose();
 
-	// DON'T do this
-	if (body[i].stage2 !== null) {
-		if (body[i].fairin)
+		body[i].mesh.remove(body[i].nose);
+		body[i].nose.geometry.dispose();
+		body[i].nose.material.dispose();
+	}
+
+	// what if it's stage 2?
+	if (body[i].paf) {
+		if (body[i].fairingN) {
+			body[i].fairingN.mesh.remove(body[i].fairingN.nose);
+			body[i].fairingN.nose.geometry.dispose();
+			body[i].fairingN.nose.material.dispose();
+
+			body[i].fairingZ.mesh.remove(body[i].fairingZ.nose);
+			body[i].fairingZ.nose.geometry.dispose();
+			body[i].fairingZ.nose.material.dispose();
+
+			body[i].fairingN.mesh.remove(body[i].fairingN.mid);
+			body[i].fairingN.mid.geometry.dispose();
+			body[i].fairingN.mid.material.dispose();
+
+			body[i].fairingZ.mesh.remove(body[i].fairingZ.mid);
+			body[i].fairingZ.nose.geometry.dispose();
+			body[i].fairingZ.nose.material.dispose();
+
+			body[i].mesh.remove(body[i].fairingN.mesh);
+			body[i].fairingN.mesh.geometry.dispose();
+			body[i].fairingN.mesh.material.dispose();
+	
+			body[i].mesh.remove(body[i].fairingZ.mesh);
+			body[i].fairingZ.mesh.geometry.dispose();
+			body[i].fairingZ.mesh.material.dispose();
+		}
+
+		body[i].mesh.remove(body[i].paf);
+		body[i].paf.geometry.dispose();
+		body[i].paf.material.dispose();
+
+		body[i].mesh.remove(body[i].engine);
+		body[i].engine.geometry.dispose();
+		body[i].engine.material.dispose();
+	}
+
+	// if it's stage 1
+	if (body[i].stage2) {
+
+		body[i].stage2.fairingN.mesh.remove(body[i].stage2.fairingN.nose);
+		body[i].stage2.fairingN.nose.geometry.dispose();
+		body[i].stage2.fairingN.nose.material.dispose();
+
+		body[i].stage2.fairingZ.mesh.remove(body[i].stage2.fairingZ.nose);
+		body[i].stage2.fairingZ.nose.geometry.dispose();
+		body[i].stage2.fairingZ.nose.material.dispose();
+
+
+		body[i].stage2.fairingN.mesh.remove(body[i].stage2.fairingN.mid);
+		body[i].stage2.fairingN.mid.geometry.dispose();
+		body[i].stage2.fairingN.mid.material.dispose();
+
+		body[i].stage2.fairingZ.mesh.remove(body[i].stage2.fairingZ.mid);
+		body[i].stage2.fairingZ.mid.geometry.dispose();
+		body[i].stage2.fairingZ.mid.material.dispose();
+
+
+		body[i].stage2.mesh.remove(body[i].stage2.fairingN.mesh);
+		body[i].stage2.fairingN.mesh.geometry.dispose();
+		body[i].stage2.fairingN.mesh.material.dispose();
+
+		body[i].stage2.mesh.remove(body[i].stage2.fairingZ.mesh);
+		body[i].stage2.fairingZ.mesh.geometry.dispose();
+		body[i].stage2.fairingZ.mesh.material.dispose();
+
+
+		body[i].stage2.mesh.remove(body[i].stage2.paf);
+		body[i].stage2.paf.geometry.dispose();
+		body[i].stage2.paf.material.dispose();
+
+		body[i].stage2.mesh.remove(body[i].stage2.engine);
+		body[i].stage2.engine.geometry.dispose();
+		body[i].stage2.engine.material.dispose();
+
+		body[i].mesh.remove(body[i].stage2.mesh);
 		body[i].stage2.mesh.geometry.dispose();
 		body[i].stage2.mesh.material.dispose();
-		scene.remove(body[i].stage2.mesh);
 	}
-	*/
-	// might as well at least do this until globals are implemented
-	scene.remove(body[i].mesh);
+
+	// stage 1
+	if (body[i].interstage) {
+		body[i].mesh.remove(body[i].interstage);
+		body[i].interstage.geometry.dispose();
+		body[i].interstage.material.dispose();
+	}
+	if (body[i].tCap) {
+		body[i].mesh.remove(body[i].tCap);
+		body[i].tCap.geometry.dispose();
+		body[i].tCap.material.dispose();
+	}
+	if (body[i].bCap) {
+		body[i].mesh.remove(body[i].bCap);
+		body[i].bCap.geometry.dispose();
+		body[i].bCap.material.dispose();
+	}
 
 	body[i].mesh.geometry.dispose();
 	body[i].mesh.material.dispose();
@@ -2365,7 +2499,7 @@ function performRecycle(i) {
 // main loop (separate from animation loop)
 function main() {
 
-	// spin and throttle rocket
+	// spin, throttle thrust, and drag for rockets
 	rocketControl();
 
 	// calculate new velocities for everything (true n-body physics.
