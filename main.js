@@ -2493,78 +2493,6 @@ function performRecycle(i) {
 	body.splice(i, 1);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// main loop
-
-// main loop (separate from animation loop)
-function main() {
-
-	// spin, throttle thrust, and drag for rockets
-	rocketControl();
-
-	// calculate new velocities for everything (true n-body physics.
-	//body = nBodyVelocity(body, GRAVITY, timestep);
-	nBodyVelocity();
-
-	// update sun position. relative to system barycenter. no keplerian orbit
-	body[mostMassiveBody].x += body[mostMassiveBody].vx * timestep;
-	body[mostMassiveBody].y += body[mostMassiveBody].vy * timestep;
-	body[mostMassiveBody].z += body[mostMassiveBody].vz * timestep;
-	body[mostMassiveBody].mesh.rotateY(
-		body[mostMassiveBody].angularVelocity * timestep);
-	body[mostMassiveBody].spun +=
-		body[mostMassiveBody].angularVelocity * timestep;
-
-	// update everything else's position within the context of a 2-body problem
-	keplerPosition();
-
-	// update sun mesh position. relative to system barycenter
-	body[mostMassiveBody].mesh.position.x = body[mostMassiveBody].x * scale;
-	body[mostMassiveBody].mesh.position.y = body[mostMassiveBody].y * scale;
-	body[mostMassiveBody].mesh.position.z = body[mostMassiveBody].z * scale;
-
-	// new rocket
-	if (addFalconReq) {
-		let i = addFalcon();
-		addFalconGraphics(i);
-		body[i].pad = addLaunchPad(body[i].gps, body[i].focus);
-		addFalconReq = false;
-	}
-
-	// stage separation
-	while (stageSepReq.length > 0) {
-		let i = stageSepReq.pop(); // the first will be last, and the last, first
-		if (body[i].stage2 !== undefined && body[i].stage2 !== null) {
-			performStageSep(i);
-		}
-	}
-
-	// fairing separation
-	while (fairingSepReq.length > 0) {
-		let i = fairingSepReq.pop();
-		// just test fairing n for both n and z
-		if (body[i].fairingN !== undefined && body[i].fairingN !== null) {
-			performFairingSep(i);
-		}
-	}
-
-	while (recycleReq.length > 0) {
-		let i = recycleReq.pop();
-		if (body[i] !== undefined && body[i].onSurface === true) {
-			performRecycle(i);
-		}
-	}
-
-	// get everything else's solar system position based on local position
-	systemPosition();
-
-	// increment time
-	now.setMilliseconds(now.getMilliseconds() + timestep * 1000);
-
-	displayText();
-
-	preAnimate();
-}
 
 
 document.querySelector("#allOrbits").checked = false;
@@ -2735,6 +2663,80 @@ function preAnimate() {
 	oldViewZ = body[view].mesh.position.z;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// main loop
+
+// main loop (separate from animation loop)
+function main() {
+
+	// spin, throttle thrust, and drag for rockets
+	rocketControl();
+
+	// calculate new velocities for everything (true n-body physics.
+	//body = nBodyVelocity(body, GRAVITY, timestep);
+	nBodyVelocity();
+
+	// update sun position. relative to system barycenter. no keplerian orbit
+	body[mostMassiveBody].x += body[mostMassiveBody].vx * timestep;
+	body[mostMassiveBody].y += body[mostMassiveBody].vy * timestep;
+	body[mostMassiveBody].z += body[mostMassiveBody].vz * timestep;
+	body[mostMassiveBody].mesh.rotateY(
+		body[mostMassiveBody].angularVelocity * timestep);
+	body[mostMassiveBody].spun +=
+		body[mostMassiveBody].angularVelocity * timestep;
+
+	// update everything else's position within the context of a 2-body problem
+	keplerPosition();
+
+	// update sun mesh position. relative to system barycenter
+	body[mostMassiveBody].mesh.position.x = body[mostMassiveBody].x * scale;
+	body[mostMassiveBody].mesh.position.y = body[mostMassiveBody].y * scale;
+	body[mostMassiveBody].mesh.position.z = body[mostMassiveBody].z * scale;
+
+	// new rocket
+	if (addFalconReq) {
+		let i = addFalcon();
+		addFalconGraphics(i);
+		body[i].pad = addLaunchPad(body[i].gps, body[i].focus);
+		addFalconReq = false;
+	}
+
+	// stage separation
+	while (stageSepReq.length > 0) {
+		let i = stageSepReq.pop(); // the first will be last, and the last, first
+		if (body[i].stage2 !== undefined && body[i].stage2 !== null) {
+			performStageSep(i);
+		}
+	}
+
+	// fairing separation
+	while (fairingSepReq.length > 0) {
+		let i = fairingSepReq.pop();
+		// just test fairing n for both n and z
+		if (body[i].fairingN !== undefined && body[i].fairingN !== null) {
+			performFairingSep(i);
+		}
+	}
+
+	while (recycleReq.length > 0) {
+		let i = recycleReq.pop();
+		if (body[i] !== undefined && body[i].onSurface === true) {
+			performRecycle(i);
+		}
+	}
+
+	// get everything else's solar system position based on local position
+	systemPosition();
+
+	// increment time
+	now.setMilliseconds(now.getMilliseconds() + timestep * 1000);
+
+	displayText();
+
+	preAnimate();
+}
+
+
 function animate() {
 	requestAnimationFrame(animate);
 
@@ -2745,10 +2747,10 @@ function animate() {
 	renderer.clearDepth();
 	renderer.render(scene2, camera2);
 }
-animate();
-
 
 let loop = setInterval(main, 10);
+animate();
+
 let running = true;
 function playPause() {
 	if (running === true) {

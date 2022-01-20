@@ -3,6 +3,8 @@
 # IN-PROGRESS
 -------------
 
+major refactoring
+
 need finer throttle controls
 
 402 not tidally locked properly (and probably 401 as well)
@@ -14,11 +16,9 @@ shouldn't be able to rotate while landed
 orbits toggles (all 3) can be toggled off when paused BUT not back on...
   seems like inconsistent behavior
 
-spin fairing
+shouldn't be able to control spin of fairing
 
-major refactoring
-
-recycle() has mem leak, should reuse global geometries, materials
+check and confirm memory is not leaking
 
 fairing separation: correct directions
 
@@ -28,7 +28,6 @@ isNaN safety before integration
 
 button layout, throttle sliders (main & spin)
 
-random launch location is not uniform distribution, more near poles
 
 
 
@@ -697,9 +696,13 @@ function displayText()
 function viewNext()
 function viewPrevious()
 
+add rocket, stage sep, fairing sep, recycle
+
+toggle orbits: all, local, single
+function preAnimate();
+
 function main();
-
-
+function animate();
 
 
 
