@@ -113,12 +113,7 @@ let navBall = new THREE.Mesh(new THREE.SphereGeometry(50, 32, 16),
 	new THREE.MeshPhongMaterial({map:
 	new THREE.TextureLoader().load("graphics/navball_blackgrey.png")}));
 
-// should add to scene2 later, after navBall rotation is set
-// add here for now
-scene2.add(ambientLight2);
-scene2.add(pointLight2);
-scene2.add(navBall);
-
+// add to scene2 later, after navBall rotation is set
 
 ////////////////////////////////////////////////////////////////////////////////
 // resize 3d graphics setup as needed
@@ -294,152 +289,150 @@ function starlightLock() {
 // planets, moons, etc: oblate spheroids (with helpers)
 function makeNaturalBodyGraphics() {
 
-for (let i = body.length - 1; i > -1; i--) {
-	if (body[i].type === "Artificial") continue;
+	for (let i = body.length - 1; i > -1; i--) {
+		if (body[i].type === "Artificial") continue;
 
-	let material;
+		let material;
 
-	if (body[i].map !== undefined && body[i].map !== null && i === earth) {
-		material = new THREE.MeshLambertMaterial({
-			map: new THREE.TextureLoader().load(body[i].map),
-			emissive: 0xffffdd,
-			emissiveIntensity: 0.3,
-			emissiveMap:
-				new THREE.TextureLoader().load("graphics/planet3lights_2k_dark.jpg")
-		});
-
-		material.map.magFilter = THREE.NearestFilter;
-		material.map.minFilter = THREE.NearestFilter;
-		material.emissiveMap.magFilter = THREE.NearestFilter;
-		material.emissiveMap.minFilter = THREE.NearestFilter;
-
-	} else if (body[i].map !== undefined && body[i].map !== null) {
-		material = new THREE.MeshLambertMaterial({
-			map: new THREE.TextureLoader().load(body[i].map)});
-
-		material.map.magFilter = THREE.NearestFilter;
-		material.map.minFilter = THREE.NearestFilter;
-
-	} else if (body[i].color !== undefined) {
+		if (body[i].map !== undefined && body[i].map !== null && i === earth) {
 			material = new THREE.MeshLambertMaterial({
-				color: body[i].color});
-	} else {
-		material = new THREE.MeshLambertMaterial();
+				map: new THREE.TextureLoader().load(body[i].map),
+				emissive: 0xffffdd,
+				emissiveIntensity: 0.3,
+				emissiveMap:
+					new THREE.TextureLoader().load("graphics/planet3lights_2k_dark.jpg")
+			});
+
+			material.map.magFilter = THREE.NearestFilter;
+			material.map.minFilter = THREE.NearestFilter;
+			material.emissiveMap.magFilter = THREE.NearestFilter;
+			material.emissiveMap.minFilter = THREE.NearestFilter;
+
+		} else if (body[i].map !== undefined && body[i].map !== null) {
+			material = new THREE.MeshLambertMaterial({
+				map: new THREE.TextureLoader().load(body[i].map)});
+
+			material.map.magFilter = THREE.NearestFilter;
+			material.map.minFilter = THREE.NearestFilter;
+
+		} else if (body[i].color !== undefined) {
+				material = new THREE.MeshLambertMaterial({
+					color: body[i].color});
+		} else {
+			material = new THREE.MeshLambertMaterial();
+		}
+
+		body[i].mesh = new THREE.Mesh(new THREE.SphereGeometry(
+			body[i].radiusEquator * scale, body[i].segments, body[i].segments / 2),
+			material);
+
+		if (i === earth) {
+
+			// clouds
+			let material2 =	new THREE.MeshLambertMaterial({
+				map: new THREE.TextureLoader().load("graphics/planet3clouds_512_b.png"),
+				side: THREE.DoubleSide,
+				transparent: true
+			});
+
+			// 8500 is scale height, * 3.75 so it doesn't appear shredded (clip),
+			// due to limited segments.
+			body[i].clouds = new THREE.Mesh(new THREE.SphereGeometry(
+				body[i].radiusEquator * scale + 8500 * 3.75 * scale,
+				body[i].segments, body[i].segments / 2),
+				material2);
+
+			body[i].clouds.scale.y = body[i].radiusPole / body[i].radiusEquator;
+
+			body[i].mesh.add(body[i].clouds);
+			body[i].clouds.visible = false;
+		}
+
+		// shadows
+		//body[i].mesh.castShadow = true;
+		//body[i].mesh.receiveShadow = true;
+
+
+		if (body[i].emissive !== undefined) {
+			body[i].mesh.material.emissive.set(body[i].emissive);
+		}
+
+		//body[i].mesh.material.transparent = true;
+		//body[i].mesh.material.opacity = 0.8;
+
+		body[i].mesh.scale.y = body[i].radiusPole / body[i].radiusEquator;
+		if (body[i].radiusWest !== undefined) {
+			body[i].mesh.scale.z = body[i].radiusPole / body[i].radiusEquator;
+		}
+
+
+		// rings
+		if (body[i].ringsRadius !== undefined && body[i].ringsMap !== undefined) {
+			body[i].rings = new THREE.Mesh(
+				new THREE.PlaneGeometry(
+					body[i].ringsRadius * 2 * scale, body[i].ringsRadius * 2 * scale),
+				new THREE.MeshBasicMaterial({
+					map: new THREE.TextureLoader().load(body[i].ringsMap),
+					transparent: true,
+					side: THREE.DoubleSide})
+				);
+			body[i].rings.rotation.set(Math.PI / 2, 0, 0);
+			//body[i].rings.castShadow = true;
+			//body[i].rings.receiveShadow = true;
+			body[i].mesh.attach(body[i].rings);
+		}
+
+		// turn to z-up, then Dec, thrn RA, then W.
+		body[i].mesh.rotation.set(Math.PI / 2, 0, -Math.PI / 2 +
+			body[i].declination);
+		body[i].mesh.rotateOnWorldAxis(zAxis, body[i].rightAscension);
+		body[i].mesh.rotateY(Math.PI / 2 + body[i].primeMeridian);
+
+		scene.add(body[i].mesh);
+
+		// create ecef axes helper
+		body[i].axesHelper = new THREE.AxesHelper(body[i].radiusEquator * 1.5 *
+			scale);
+		// same config as spheroid
+		body[i].axesHelper.rotation.set(Math.PI / 2, 0, -Math.PI / 2 +
+			body[i].declination);
+		body[i].axesHelper.rotateOnWorldAxis(zAxis, body[i].rightAscension);
+		body[i].axesHelper.rotateY(Math.PI / 2 + body[i].primeMeridian);
+		// rotate to appear as z-up (space axes convention)
+		body[i].axesHelper.rotateX(-Math.PI / 2);
+		body[i].mesh.attach(body[i].axesHelper);
+		body[i].axesHelper.visible = false;
+
+		// create eci axes helper
+		body[i].axesHelperEci = new THREE.AxesHelper(body[i].radiusEquator * 2.25 *
+			scale);
+		// same config as spheroid
+		body[i].axesHelperEci.rotation.set(Math.PI / 2, 0, -Math.PI / 2 +
+			body[i].declination);
+		body[i].axesHelperEci.rotateOnWorldAxis(zAxis, body[i].rightAscension);
+		//body[i].axesHelperEci.rotateY(Math.PI / 2 + body[i].primeMeridian);
+		// rotate to appear as z-up (space axes convention)
+		body[i].axesHelperEci.rotateX(-Math.PI / 2);
+		scene.add(body[i].axesHelperEci);
+		body[i].axesHelperEci.visible = false;
+
+		// create icrf axes helper
+		body[i].axesHelperIcrf = new THREE.AxesHelper(
+			body[i].radiusEquator * 3 * scale);
+		// add to scene so it doesn't rotate with parent. must update position.
+		scene.add(body[i].axesHelperIcrf);
+		body[i].axesHelperIcrf.visible = false;
+
+		{
+			const map = new THREE.TextureLoader().load("graphics/circle-64.png");
+			body[i].sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+				map: map,
+				color: body[i].color,
+				sizeAttenuation: false}));
+			body[i].sprite.scale.set(100 * scale, 100 * scale, 1)
+			body[i].mesh.add(body[i].sprite);
+		}
 	}
-
-	body[i].mesh = new THREE.Mesh(new THREE.SphereGeometry(
-		body[i].radiusEquator * scale, body[i].segments, body[i].segments / 2),
-		material);
-
-	if (i === earth) {
-
-		// clouds
-		let material2 =	new THREE.MeshLambertMaterial({
-			map: new THREE.TextureLoader().load("graphics/planet3clouds_512_b.png"),
-			side: THREE.DoubleSide,
-			transparent: true
-		});
-
-		// 8500 is scale height, * 3.75 so it doesn't appear shredded (clip),
-		// due to limited segments.
-		body[i].clouds = new THREE.Mesh(new THREE.SphereGeometry(
-			body[i].radiusEquator * scale + 8500 * 3.75 * scale,
-			body[i].segments, body[i].segments / 2),
-			material2);
-
-		body[i].clouds.scale.y = body[i].radiusPole / body[i].radiusEquator;
-
-		body[i].mesh.add(body[i].clouds);
-		body[i].clouds.visible = false;
-	}
-
-	// shadows
-	//body[i].mesh.castShadow = true;
-	//body[i].mesh.receiveShadow = true;
-
-
-	if (body[i].emissive !== undefined) {
-		body[i].mesh.material.emissive.set(body[i].emissive);
-	}
-
-	//body[i].mesh.material.transparent = true;
-	//body[i].mesh.material.opacity = 0.8;
-
-	body[i].mesh.scale.y = body[i].radiusPole / body[i].radiusEquator;
-	if (body[i].radiusWest !== undefined) {
-		body[i].mesh.scale.z = body[i].radiusPole / body[i].radiusEquator;
-	}
-
-
-	// rings
-	if (body[i].ringsRadius !== undefined && body[i].ringsMap !== undefined) {
-		body[i].rings = new THREE.Mesh(
-			new THREE.PlaneGeometry(
-				body[i].ringsRadius * 2 * scale, body[i].ringsRadius * 2 * scale),
-			new THREE.MeshBasicMaterial({
-				map: new THREE.TextureLoader().load(body[i].ringsMap),
-				transparent: true,
-				side: THREE.DoubleSide})
-			);
-		body[i].rings.rotation.set(Math.PI / 2, 0, 0);
-		//body[i].rings.castShadow = true;
-		//body[i].rings.receiveShadow = true;
-		body[i].mesh.attach(body[i].rings);
-	}
-
-	// turn to z-up, then Dec, thrn RA, then W.
-	body[i].mesh.rotation.set(Math.PI / 2, 0, -Math.PI / 2 + body[i].declination);
-	body[i].mesh.rotateOnWorldAxis(zAxis, body[i].rightAscension);
-	body[i].mesh.rotateY(Math.PI / 2 + body[i].primeMeridian);
-
-	scene.add(body[i].mesh);
-
-	// create ecef axes helper
-	body[i].axesHelper = new THREE.AxesHelper(body[i].radiusEquator * 1.5 *
-		scale);
-	// same config as spheroid
-	body[i].axesHelper.rotation.set(Math.PI / 2, 0, -Math.PI / 2 +
-		body[i].declination);
-	body[i].axesHelper.rotateOnWorldAxis(zAxis, body[i].rightAscension);
-	body[i].axesHelper.rotateY(Math.PI / 2 + body[i].primeMeridian);
-	// rotate to appear as z-up (space axes convention)
-	body[i].axesHelper.rotateX(-Math.PI / 2);
-	body[i].mesh.attach(body[i].axesHelper);
-	body[i].axesHelper.visible = false;
-
-	// create eci axes helper
-	body[i].axesHelperEci = new THREE.AxesHelper(body[i].radiusEquator * 2.25 *
-		scale);
-	// same config as spheroid
-	body[i].axesHelperEci.rotation.set(Math.PI / 2, 0, -Math.PI / 2 +
-		body[i].declination);
-	body[i].axesHelperEci.rotateOnWorldAxis(zAxis, body[i].rightAscension);
-	//body[i].axesHelperEci.rotateY(Math.PI / 2 + body[i].primeMeridian);
-	// rotate to appear as z-up (space axes convention)
-	body[i].axesHelperEci.rotateX(-Math.PI / 2);
-	scene.add(body[i].axesHelperEci);
-	body[i].axesHelperEci.visible = false;
-
-	// create icrf axes helper
-	body[i].axesHelperIcrf = new THREE.AxesHelper(
-		body[i].radiusEquator * 3 * scale);
-	// add to scene so it doesn't rotate with parent. must update position.
-	scene.add(body[i].axesHelperIcrf);
-	body[i].axesHelperIcrf.visible = false;
-
-
-
-	{
-		const map = new THREE.TextureLoader().load("graphics/circle-64.png");
-		body[i].sprite = new THREE.Sprite(new THREE.SpriteMaterial({
-			map: map,
-			color: body[i].color,
-			sizeAttenuation: false}));
-		body[i].sprite.scale.set(100 * scale, 100 * scale, 1)
-		body[i].mesh.add(body[i].sprite);
-	}
-}
-
 } // end makeNaturalBodyGraphics()
 makeNaturalBodyGraphics();
 
@@ -1186,7 +1179,6 @@ function throttleShow() {
 			+ "%<br>off";
 	} else {
 		document.getElementById("hudThrottle").innerHTML = "";
-		
 	}
 }
 function throttleOn() {
@@ -2748,8 +2740,15 @@ function animate() {
 	renderer.render(scene2, camera2);
 }
 
-let loop = setInterval(main, 10);
+
+// run once to get navBall orientation before adding navBall
+main();
+scene2.add(ambientLight2);
+scene2.add(pointLight2);
+scene2.add(navBall);
+
 animate();
+let loop = setInterval(main, 10);
 
 let running = true;
 function playPause() {
