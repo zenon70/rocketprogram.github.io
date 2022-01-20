@@ -2370,7 +2370,7 @@ function main() {
 	// stage separation
 	while (stageSepReq.length > 0) {
 		let i = stageSepReq.pop(); // the first will be last, and the last, first
-		if (body[i].stage2) {
+		if (body[i].stage2 !== undefined && !== null) {
 			performStageSep(i);
 		}
 	}
@@ -2378,7 +2378,7 @@ function main() {
 	// fairing separation
 	while (fairingSepReq.length > 0) {
 		let i = fairingSepReq.pop();
-		if (body[i].fairingN) {
+		if (body[i].fairingN !== undefined && !== null) {
 			performFairingSep(i);
 		}
 	}
