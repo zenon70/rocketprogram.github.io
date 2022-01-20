@@ -9,35 +9,6 @@ function closePopUpMenu() {
 
 
 
-// viewFinalize() depends on mostMassiveBody
-// and it gets called at the end of addFalconGraphics()
-// and addFalconGraphics() gets called immediately after being defined
-////////////////////////////////////////////////////////////////////////////////
-// prepare for systemPosition()
-// assign the most massive body and make it relative to system origin
-let mostMassiveBody = 0;
-{
-	// hard coded to 0.
-	/*
-	let mostMassiveMass = 0;
-	for (let i = body.length - 1; i > -1; i--) {
-		if (body[i].mass > mostMassiveMass) {
-			mostMassiveMass = body[i].mass;
-			mostMassiveBody = i;
-		}
-	}
-	*/
-	body[mostMassiveBody].x = body[mostMassiveBody].cartes.x;
-	body[mostMassiveBody].y = body[mostMassiveBody].cartes.y;
-	body[mostMassiveBody].z = body[mostMassiveBody].cartes.z;
-	body[mostMassiveBody].vx = body[mostMassiveBody].cartes.vx;
-	body[mostMassiveBody].vy = body[mostMassiveBody].cartes.vy;
-	body[mostMassiveBody].vz = body[mostMassiveBody].cartes.vz;
-}
-
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // set up three.js
 
@@ -434,7 +405,7 @@ function makeNaturalBodyGraphics() {
 		}
 	}
 } // end makeNaturalBodyGraphics()
-makeNaturalBodyGraphics();
+//makeNaturalBodyGraphics();
 
 document.getElementById("1kEarth").checked = true;
 function changeEarth(value) {
@@ -504,25 +475,6 @@ function cityLightLock() {
 	}
 }
 
-// disable sun shadow
-//body[sun].mesh.castShadow = false;
-//body[sun].mesh.receiveShadow = false;
-
-// sunlight
-body[sun].sunlight = new THREE.PointLight(0xffffff, 1.5);
-//body[sun].sunlight.castShadow = true;
-
-//Set up shadow properties for the light
-//body[sun].sunlight.shadow.mapSize.width = 512; // default
-//body[sun].sunlight.shadow.mapSize.height = 512; // default
-//body[sun].sunlight.shadow.camera.near = body[sun].radiusPole - 10000 * scale;
-//body[sun].sunlight.shadow.camera.far = 7500e9 * scale;
-
-body[sun].mesh.add(body[sun].sunlight);
-
-//Create a helper for the shadow camera (optional)
-//const shadowHelper = new THREE.CameraHelper(body[sun].sunlight.shadow.camera);
-//scene.add(shadowHelper);
 
 // initialize in case of refresh
 document.getElementById("sunlight").disabled = true;
@@ -544,10 +496,83 @@ function sunlightLock() {
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// view control
 
-
-// integer
 let view = 0;
+
+function throttleShow() {
+	if (body[view].throttleOn) {
+		document.getElementById("hudThrottle").innerHTML = body[view].throttle
+			+ "%<br>on";
+	// make sure it's false, not undefined as if a "Natural" body
+	} else if (body[view].throttleOn === false) {
+		document.getElementById("hudThrottle").innerHTML = body[view].throttle
+			+ "%<br>off";
+	} else {
+		document.getElementById("hudThrottle").innerHTML = "";
+	}
+}
+
+function viewFinalize() {
+	controls.target = body[view].mesh.position;
+	if (body[view].type === "Natural") {
+		controls.minDistance = body[view].radiusEquator * 1.2 * scale;
+	}
+	else {
+		controls.minDistance = 60 * scale;
+	}
+	// sun view
+	if (view === 0) {
+		body[view].mesh.material.emissiveIntensity = 0;
+		starlight.intensity = 1;
+		document.getElementById("hudView").innerHTML = body[view].name + "<br>@ " +
+			"mlky";
+		document.querySelector("#singleOrbit").disabled = true;
+	}
+	else {
+		body[mostMassiveBody].mesh.material.emissiveIntensity = 1;
+		starlight.intensity = starlightControl;
+		document.getElementById("hudView").innerHTML = body[view].name + "<br>@ " +
+			body[body[view].focus].name;
+		document.querySelector("#singleOrbit").disabled = false;
+	}
+	if (body[view].type === "Artificial") {
+		scene2.visible = true;
+		document.getElementById("hudFuel").innerHTML =
+			body[view].fuelMass.toFixed(0) + "<br>kg fuel";
+		document.getElementById("hudPitch").innerHTML =
+			Math.round(body[view].xSpin * 10) + "<br>pitch";
+		document.getElementById("hudYaw").innerHTML =
+			Math.round(- body[view].ySpin * 10) + "<br>yaw";
+		document.getElementById("hudRoll").innerHTML =
+			Math.round(body[view].zSpin * 10) + "<br>roll";
+		let panel = document.getElementsByClassName("rocketPanel");
+		for (let i = panel.length - 1; i > -1; i--) {
+			panel[i].style.visibility = "visible";
+		}
+	} else {
+		scene2.visible = false;
+		let panel = document.getElementsByClassName("rocketPanel");
+		for (let i = panel.length - 1; i > -1; i--) {
+			panel[i].style.visibility = "hidden";
+		}
+	}
+	throttleShow();
+
+	//body[view].mesh.attach(camera); // first person?
+
+	// manage check boxes in menu
+	if (body[view].alwaysShowOrbit === undefined) {
+		document.querySelector("#singleOrbit").checked = false;
+	} else {
+		document.querySelector("#singleOrbit").checked = body[view].alwaysShowOrbit;
+	}
+	
+	document.querySelector("#localAxes").checked = body[view].axesHelper.visible;
+}
+
+
 
 
 
@@ -809,7 +834,7 @@ function addFalconGraphics(i) {
 	controls.target = body[view].mesh.position;
 	controls.minDistance = 75 * scale;
 }
-addFalconGraphics(rocket);
+
 
 
 
@@ -876,7 +901,7 @@ function addLaunchPad(gps, i) {
 
 	return p;
 }
-body[rocket].pad = addLaunchPad(body[rocket].gps, body[rocket].focus);
+//body[rocket].pad = addLaunchPad(body[rocket].gps, body[rocket].focus);
 
 
 
@@ -1006,83 +1031,6 @@ function systemPosition() {
 		body[i].mesh.position.z = body[i].z * scale;
 	}
 }
-// initialize positions
-body[mostMassiveBody].mesh.position.x = body[mostMassiveBody].x * scale;
-body[mostMassiveBody].mesh.position.y = body[mostMassiveBody].y * scale;
-body[mostMassiveBody].mesh.position.z = body[mostMassiveBody].z * scale;
-systemPosition();
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// view control
-
-
-function viewFinalize() {
-	controls.target = body[view].mesh.position;
-	if (body[view].type === "Natural") {
-		controls.minDistance = body[view].radiusEquator * 1.2 * scale;
-	}
-	else {
-		controls.minDistance = 60 * scale;
-	}
-	// sun view
-	if (view === 0) {
-		body[view].mesh.material.emissiveIntensity = 0;
-		starlight.intensity = 1;
-		document.getElementById("hudView").innerHTML = body[view].name + "<br>@ " +
-			"mlky";
-		document.querySelector("#singleOrbit").disabled = true;
-	}
-	else {
-		body[mostMassiveBody].mesh.material.emissiveIntensity = 1;
-		starlight.intensity = starlightControl;
-		document.getElementById("hudView").innerHTML = body[view].name + "<br>@ " +
-			body[body[view].focus].name;
-		document.querySelector("#singleOrbit").disabled = false;
-	}
-	if (body[view].type === "Artificial") {
-		scene2.visible = true;
-		document.getElementById("hudFuel").innerHTML =
-			body[view].fuelMass.toFixed(0) + "<br>kg fuel";
-		document.getElementById("hudPitch").innerHTML =
-			Math.round(body[view].xSpin * 10) + "<br>pitch";
-		document.getElementById("hudYaw").innerHTML =
-			Math.round(- body[view].ySpin * 10) + "<br>yaw";
-		document.getElementById("hudRoll").innerHTML =
-			Math.round(body[view].zSpin * 10) + "<br>roll";
-		let panel = document.getElementsByClassName("rocketPanel");
-		for (let i = panel.length - 1; i > -1; i--) {
-			panel[i].style.visibility = "visible";
-		}
-	} else {
-		scene2.visible = false;
-		let panel = document.getElementsByClassName("rocketPanel");
-		for (let i = panel.length - 1; i > -1; i--) {
-			panel[i].style.visibility = "hidden";
-		}
-	}
-	throttleShow();
-
-	//body[view].mesh.attach(camera); // first person?
-
-	// manage check boxes in menu
-	if (body[view].alwaysShowOrbit === undefined) {
-		document.querySelector("#singleOrbit").checked = false;
-	} else {
-		document.querySelector("#singleOrbit").checked = body[view].alwaysShowOrbit;
-	}
-	
-	document.querySelector("#localAxes").checked = body[view].axesHelper.visible;
-}
-viewFinalize();
-
-
-
-
-
-
-
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1168,19 +1116,6 @@ function stopSpin() {
 }
 
 
-
-function throttleShow() {
-	if (body[view].throttleOn) {
-		document.getElementById("hudThrottle").innerHTML = body[view].throttle
-			+ "%<br>on";
-	// make sure it's false, not undefined as if a "Natural" body
-	} else if (body[view].throttleOn === false) {
-		document.getElementById("hudThrottle").innerHTML = body[view].throttle
-			+ "%<br>off";
-	} else {
-		document.getElementById("hudThrottle").innerHTML = "";
-	}
-}
 function throttleOn() {
 	if (body[view].type === "Artificial") {
 		body[view].throttleOn = true;
@@ -2740,6 +2675,63 @@ function animate() {
 	renderer.render(scene2, camera2);
 }
 
+let mostMassiveBody = 0;
+function initialize() {
+
+	// first use of body[]
+	makeNaturalBodyGraphics();
+
+	// disable sun shadow
+	//body[sun].mesh.castShadow = false;
+	//body[sun].mesh.receiveShadow = false;
+
+	// sunlight
+	body[sun].sunlight = new THREE.PointLight(0xffffff, 1.5);
+	//body[sun].sunlight.castShadow = true;
+
+	//Set up shadow properties for the light
+	//body[sun].sunlight.shadow.mapSize.width = 512; // default
+	//body[sun].sunlight.shadow.mapSize.height = 512; // default
+	//body[sun].sunlight.shadow.camera.near = body[sun].radiusPole - 10000 * scale;
+	//body[sun].sunlight.shadow.camera.far = 7500e9 * scale;
+
+	body[sun].mesh.add(body[sun].sunlight);
+
+	//Create a helper for the shadow camera (optional)
+	//const shadowHelper = new THREE.CameraHelper(body[sun].sunlight.shadow.camera);
+	//scene.add(shadowHelper);
+
+
+	/* currently hard coded to 0.
+	// dynamically assign mostMassiveBody
+	{
+		let greatestMass = 0;
+		for (let i = body.length - 1; i > -1; i--) {
+			if (body[i].mass > greatestMass) {
+				greatestMass = body[i].mass;
+				mostMassiveBody = i;
+			}
+		}
+	}
+	*/
+
+	// first use of mostMassiveBody
+	addFalconGraphics(rocket);
+	body[rocket].pad = addLaunchPad(body[rocket].gps, body[rocket].focus);
+
+	// initialize positions
+	body[mostMassiveBody].x = body[mostMassiveBody].cartes.x;
+	body[mostMassiveBody].y = body[mostMassiveBody].cartes.y;
+	body[mostMassiveBody].z = body[mostMassiveBody].cartes.z;
+	body[mostMassiveBody].vx = body[mostMassiveBody].cartes.vx;
+	body[mostMassiveBody].vy = body[mostMassiveBody].cartes.vy;
+	body[mostMassiveBody].vz = body[mostMassiveBody].cartes.vz;
+	body[mostMassiveBody].mesh.position.x = body[mostMassiveBody].x * scale;
+	body[mostMassiveBody].mesh.position.y = body[mostMassiveBody].y * scale;
+	body[mostMassiveBody].mesh.position.z = body[mostMassiveBody].z * scale;
+	systemPosition();
+}
+initialize();
 
 // run once to get navBall orientation before adding navBall
 main();
@@ -2747,6 +2739,7 @@ scene2.add(ambientLight2);
 scene2.add(pointLight2);
 scene2.add(navBall);
 
+// start loops
 animate();
 let loop = setInterval(main, 10);
 

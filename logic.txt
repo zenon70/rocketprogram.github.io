@@ -707,38 +707,35 @@ things that use body and/or should be reloadable and/or i want to delay...
 function openPopUpMenu()
 function closePopUpMenu()
 
-let mostMassiveBody = 0;
-  body[mostMassiveBody].x = body[mostMassiveBody].cartes.x;
-  ...
+########## let mostMassiveBody = 0;
+##########  body[mostMassiveBody].x = body[mostMassiveBody].cartes.x;
+##########  ...
   
 // set up three.js
 camera.position.set(-200 * scale, 0 * scale, -350 * scale); // kourou
 camera.up.set(0.62, -0.5, 2); // kourou
-scene2.add(ambientLight2);
-scene2.add(pointLight2);
-scene2.add(navBall);
 
 resize, fullscreen
 starfield, starlight
 
 function makeNaturalBodyGraphics()
-makeNaturalBodyGraphics();
 
 function ChangeEarth()
 cityLight
-body[sun].sunlight = new THREE.PointLight(0xffffff, 1.5);
-body[sun].mesh.add(body[sun].sunlight);
+
 
 let view = 0;
+function throttleShow() (depends on body[] and view)
+function viewFinalize() (calls throttleShow())
 
 function addRocketHelpers(i)
 const f9...
 function addFalconGraphics(rocket)
-addFalconGraphics(rocket);
+
 
 let pad = [];
 function addLaunchPad(gps, i)
-body[rocket].pad = addLaunchPad(body[rocket].gps, body[rocket].focus);
+
 
 clouds
 sprites
@@ -746,13 +743,7 @@ localAxes
 ssbAxes
 
 function systemPosition()
-body[mostMassiveBody].mesh.position.x = body[mostMassiveBody].x * scale;
-body[mostMassiveBody].mesh.position.y = body[mostMassiveBody].y * scale;
-body[mostMassiveBody].mesh.position.z = body[mostMassiveBody].z * scale;
-systemPosition();
 
-function viewFinalize() (depends on throttleShow())
-viewFinalize()
 
 let timestep = 0.01;
 function faster()
@@ -762,7 +753,6 @@ let now = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
 let spinPower = 0.1;
 function up()
 ...
-function throttleShow()
 
 ///////// NOW GETTING INTO THE MAIN PROGRAM...
 
@@ -779,7 +769,7 @@ function displayText()
 function viewNext()
 function viewPrevious()
 
-add rocket, stage sep, fairing sep, recycle
+functions for add rocket, stage sep, fairing sep, recycle
 
 toggle orbits: all, local, single
 function preAnimate();
@@ -787,8 +777,36 @@ function preAnimate();
 function main();
 function animate();
 
-let loop = setInterval(main, 10);
+
+function initialize() {
+
+
+
+
+makeNaturalBodyGraphics();
+
+body[sun].sunlight = new THREE.PointLight(0xffffff, 1.5);
+body[sun].mesh.add(body[sun].sunlight);
+
+......
+
+addFalconGraphics(rocket); (calls viewFinalize())
+body[rocket].pad = addLaunchPad(body[rocket].gps, body[rocket].focus);
+
+body[mostMassiveBody].mesh.position.x = body[mostMassiveBody].x * scale;
+body[mostMassiveBody].mesh.position.y = body[mostMassiveBody].y * scale;
+body[mostMassiveBody].mesh.position.z = body[mostMassiveBody].z * scale;
+systemPosition();
+
+}
+initialize()
+
+main()
+scene2.add(ambientLight2);
+scene2.add(pointLight2);
+scene2.add(navBall);
 animate();
+let loop = setInterval(main, 10);
 
 let running = true;
 function playPause()
