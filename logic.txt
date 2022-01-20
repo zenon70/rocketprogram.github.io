@@ -3,6 +3,20 @@
 # IN-PROGRESS
 -------------
 
+need finer throttle controls
+
+402 not tidally locked properly (and probably 401 as well)
+
+planet texture should always be below spacecraft 
+
+shouldn't be able to rotate while landed
+
+show Ap[Eq] and Pe[Eq] not Apo[s]
+
+all orbits toggle messed up by pause
+
+spin fairing
+
 major refactoring
 
 recycle() has mem leak, should reuse global geometries, materials

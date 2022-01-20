@@ -1980,9 +1980,9 @@ function displayText() {
 			"<br>Ω " + (keplerShow.lan * 180 / Math.PI).toFixed(5) + "°" +
 			"<br>ω " + (keplerShow.w * 180 / Math.PI).toFixed(7) + "°" +
 			"<br>M " + (keplerShow.meanAnom * 180 / Math.PI).toFixed(5) + "°" +
-			"<br>v<sub>o</sub> " + (keplerShow.v / 1000).toFixed(3) + " km/s" +
-			"<br>Apo  " + (keplerShow.apoapsis / 1000).toFixed(3) + " km" +
-			"<br>Peri " + (keplerShow.periapsis / 1000).toFixed(3) + " km";
+			"<br>v<sub>o</sub> " + (keplerShow.v * 3.6).toFixed(0) + " km/h" +
+			"<br>Ap " + (keplerShow.apoapsis / 1000).toFixed(3) + " km" +
+			"<br>Pe " + (keplerShow.periapsis / 1000).toFixed(3) + " km";
 	}
 
 	if (body[view].type === "Artificial") {
@@ -1990,15 +1990,15 @@ function displayText() {
 			"Alt " + (body[view].gps.alt / 1000).toFixed(6) + " km" +
 			"<br>v<sub>s</sub> " + (Math.sqrt(body[view].ecef.vx**2 +
 				body[view].ecef.vy**2 +
-				body[view].ecef.vz**2) / 1000).toFixed(6) + " km/s" +
+				body[view].ecef.vz**2) * 3.6).toFixed(0) + " km/h" +
 			"<br>drag " + body[view].drag.toExponential(2) + " m/s²" +
 			"<br>Mass " + body[view].mass.toExponential(3) + " kg" +
 			"<br>Lat " + (body[view].gps.lat * 180 / Math.PI).toFixed(6) + "°" +
 			"<br>Lon " + (body[view].gps.lon * 180 / Math.PI).toFixed(6) + "°" +
-			"<br>Apo<sub>s</sub>  " + ((body[view].kepler.apoapsis -
+			"<br>Ap<sub>Eq</sub>  " + ((body[view].kepler.apoapsis -
 				body[vFocus].radiusEquator)
 				/ 1000).toFixed(3) + " km" +
-			"<br>Peri<sub>s</sub> " + ((body[view].kepler.periapsis -
+			"<br>Pe<sub>Eq</sub> " + ((body[view].kepler.periapsis -
 				body[vFocus].radiusEquator) / 1000).toFixed(3) + " km";
 		if (body[view].s1refuel) {
 			document.getElementById("hudGpsInfo").innerHTML +=
