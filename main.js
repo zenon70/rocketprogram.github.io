@@ -2327,7 +2327,37 @@ function recycle() {
 	//recycleReq = view;
 	recycleReq.push(view);
 }
+function performRecycle(i) {
 
+	/*
+	right now it IS a memory leak to keep adding & recycling rockets...
+	but...
+	why dispose? just use global geometries and materials
+
+	// DON'T do this
+	if (body[i].stage2 !== null) {
+		if (body[i].fairin)
+		body[i].stage2.mesh.geometry.dispose();
+		body[i].stage2.mesh.material.dispose();
+		scene.remove(body[i].stage2.mesh);
+	}
+	*/
+	// might as well at least do this until globals are implemented
+	scene.remove(body[i].mesh);
+
+	body[i].mesh.geometry.dispose();
+	body[i].mesh.material.dispose();
+
+	if (body[i].ellipse) {
+		scene.remove(body[i].ellipse);
+		body[i].ellipse.geometry.dispose();
+		body[i].ellipse.material.dispose();
+	}
+
+	view = earth; // not very graceful. would like next or prev, but issues..
+	viewFinalize();
+	body.splice(i, 1);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // main loop
@@ -2370,7 +2400,7 @@ function main() {
 	// stage separation
 	while (stageSepReq.length > 0) {
 		let i = stageSepReq.pop(); // the first will be last, and the last, first
-		if (body[i].stage2 !== undefined && !== null) {
+		if (body[i].stage2 !== undefined && body[i].stage2 !== null) {
 			performStageSep(i);
 		}
 	}
@@ -2378,7 +2408,8 @@ function main() {
 	// fairing separation
 	while (fairingSepReq.length > 0) {
 		let i = fairingSepReq.pop();
-		if (body[i].fairingN !== undefined && !== null) {
+		// just test fairing n for both n and z
+		if (body[i].fairingN !== undefined && body[i].fairingN !== null) {
 			performFairingSep(i);
 		}
 	}
@@ -2386,51 +2417,9 @@ function main() {
 	while (recycleReq.length > 0) {
 		let i = recycleReq.pop();
 		if (body[i] !== undefined && body[i].onSurface === true) {
-
-/*
-	if (recycleReq !== null && body[recycleReq].onSurface) {
-		let i = recycleReq;
-*/
-
-
-		/*
-		right now it IS a memory leak to keep adding & recycling rockets...
-		but...
-		why dispose? just use global geometries and materials
-
-		// DON'T do this
-		if (body[i].stage2 !== null) {
-			if (body[i].fairin)
-			body[i].stage2.mesh.geometry.dispose();
-			body[i].stage2.mesh.material.dispose();
-			scene.remove(body[i].stage2.mesh);
-		}
-		*/
-		// might as well at least do this until globals are implemented
-		scene.remove(body[i].mesh);
-
-		body[i].mesh.geometry.dispose();
-		body[i].mesh.material.dispose();
-
-		if (body[i].ellipse) {
-			scene.remove(body[i].ellipse);
-			body[i].ellipse.geometry.dispose();
-			body[i].ellipse.material.dispose();
-		}
-
-		view = earth; // not very graceful. would like next or prev, but issues..
-		viewFinalize();
-		body.splice(i, 1);
-
-
-/*
-	}
-	recycleReq = null;
-*/
-
+			performRecycle(i);
 		}
 	}
-
 
 	// get everything else's solar system position based on local position
 	systemPosition();
