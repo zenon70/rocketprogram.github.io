@@ -15,6 +15,12 @@ const GRAVITY = 6.6743e-11;
 let body = [];
 let X, Y, Z, VX, VY, VZ;
 
+let sun, earth, planet4, moon, moon401, moon402;
+
+function loadBodies() {
+
+body = [];
+
 // mass in kg, distance in m, sidereal in hours, axial tilt in degrees
 
 // sun ssb kms frame
@@ -23,7 +29,7 @@ let X, Y, Z, VX, VY, VZ;
  X =-1.067598502264559E+06, Y =-3.959890535950128E+05, Z =-1.380711260212289E+05
  VX= 9.312570119052345E-03, VY=-1.170150735349599E-02, VZ=-5.251247980405208E-03
 
-let sun = body.push({
+sun = body.push({
 	name: "10",
 	focus: null,
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
@@ -103,7 +109,7 @@ body.push({
  X =-2.649903375682292E+07, Y = 1.327574173547878E+08, Z = 5.755671839918904E+07
  VX=-2.979426006719171E+01, VY=-5.018052326235948E+00, VZ=-2.175393803476646E+00
 
-let earth = body.push({
+earth = body.push({
 	name: "399",
 	focus: sun,
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
@@ -131,7 +137,7 @@ let earth = body.push({
  X = 2.080481406481886E+08, Y = 2.096192809566167E+05, Z =-5.529162176566044E+06
  VX= 1.162672383641686E+00, VY= 2.391840970779204E+01, VZ= 1.093917189957652E+01
 
-let planet4 = body.push({
+planet4 = body.push({
 	name: "499",
 	focus: sun,
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
@@ -333,7 +339,7 @@ body.push({
  X =-2.916083849926414E+05, Y =-2.667168332421485E+05, Z =-7.610248593416973E+04
  VX= 6.435313864033421E-01, VY=-6.660876856217284E-01, VZ=-3.013257041854706E-01
 
-let moon = body.push({
+moon = body.push({
 	name: "301",
 	focus: earth,
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
@@ -363,7 +369,7 @@ let moon = body.push({
  X =-1.989463946057447E+03, Y =-8.743034419032687E+03, Z =-3.181949969502783E+03
  VX= 1.843207370506235E+00, VY=-4.310475264969203E-02, VZ=-1.018331998843603E+00
 
-let moon401 = body.push({
+moon401 = body.push({
 	name: "401",
 	focus: planet4,
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
@@ -391,7 +397,7 @@ let moon401 = body.push({
  X = 1.036430106515217E+04, Y =-1.574833981312149E+04, Z =-1.394599172365574E+04
  VX= 1.040923986869151E+00, VY= 8.434501190821236E-01, VZ=-1.789391669940932E-01
 
-let moon402 = body.push({
+moon402 = body.push({
 	name: "402",
 	focus: planet4,
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
@@ -496,13 +502,29 @@ for (let i = body.length - 1; i > -1; i--) {
  X =-5.405605653409561E+03, Y =-4.180316246779086E+04, Z =-2.061177954249511E+00
  VX= 5.050274561890771E+00, VY=-3.943561492961989E-01, VZ=-3.098607080831567E-03
 
+} // end loadBodies()
+loadBodies();
+
+/*
+function idNaturalBodies() {
+	for (let i = body.length; i > -1; i--) {
+		if (body[i].name === "10") sun = i;
+		else if (body[i].name === "399") earth = i;
+		// etc...
+	}
+}
+*/
+
+
 
 // test
 // 2455198.000000000 = A.D. 2010-Jan-01 12:00:00.0000 TDB 
 //X =6378.137, Y =0, Z =0 
 //VX=0, VY=1e-5, VZ=0
+
 let rocket;
 let rocketCount = 0;
+
 function addFalcon() {
 	rocketCount++;
 	rocket = body.push({
@@ -610,6 +632,8 @@ function addFalcon() {
 				lon: -52.775 * Math.PI / 180,
 				alt: 0  // actual unknown
 			};
+			camera.position.set(-200 * scale, 0 * scale, -350 * scale); // kourou
+			camera.up.set(0.62, -0.5, 2); // kourou
 		} else if (rocketCount === 2) {
 			// boca chica, texas
 			body[i].gps = {

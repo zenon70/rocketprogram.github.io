@@ -43,12 +43,6 @@ const camera = new THREE.PerspectiveCamera(
 	1e10
 );
 
-// shouldn't set yet, or like this, but this works for now
-//camera.position.set(-200 * scale, 0 * scale, -250 * scale); // texas
-//camera.position.set(0 * scale, -300 * scale, 0 * scale); // kazakhstan
-camera.position.set(-200 * scale, 0 * scale, -350 * scale); // kourou
-camera.up.set(0.62, -0.5, 2); // kourou
-
 // trackball controls
 const controls = new THREE.TrackballControls(camera, renderer.domElement);
 
@@ -405,7 +399,6 @@ function makeNaturalBodyGraphics() {
 		}
 	}
 } // end makeNaturalBodyGraphics()
-//makeNaturalBodyGraphics();
 
 document.getElementById("1kEarth").checked = true;
 function changeEarth(value) {
@@ -901,7 +894,6 @@ function addLaunchPad(gps, i) {
 
 	return p;
 }
-//body[rocket].pad = addLaunchPad(body[rocket].gps, body[rocket].focus);
 
 
 
@@ -1368,9 +1360,9 @@ function rocketControl() {
 
 		body[i].onSurface = false;
 		
-		// missing closes from non-indentation
-	}
-	}
+			// missing closes from non-indentation
+			}
+		}
 	
 	}
 }
@@ -2420,6 +2412,36 @@ function performRecycle(i) {
 	body.splice(i, 1);
 }
 
+let resetReq = false;
+function reset() {
+	resetReq = true;
+}
+function performReset() {
+	// dispose of everything
+	for (let i = body.length - 1; i > -1; i--) {
+		if (body[i].type === "Natural") {
+			scene.remove(body[i].mesh);
+			body[i].mesh.geometry.dispose();
+			body[i].mesh.material.dispose();
+			if (body[i].ellipse) {
+				body[i].ellipse.geometry.dispose();
+			}
+		} else {
+			performRecycle(i);
+		}
+	}
+
+	timestep = 0.01;
+	document.getElementById("hudStep").innerHTML = 1;
+	now = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
+	rocketCount = 0;
+	loadBodies();
+	addFalcon();
+
+	initialize();
+
+	resetReq = false;
+}
 
 
 document.querySelector("#allOrbits").checked = false;
@@ -2661,8 +2683,12 @@ function main() {
 	displayText();
 
 	preAnimate();
-}
 
+
+	if (resetReq === true) {
+		performReset();
+	}
+}
 
 function animate() {
 	requestAnimationFrame(animate);
@@ -2731,26 +2757,4 @@ function initialize() {
 	body[mostMassiveBody].mesh.position.z = body[mostMassiveBody].z * scale;
 	systemPosition();
 }
-initialize();
 
-// run once to get navBall orientation before adding navBall
-main();
-scene2.add(ambientLight2);
-scene2.add(pointLight2);
-scene2.add(navBall);
-
-// start loops
-animate();
-let loop = setInterval(main, 10);
-
-let running = true;
-function playPause() {
-	if (running === true) {
-		clearInterval(loop);
-		running = false;
-	}
-	else {
-		loop = setInterval(main, 10);
-		running = true;
-	}
-}
