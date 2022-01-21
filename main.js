@@ -1897,6 +1897,8 @@ function toggleHud() {
 	verbose = true;
 	document.getElementById("hudDateOrbit").style.height = "134px";
 	document.getElementById("hudGpsInfo").style.height = "134px";
+	document.getElementById("hudDateOrbit").style.visibility = "visible";
+	document.getElementById("hudGpsInfo").style.visibility = "visible";
 	} else {
 	document.getElementById("hudDateOrbit").style.height = "12px";
 	document.getElementById("hudGpsInfo").style.height = "47px";

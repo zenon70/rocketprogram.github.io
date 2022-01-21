@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v118</pre>
+		<pre id="version">v119</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -36,7 +36,6 @@
 		<button class="onScreenButton" id="viewPrevious" onclick="viewPrevious()">previous view</button>
 		<button class="onScreenButton" id="viewNext" onclick="viewNext()">next view (v)</button>
 		<button class="onScreenButton" id="menuButton" onclick="openPopUpMenu()">menu</button>
-		<button class="onScreenButton" id="toggleFullscreen" onclick="toggleFullscreen()">full screen</button>
 
 		<button class="onScreenButton rocketPanel" id="up" onclick="up()">pitch up (e)</button>
 		<button class="onScreenButton rocketPanel" id="down" onclick="down()">pitch down (d)</button>
@@ -79,6 +78,8 @@
 				<br>
 				<input type="checkbox" id="sprites" onchange="toggleSprites()">
 				<label for="sprites">Sprites</label>
+				<h3>Fullscreen</h3>
+				<button class="inMenuButton" id="toggleFullscreen" onclick="toggleFullscreen()">full screen</button>
 				<h3>Starlight Intensity (ambient light)</h3>
 				<div id="starlightOutput" class="slider"></div>
 					<div class="slideContainer">
@@ -114,7 +115,7 @@
 				<label for="1kEarth">1024 x 512</label>
 				<br>
 				<input type="radio" id="4kEarth" value="2" name="earth" onchange="changeEarth(value)">
-				<label for="4kEarth">4096 x 2048, Jpeg Quality 90%</label>
+				<label for="4kEarth">4096 x 2048</label>
 				<br>
 				<h3>Starfield Resolution</h3>
 				<input type="radio" id="noStars" value="0" name="stars" onchange="changeStars(value)">
@@ -130,7 +131,6 @@
 				<label for="4kStars">4096 x 4096 x 6, Dark
 					<span id="warn"><em>high memory required</em></span>
 				</label>
-				<br>
 				<h3>Reference Plane for objects orbiting the sun</h3>
 				<input type="radio" id="eclipticPlane" value="ecliptic" name="plane" onchange="setPlane(value)">
 				<label for="eclipticPlane">Ecliptic IAU76/80 & IAU2009 J2000.0</label>
