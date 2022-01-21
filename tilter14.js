@@ -510,6 +510,7 @@ function earthAtmosphere(altitude) {
 
 
 function secondsToYears(seconds) {
+	if (isNaN(seconds)) seconds = 0;
 //function s(seconds) {
 	let y = 0;
 	let d = 0;

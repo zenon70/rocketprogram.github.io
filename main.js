@@ -906,16 +906,6 @@ function toggleClouds() {
 	}
 }
 
-let verbose = false;
-document.querySelector("#toggleHud").checked = false;
-function toggleHud() {
-	if (verbose === false) {
-	verbose = true;
-	} else {
-		verbose = false;
-	}
-}
-
 document.querySelector("#sprites").checked = true;
 function toggleSprites() {
 	if (body[0].sprite.visible === true) {
@@ -1313,9 +1303,11 @@ function rocketControl() {
 		//}
 	//}
 
-	// process thrust
+	if (body[i].missionTime !== undefined) {
+		body[i].missionTime += timestep;
+	}
 
-	// free fuel if timewarping on last drop
+	// process thrust
 	if (body[i].fuelMass > 0 && body[i].throttleOn && body[i].throttle > 0) {
 		// update the direction vector of rocket
 		body[i].pointingM4.extractRotation(body[i].mesh.matrix);
@@ -1368,12 +1360,15 @@ function rocketControl() {
 		}
 
 		body[i].onSurface = false;
-		
-			// missing closes from non-indentation
-			}
+
+		if (body[i].missionTime === undefined) {
+			body[i].missionTime = 0;
 		}
-	
-	}
+
+			// missing closes from non-indentation
+			} // end process thrust
+		} // end Artificial
+	} // end for loop
 }
 
 //document.getElementById("refuel").disabled = true;
@@ -1895,16 +1890,32 @@ function setPlane(value) {
 	}
 }
 
+let verbose = false;
+document.querySelector("#toggleHud").checked = false;
+function toggleHud() {
+	if (verbose === false) {
+	verbose = true;
+	document.getElementById("hudDateOrbit").style.height = "134px";
+	document.getElementById("hudGpsInfo").style.height = "134px";
+	} else {
+	document.getElementById("hudDateOrbit").style.height = "12px";
+	document.getElementById("hudGpsInfo").style.height = "47px";
+		verbose = false;
+	}
+}
+
 function simpleHud() {
 	if (body[view].type !== "Artificial") {
-		document.getElementById("hudDateOrbit").innerHTML = "";
-		document.getElementById("hudGpsInfo").innerHTML = "";
+		document.getElementById("hudDateOrbit").style.visibility = "hidden";
+		document.getElementById("hudGpsInfo").style.visibility = "hidden";
 		return;
 	}
-	// should show mission time
+	document.getElementById("hudDateOrbit").style.visibility = "visible";
+	document.getElementById("hudGpsInfo").style.visibility = "visible";
+	// show mission time
 	document.getElementById("hudDateOrbit").innerHTML =
-	//"T + " + body[view].time;
-	now.toLocaleTimeString();
+	"T+ " + secondsToYears(body[view].missionTime);
+	//now.toLocaleTimeString();
 	//now.getUTCHours() + ":" + now.getUTCMinutes() + ":" + now.getUTCSeconds();
 
 	document.getElementById("hudGpsInfo").innerHTML =
@@ -2151,6 +2162,8 @@ function performStageSep(i) {
 	// copy
 	body[i].stage2.focus = body[i].focus;
 
+	body[i].stage2.missionTime = body[i].missionTime;
+
 	body[i].stage2.cartes.x = body[i].cartes.x;
 	body[i].stage2.cartes.y = body[i].cartes.y;
 	body[i].stage2.cartes.z = body[i].cartes.z;
@@ -2224,6 +2237,8 @@ function performFairingSep(i) {
 	// copy
 	body[i].fairingN.focus = body[i].focus;
 
+	body[i].fairingN.missionTime = body[i].missionTime;
+
 	body[i].fairingN.cartes.x = body[i].cartes.x;
 	body[i].fairingN.cartes.y = body[i].cartes.y;
 	body[i].fairingN.cartes.z = body[i].cartes.z;
@@ -2275,6 +2290,8 @@ function performFairingSep(i) {
 
 	// copy
 	body[i].fairingZ.focus = body[i].focus;
+
+	body[i].fairingZ.missionTime = body[i].missionTime;
 
 	body[i].fairingZ.cartes.x = body[i].cartes.x;
 	body[i].fairingZ.cartes.y = body[i].cartes.y;
