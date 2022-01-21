@@ -7,7 +7,14 @@ function closePopUpMenu() {
 	document.querySelector(".popup").classList.remove("open");
 }
 
-
+/*
+// this really works to stop firefox's autohide address bar...
+// but it's overkill and prevents scrolling the menu
+window.addEventListener('touchmove', event => {
+	event.preventDefault();
+	event.stopImmediatePropagation();
+}, { passive: false });
+*/
 
 ////////////////////////////////////////////////////////////////////////////////
 // set up three.js
@@ -1033,14 +1040,22 @@ function systemPosition() {
 // 8 million times is relatively stable, though wobbly
 // 16 million times will eject moons 401 and 402 in about a minute
 let timestep = 0.01;
+function showStep() {
+	let state = "";
+	if (running === false) {
+		state = "paused";
+	}
+	document.getElementById("hudStep").innerHTML =
+		Math.round(timestep * 100).toString() + "<br>" + state;
+}
 function faster() {
 	if (timestep < 80000) timestep *= 2;
-	document.getElementById("hudStep").innerHTML = Math.round(timestep * 100);
+	showStep();
 }
 function slower() {
 	if (timestep > .01) timestep /= 2;
 	if (timestep < .01) timestep = .01;
-	document.getElementById("hudStep").innerHTML = Math.round(timestep * 100);
+	showStep();
 }
 
 // start with J2000.0 date to match positions and rotations
@@ -1920,14 +1935,14 @@ let verbose = false;
 document.querySelector("#toggleHud").checked = false;
 function toggleHud() {
 	if (verbose === false) {
-	verbose = true;
-	document.getElementById("hudDateOrbit").style.height = "134px";
-	document.getElementById("hudGpsInfo").style.height = "134px";
-	document.getElementById("hudDateOrbit").style.visibility = "visible";
-	document.getElementById("hudGpsInfo").style.visibility = "visible";
+		document.getElementById("hudDateOrbit").style.height = "134px";
+		document.getElementById("hudGpsInfo").style.height = "134px";
+		document.getElementById("hudDateOrbit").style.visibility = "visible";
+		document.getElementById("hudGpsInfo").style.visibility = "visible";
+		verbose = true;
 	} else {
-	document.getElementById("hudDateOrbit").style.height = "12px";
-	document.getElementById("hudGpsInfo").style.height = "47px";
+		document.getElementById("hudDateOrbit").style.height = "12px";
+		document.getElementById("hudGpsInfo").style.height = "47px";
 		verbose = false;
 	}
 }
@@ -2517,7 +2532,7 @@ function performReset() {
 	}
 
 	timestep = 0.01;
-	document.getElementById("hudStep").innerHTML = 1;
+	document.getElementById("hudStep").innerHTML = "1";
 
 	// to save game, save body[], now (date), and rocketCount
 	now = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));

@@ -16,10 +16,12 @@ function playPause() {
 	if (running === true) {
 		clearInterval(loop);
 		running = false;
+		showStep();
 	}
 	else {
 		loop = setInterval(main, 10);
 		running = true;
+		showStep();
 	}
 }
 
