@@ -906,6 +906,15 @@ function toggleClouds() {
 	}
 }
 
+let verbose = false;
+document.querySelector("#toggleHud").checked = false;
+function toggleHud() {
+	if (verbose === false) {
+	verbose = true;
+	} else {
+		verbose = false;
+	}
+}
 
 document.querySelector("#sprites").checked = true;
 function toggleSprites() {
@@ -1886,7 +1895,32 @@ function setPlane(value) {
 	}
 }
 
+function simpleHud() {
+	if (body[view].type !== "Artificial") {
+		document.getElementById("hudDateOrbit").innerHTML = "";
+		document.getElementById("hudGpsInfo").innerHTML = "";
+		return;
+	}
+	// should show mission time
+	document.getElementById("hudDateOrbit").innerHTML =
+	//"T + " + body[view].time;
+	now.toLocaleTimeString();
+	//now.getUTCHours() + ":" + now.getUTCMinutes() + ":" + now.getUTCSeconds();
+
+	document.getElementById("hudGpsInfo").innerHTML =
+		"Altitude<br>" + (body[view].gps.alt / 1000).toFixed(1) + " km" +
+		"<br>Speed<br>" + (Math.sqrt(body[view].ecef.vx**2 +
+			body[view].ecef.vy**2 +
+			body[view].ecef.vz**2) * 3.6).toFixed(0) + " km/h";
+}
+
 function displayText() {
+
+	if (verbose === false) {
+		simpleHud();
+		return;
+	}
+
 	let vFocus = body[view].focus;
 
 	if (view === mostMassiveBody) {
@@ -2433,8 +2467,11 @@ function performReset() {
 
 	timestep = 0.01;
 	document.getElementById("hudStep").innerHTML = 1;
+
+	// to save game, save body[], now (date), and rocketCount
 	now = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
 	rocketCount = 0;
+
 	loadBodies();
 	addFalcon();
 
@@ -2443,6 +2480,7 @@ function performReset() {
 	resetReq = false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 
 document.querySelector("#allOrbits").checked = false;
 let drawOrbits = false;

@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v116</pre>
+		<pre id="version">v117</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -58,6 +58,9 @@
 				<button class="inMenuButton" onclick="addRocket()">deploy</button>
 				<button id="recycle" class="inMenuButton rocketPanel" onclick="recycle()">recycle</button>
 				<div class="subtext">Recycle available when grounded</div>
+				<h3>Heads Up Display</h3>
+				<input type="checkbox" id="toggleHud" onchange="toggleHud()">
+				<label for="toggleHud">Verbose</label>
 				<h3>Visual Helpers</h3>
 				<input type="checkbox" id="sprites" onchange="toggleSprites()">
 				<label for="sprites">Sprites</label>
@@ -145,9 +148,11 @@
 				<br>
 				<input type="radio" id="icrfPlane" value="icrf" name="plane" onchange="setPlane(value)">
 				<label for="icrfPlane">ICRF (International Celestial Reference Frame) J2000.0</label>
-				<h3>Reset</h3>
+				<h3>Manage Simulation</h3>
 				<button id="reset" class="inMenuButton" onclick="reset()">reset</button>
 				<div class="subtext">Reset simulation and preserve settings</div>
+				<!--<button id="save" class="inMenuButton" onclick="save()">save</button>
+				<div class="subtext">Export simulation</div>-->
 				<h3>About</h3>
 				<div id="readme">
 <pre>

@@ -3,20 +3,26 @@
 # IN-PROGRESS
 -------------
 
+
+need friendly gui
+
+402 not tidally locked properly (and probably 401 as well)
+
+shouldn't be able to rotate while landed
+
+
+
+shouldn't be able to control spin of fairing
+
+
+planet texture should always be below spacecraft
+
 major refactoring
 
 need finer throttle controls
 
-402 not tidally locked properly (and probably 401 as well)
-
-planet texture should always be below spacecraft 
-
-shouldn't be able to rotate while landed
-
 orbits toggles (all 3) can be toggled off when paused BUT not back on...
   seems like inconsistent behavior
-
-shouldn't be able to control spin of fairing
 
 check and confirm memory is not leaking
 
