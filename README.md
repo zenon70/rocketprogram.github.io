@@ -70,8 +70,8 @@ i     | inclination
 ω     | argument of periapsis
 M     | mean anomaly
 vo    | orbital velocity kilometers per second*
-Apo   | apoapsis distance from center of mass
-Peri  | periapsis distance from center of mass
+Ap    | apoapsis distance from center of mass
+Pe    | periapsis distance from center of mass
 
 
 
@@ -87,8 +87,8 @@ drag | newtons of force
 mass | total mass of object
 Lat  | latitude
 Lon  | longitude
-Apos | surface apoapsis altitude from MSL at Equator
-Peris| surface periapsis altitude from MSL at Equator
+ApEq | surface apoapsis altitude from MSL at Equator
+PeEq | surface periapsis altitude from MSL at Equator
 
 
 \* the kms listed with gps info is surface speed. this is the ECEF (earth-centered earth-fixed) frame, and it DOES consider the spin of the planet/moon/etc.

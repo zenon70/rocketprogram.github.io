@@ -2162,6 +2162,12 @@ function performStageSep(i) {
 	// copy
 	body[i].stage2.focus = body[i].focus;
 
+	if (body[i].alwaysShowOrbit) {
+		body[i].stage2.alwaysShowOrbit = true;
+		body[i].alwaysShowOrbit = false;
+		body[i].ellipse.visible = false;
+	}
+
 	body[i].stage2.missionTime = body[i].missionTime;
 
 	body[i].stage2.cartes.x = body[i].cartes.x;
@@ -2544,7 +2550,7 @@ function toggleSingleOrbit() {
 	} else {
 		body[view].alwaysShowOrbit = false;
 	}
-	if (!drawOrbits && !drawLocalOrbits && body[view].ellipse) {
+	if (!drawLocalOrbits && !drawOrbits && body[view].ellipse) {
 		body[view].ellipse.visible = false;
 	}
 }

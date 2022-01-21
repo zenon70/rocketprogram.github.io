@@ -62,36 +62,23 @@
 				<input type="checkbox" id="toggleHud" onchange="toggleHud()">
 				<label for="toggleHud">Verbose</label>
 				<h3>Visual Helpers</h3>
-				<input type="checkbox" id="sprites" onchange="toggleSprites()">
-				<label for="sprites">Sprites</label>
-				<br>
-				<input type="checkbox" id="allOrbits" onchange="toggleAllOrbits()">
-				<label for="allOrbits">All Orbits</label>
+				<input type="checkbox" id="singleOrbit" onchange="toggleSingleOrbit()">
+				<label for="singleOrbit">Always show orbit for this object</label>
 				<br>
 				<input type="checkbox" id="localOrbits" onchange="toggleLocalOrbits()">
 				<label for="localOrbits">Local Orbits</label>
 				<br>
-				<input type="checkbox" id="singleOrbit" onchange="toggleSingleOrbit()">
-				<label for="singleOrbit">Always show the orbit for current object</label>
+				<input type="checkbox" id="allOrbits" onchange="toggleAllOrbits()">
+				<label for="allOrbits">All Orbits</label>
 				<br>
 				<input type="checkbox" id="localAxes" onchange="toggleAxes()">
-				<label for="singleOrbit">Toggle axes for currently viewed object</label>
+				<label for="singleOrbit">Axes for this object</label>
 				<br>
 				<input type="checkbox" id="ssbAxes" onchange="toggleSsbAxes()">
-				<label for="ssbAxes">Toggle Solar System Barycenter ICRF Axes</label>
+				<label for="ssbAxes">Axes for Solar System Barycenter ICRF</label>
 				<br>
-				<h3>Earth Atmosphere</h3>
-				<input type="checkbox" id="clouds" onchange="toggleClouds()">
-				<label for="clouds">Show Clouds</label>
-				<br>
-				<h3>City Lights</h3>
-				<div id="cityLightOutput" class="slider"></div>
-					<div class="slideContainer">
-						<input type="range" min="0" max="100" value="0" class="slider" id="cityLight">
-					</div>
-				<br>
-				<input type="checkbox" id="cityLightLock" onchange="cityLightLock()">
-				<label for="cityLightLock">Locked</label>
+				<input type="checkbox" id="sprites" onchange="toggleSprites()">
+				<label for="sprites">Sprites</label>
 				<h3>Starlight Intensity (ambient light)</h3>
 				<div id="starlightOutput" class="slider"></div>
 					<div class="slideContainer">
@@ -108,6 +95,27 @@
 				<br>
 				<input type="checkbox" id="sunlightLock" onchange="sunlightLock()">
 				<label for="sunlightLock">Locked</label>
+				<h3>City Lights</h3>
+				<div id="cityLightOutput" class="slider"></div>
+					<div class="slideContainer">
+						<input type="range" min="0" max="100" value="0" class="slider" id="cityLight">
+					</div>
+				<br>
+				<input type="checkbox" id="cityLightLock" onchange="cityLightLock()">
+				<label for="cityLightLock">Locked</label>
+				<h3>Earth Atmosphere</h3>
+				<input type="checkbox" id="clouds" onchange="toggleClouds()">
+				<label for="clouds">Clouds</label>
+				<h3>Earth Resolution</h3>
+				<input type="radio" id="noEarth" value="0" name="earth" onchange="changeEarth(value)">
+				<label for="noEarth">None</label>
+				<br>
+				<input type="radio" id="1kEarth" value="1" name="earth" onchange="changeEarth(value)">
+				<label for="1kEarth">1024 x 512</label>
+				<br>
+				<input type="radio" id="4kEarth" value="2" name="earth" onchange="changeEarth(value)">
+				<label for="4kEarth">4096 x 2048, Jpeg Quality 90%</label>
+				<br>
 				<h3>Starfield Resolution</h3>
 				<input type="radio" id="noStars" value="0" name="stars" onchange="changeStars(value)">
 				<label for="noStars">None</label>
@@ -122,16 +130,6 @@
 				<label for="4kStars">4096 x 4096 x 6, Dark
 					<span id="warn"><em>high memory required</em></span>
 				</label>
-				<br>
-				<h3>Earth Resolution</h3>
-				<input type="radio" id="noEarth" value="0" name="earth" onchange="changeEarth(value)">
-				<label for="noEarth">None</label>
-				<br>
-				<input type="radio" id="1kEarth" value="1" name="earth" onchange="changeEarth(value)">
-				<label for="1kEarth">1024 x 512</label>
-				<br>
-				<input type="radio" id="4kEarth" value="2" name="earth" onchange="changeEarth(value)">
-				<label for="4kEarth">4096 x 2048, Jpeg Quality 90%</label>
 				<br>
 				<h3>Reference Plane for objects orbiting the sun</h3>
 				<input type="radio" id="eclipticPlane" value="ecliptic" name="plane" onchange="setPlane(value)">
