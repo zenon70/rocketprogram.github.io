@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v122</pre>
+		<pre id="version">v123</pre>
 		<p class="hud" id="hudDateOrbit">Loading...</p>
 		<p class="hud" id="hudGpsInfo"></p>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -26,19 +26,17 @@
 		<script src="tilter14.js"></script>
 
 		<button class="onScreenButton rocketPanel" id="throttleOn" onclick="throttleOn()">throttle on</button>
+
 		<button class="onScreenButton rocketPanel" id="throttleAdjustButton" onclick="throttleAdjust()">adjust throttle</button>
-
-
-		<!--<button class="onScreenButton rocketPanel" id="throttleUp" onclick="throttleUp()">throttle up (a)</button>
-		<button class="onScreenButton rocketPanel" id="throttleDown" onclick="throttleDown()">throttle down (z)</button>-->
-
 		<div id="throttleAdjustContainer">
 			<input id="throttleAdjustSlider" type="range" min="0" max="100" value="100" class="vertSlider" orient="vertical">
 		</div>
 
-
+		<!--<button class="onScreenButton rocketPanel" id="throttleUp" onclick="throttleUp()">throttle up (a)</button>
+		<button class="onScreenButton rocketPanel" id="throttleDown" onclick="throttleDown()">throttle down (z)</button>-->
 
 		<button class="onScreenButton rocketPanel" id="throttleOff" onclick="throttleOff()">throttle off (x)</button>
+
 
 		<button class="onScreenButton" id="faster" onclick="faster()">double time (t)</button> 
 		<button class="onScreenButton" id="slower" onclick="slower()">halve time (g)</button>

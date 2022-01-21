@@ -1,3 +1,4 @@
+"use strict";
 // revision 14
 // getDirections() depends on three.js
 //   ECI<->ECEF depends on getDirections
@@ -493,7 +494,7 @@ function earthAtmosphere(altitude) {
 		60.980, 65.654, 76.377, 100.587, 147.203, 208.020, 283]; // 283 is a guess
 
 	let i;
-	for (j = 0; j < 27; j++) {
+	for (let j = 0; j < 27; j++) {
 		if (altitude >= height[j] && altitude < height[j + 1]) {
 			i = j;
 		}

@@ -4,22 +4,30 @@
 -------------
 
 
-need friendly gui
 
-402 not tidally locked properly (and probably 401 as well)
+# UP NEXT
+---------
+
+make sure to dispose of launchpads, especially for reset
+
+finish atmosphere: add atmospheres of other planets, moons
+(add galilean moons and outer moons that have atmospheres)
+
+aerodynamics specific to spacecraft and different stages
+
+
+401 & 402 not tidally locked properly
 
 shouldn't be able to rotate while landed
 
 
 
 shouldn't be able to control spin of fairing
-
+fairing should spin from center, not base
 
 planet texture should always be below spacecraft
 
-major refactoring
-
-need finer throttle controls
+refactoring: split up main.js
 
 orbits toggles (all 3) can be toggled off when paused BUT not back on...
   seems like inconsistent behavior
@@ -31,9 +39,6 @@ fairing separation: correct directions
 make aerodynamic drag specific to vehicle...
 
 isNaN safety before integration
-
-button layout, throttle sliders (main & spin)
-
 
 
 
@@ -655,67 +660,14 @@ what if there are no things to view?
 
 
 
-# refactoring
--------------
-things that use body and/or should be reloadable and/or i want to delay...
-// mostMassiveBody...
-// function viewFinalize() (depends on mostMassiveBody)
-// function addFalconGraphics() (depends on viewFinalize())
-// addFalconGraphics()
-----------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# refactoring notes ~v100-110
+-----------------------------
 
 
 
 function openPopUpMenu()
 function closePopUpMenu()
 
-########## let mostMassiveBody = 0;
-##########  body[mostMassiveBody].x = body[mostMassiveBody].cartes.x;
-##########  ...
   
 // set up three.js
 camera.position.set(-200 * scale, 0 * scale, -350 * scale); // kourou
@@ -795,6 +747,9 @@ body[sun].sunlight = new THREE.PointLight(0xffffff, 1.5);
 body[sun].mesh.add(body[sun].sunlight);
 
 ......
+let mostMassiveBody = 0;
+body[mostMassiveBody].x = body[mostMassiveBody].cartes.x;
+  ...
 
 addFalconGraphics(rocket); (calls viewFinalize())
 body[rocket].pad = addLaunchPad(body[rocket].gps, body[rocket].focus);
