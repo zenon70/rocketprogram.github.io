@@ -5,12 +5,9 @@
 	overscroll-behavior: contain;
 }
 
-/* do i need this here? will be controlled in js */
-
-.rocketPanel {
-	visible: true;
-}
-
+/*
+html, body {margin: 0; height: 100%; overflow: hidden}
+*/
 
 
 #version {
@@ -19,7 +16,6 @@
 	right: 1px;
 	color: #aaaaaa;
 }
-
 
 .hud {
 	position: fixed;
@@ -31,7 +27,6 @@
 	font-family: monospace;
 	padding: 2px;
 }
-
 
 #hudDateOrbit {
 	top: 1px;
@@ -48,12 +43,11 @@
 
 #hudFuel {
 	left: 1px;
-	bottom: 265px;
+	bottom: 205px;
 	width: 42px;
 }
 #hudThrottle {
 	left: 1px;
-	bottom: 235px;
 }
 #hudStep {
 	left: 61px;
@@ -95,13 +89,9 @@
 
 #throttleOn {
 	left: 1px;
-	bottom: 181px;
-}
-#throttleUp {
-	left: 1px;
 	bottom: 121px;
 }
-#throttleDown {
+#throttleAdjustButton {
 	left: 1px;
 	bottom: 61px;
 }
@@ -109,6 +99,7 @@
 	left: 1px;
 	bottom: 1px;
 }
+
 
 #faster {
 	left: 61px;
@@ -135,6 +126,17 @@
 	bottom: 1px;
 }
 
+#throttleAdjustContainer {
+	position: fixed;
+	left: 181px;
+	bottom: 41px;
+	height: 200px;
+}
+.vertSlider {
+	-webkit-appearance: slider-vertical;
+	writing-mode: bt-lr;
+	height: 100%;
+}
 
 
 

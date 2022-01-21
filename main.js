@@ -551,6 +551,8 @@ function viewFinalize() {
 			panel[i].style.visibility = "hidden";
 		}
 	}
+	document.getElementById("throttleAdjustContainer").style.visibility =
+		"hidden";
 	throttleShow();
 
 	//body[view].mesh.attach(camera); // first person?
@@ -1113,6 +1115,30 @@ function throttleOn() {
 		throttleShow();
 	}
 }
+document.getElementById("throttleAdjustContainer").style.visibility = "hidden";
+function throttleAdjust() {
+	if (document.getElementById("throttleAdjustContainer").style.visibility ===
+		"hidden") {
+		document.getElementById("throttleAdjustContainer").style.visibility =
+			"visible";
+	} else {
+		document.getElementById("throttleAdjustContainer").style.visibility =
+			"hidden";
+	}
+}
+
+
+document.getElementById("throttleAdjustSlider").value = 100;
+//document.getElementById("starlightOutput").innerHTML = "100%";
+// Update the current slider value (each time you drag the slider handle)
+document.getElementById("throttleAdjustSlider").oninput = function() {
+	//document.getElementById("starlightOutput").innerHTML = this.value * 20 + "%";
+	body[view].throttle = this.value;
+	throttleShow();
+}
+
+
+
 function throttleOff() {
 	if (body[view].type === "Artificial") {
 		body[view].throttleOn = false;
