@@ -452,17 +452,17 @@ function dragEquation(airDensity, velocity, mass, dragCoefficient) {
 
 // https://www.spaceacademy.net.au/watch/debris/atmosmod.htm
 // https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
-function isothermalAirDensity(altitude) {
+function isothermalAirDensity(surfaceAirDensity, scaleHeight, altitude) {
 	// 1.225 is kg/m^3 air density at sea level of earth
 
 	//const k = 1.38e-23; // boltz
-	//const g = 9.80665;
-	// m is mean molecular mass. T is temperature Kelvin
+	// T is temperature Kelvin
+	// m is mean molecular mass
+	//const g = 9.80665; // for earth
 	//const H = ( k * T ) / ( m * g );
+	// H is scale height. nasa says 8.5km for earth
 
-	// H is scale height. nasa says 8.5km
-
-	return 1.225 * Math.exp( - altitude / 8500);
+	return surfaceAirDensity * Math.exp( - altitude / scaleHeight);
 
 	// easily a function for any planet if 3 arguments are used
 

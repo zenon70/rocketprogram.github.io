@@ -73,9 +73,8 @@ vo    | orbital velocity kilometers per second*
 Ap    | apoapsis distance from center of mass
 Pe    | periapsis distance from center of mass
 
-
-
 \* the kms listed with orbital info is orbital speed. this is the ECI (earth centered inertial) frame, which means it does NOT consider the spin of the planet/moon/etc.
+
 
 **surface info**
 
@@ -89,7 +88,6 @@ Lat  | latitude
 Lon  | longitude
 ApEq | surface apoapsis altitude from MSL at Equator
 PeEq | surface periapsis altitude from MSL at Equator
-
 
 \* the kms listed with gps info is surface speed. this is the ECEF (earth-centered earth-fixed) frame, and it DOES consider the spin of the planet/moon/etc.
 
@@ -165,13 +163,13 @@ The sun does not rotate like planets. Its equator rotates more rapidly than its 
 
 - surface speed is accurate, even with oblate sphereoid bodies.
 
-- atmosphere of earth and aerodynamic drag, up to 202,000 km altitude. that's more than half-way to the moon. so even gps and geostationary satellites experience aerodynamic drag.
+- atmosphere of earth and aerodynamic drag, up to 202,000 km altitude. that's more than half-way to the moon. even gps and geostationary satellites experience aerodynamic drag.
+- 
+- atmosphere for other planets. the atmosphere for foreign planets is crudely simulated without considering temperature. and as for the gas giants, scientifically speaking, 1 bar of pressure is considered the surface of the gas giants, both for altitude measurements and planet radius measurements. however, 1 bar of pressure is by no means an actual surface. the galilean probe went 132km below the 1 bar pressure altitude before it lost contact. this simulation currently uses the 1 bar convention for radius and it is simulated as a hard surface, even though it definitely is not.
 
 ## what is not simulated
 
 - the actual rotation of the spacecraft is more or less lost during and after multiplying the time. this is actually due to the fact that keeping proper rotation over time requires a complex formula that has not yet been built into this simulation. 
-
-- atmosphere for other planets and moons
 
 - the rings of the 6th planet appear unrealistic in a way: they do not receive the shade of the planet, nor do they cast shade. the three.js JavaScript library does not have a good out-of-the-box solution for this. i have experimented with different possible solutions, but they all look worse than just not simulating shade. eclipse shade is also not simulated.
 

@@ -97,6 +97,9 @@ body.push({
 	declination: -67.16,
 	primeMeridian: 160.20 + 180, // iau defines neg as north. adding 180
 
+	surfaceAirDensity: 65,
+	scaleHeight: 15900,
+
 	map: "graphics/planet2_2k.jpg",
 	color: 0xe4bd7f
 });
@@ -125,6 +128,9 @@ earth = body.push({
 	declination: 90,
 	primeMeridian: 190.147,
 
+	surfaceAirDensity: 1.225,
+	scaleHeight: 8500,
+
 	segments: 64,
 	map: "graphics/planet3_1k.jpg",
 	color: 0x419dd9
@@ -152,6 +158,9 @@ planet4 = body.push({
 	rightAscension: 317.68143,
 	declination: 52.88650,
 	primeMeridian: 176.630,
+
+	surfaceAirDensity: 0.02,
+	scaleHeight: 11100,
 
 	//segments: 48,
 	map: "graphics/planet4_2k.jpg",
@@ -187,6 +196,9 @@ body.push({
 	declination: 64.495393,
 	primeMeridian: 284.95,
 
+	surfaceAirDensity: 0.16, // "surface" at 1 bar, not a real surface
+	scaleHeight: 27000,
+
 	map: "graphics/planet5_2k.jpg",
 	color: 0xada396
 });
@@ -220,6 +232,9 @@ body.push({
 	rightAscension: 40.589,
 	declination: 83.537,
 	primeMeridian: 38.90,
+
+	surfaceAirDensity: 0.19,
+	scaleHeight: 59.5,
 
 	map: "graphics/planet6_2k.jpg",
 	ringsMap: "graphics/planet6rings_1k.png",
@@ -256,6 +271,9 @@ body.push(
 	declination: -15.175,
 	primeMeridian: 203.81,
 
+	surfaceAirDensity: 0.42,
+	scaleHeight: 27.7,
+
 	map: "graphics/planet7_1k.jpg",
 	ringsMap: "graphics/planet7rings_512.png",
 	ringsRadius: 51149 * 1000,
@@ -288,6 +306,9 @@ body.push({
 	rightAscension: 299.36,
 	declination: 43.46,
 	primeMeridian: 253.18,
+
+	surfaceAirDensity: 0.45,
+	scaleHeight: 19.7,
 
 	map: "graphics/planet8_2k.jpg",
 	color: 0x364fa7
@@ -680,9 +701,11 @@ function addFalcon() {
 		// not necessary for earth, but should be standard practice
 		body[i].cartes = eciToIcrf(body[i].cartesEci,
 			body[focus].rightAscension, body[focus].declination);
-	
-	/*
-		// OVERWRITE PREVIOUS... do this instead.. sputnik 1 orbit
+
+/*
+		// OVERWRITE PREVIOUS... do this instead..
+
+		// sputnik 1 orbit
 		let aTemp = getAxis(947000, 228000, body[focus].radiusEquator);
 		let eTemp = getEcc(947000, 228000, body[focus].radiusEquator);
 		body[i].kepler = {
@@ -705,7 +728,7 @@ function addFalcon() {
 			w: 61 * Math.PI / 180,
 			meanAnom: 146 * Math.PI / 180
 		}
-	
+*/
 		// 401 orbit
 		body[i].focus = 11;
 		focus = 11;
@@ -730,9 +753,8 @@ function addFalcon() {
 			body[focus].e2);
 		body[i].cartes = eciToIcrf(body[i].cartesEci, body[focus].rightAscension,
 			body[focus].declination);
-	
-	*/
-	
+
+
 		document.getElementById("hudFuel").innerHTML =
 			body[i].fuelMass.toFixed(0) + "<br>kg fuel";
 		return i;

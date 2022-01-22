@@ -1738,12 +1738,44 @@ function keplerPosition() {
 					body[focus].spun,
 					body[focus].angularVelocity, body[focus].radiusEquator,
 					body[focus].e2);
-			} else if (body[i].focus === earth) {
 
-				// drag goes here
+			// process drag
+			// must have density & scale at minimum, but these are actually not used
+			// for processing earth drag due to better formula for earth
+			} else if (body[focus].surfaceAirDensity !== undefined &&
+						body[focus].scaleHeight !== undefined) {
 
+				let density = 1.225; // earth air density at MSL
+				if (focus === earth) {
+					if (body[i].gps.alt < 86000) {
+						let airData = earthAirData(body[i].gps.alt);
+						density = airData.airDensity;
+					} else {
+						density = earthAtmosphere(body[i].gps.alt);
+					}
+				} else {
+					// process rough estimate of foreign planet/moon drag
+					density = isothermalAirDensity(
+						body[focus].surfaceAirDensity,
+						body[focus].scaleHeight,
+						body[i].gps.alt);
+				}
 
-				// process drag
+					let velocity = Math.sqrt(
+						body[i].ecef.vx**2 +
+						body[i].ecef.vy**2 +
+						body[i].ecef.vz**2);
+
+					// this should be specific to spacecraft
+					// do this for now
+					let dragCoefficient = 0.5; // drag coefficient for a cone
+					if (body[i].gps.alt > 100000) {
+						dragCoefficient = 2.2; // cubesat standard coefficient
+						//dragCoefficient = 0.75; // irregular sphere est. for sputnik 1
+					}
+
+					body[i].drag = dragEquation(density, velocity, body[i].mass,
+						dragCoefficient);
 
 					// get prograde vector from velocity
 					body[i].ecef.prograde = new THREE.Vector3(
@@ -1751,34 +1783,6 @@ function keplerPosition() {
 						body[i].ecef.vy,
 						body[i].ecef.vz);
 					body[i].ecef.prograde.normalize();
-
-					//let airData = earthAirData(body[i].gps.alt);
-					let velocity = Math.sqrt(
-						body[i].ecef.vx**2 +
-						body[i].ecef.vy**2 +
-						body[i].ecef.vz**2);
-
-					let density = 1.225; // earth MSL air density
-					if (body[i].gps.alt < 86000) {
-						let airData = earthAirData(body[i].gps.alt);
-						density = airData.airDensity;
-					} else {
-						density = earthAtmosphere(body[i].gps.alt);
-					}
-
-					let dragCoefficient = 0.5; // spherical drag
-					//let dragCoefficient = 0.75; // sphere
-					if (body[i].gps.alt > 100000) {
-						dragCoefficient = 2.2; // cubesat
-						//dragCoefficient = 0.75; // sphere (for sputnik 1)
-						//body[i].mass = 138054; // falcon 9 without fuel in stage 1
-
-						// DISABLE DUE TO NEW THRUST CODE
-						//body[i].mass = 83.6; // sputnik 1
-					}
-
-					body[i].drag = dragEquation(density, velocity, body[i].mass,
-						dragCoefficient);
 
 					// prepare for safety checks (could be optimized)
 					let vxSign = Math.sign(body[i].ecef.vx);
@@ -1824,12 +1828,12 @@ function keplerPosition() {
 					body[focus].spun,
 					body[focus].angularVelocity, body[focus].radiusEquator,
 					body[focus].e2);
-				}
-			}
+				} // end process drag
+			} // end body[i].type === Artificial
 		// tilt back, to match icrf frame
 		body[i].cartes = eciToIcrf(body[i].cartesEci,
 			body[focus].rightAscension, body[focus].declination);
-	} // close for loop
+	} // end for loop
 }
 
 
@@ -2194,6 +2198,21 @@ function addRocket() {
 	addFalconReq = true;
 }
 
+function prepStats(j) {
+	// prep stats for displayText
+	let focus = body[j].focus;
+	body[j].cartesEci = icrfToEci(body[j].cartes, body[focus].rightAscension,
+		body[focus].declination);
+	body[j].mu = GRAVITY * (body[focus].mass + body[j].mass);
+	body[j].kepler = toKepler(body[j].cartesEci, body[j].mu);
+	body[j].ecef = eciToEcef(body[j].cartesEci,
+		body[focus].spun,
+		body[focus].angularVelocity,
+		body[focus].radiusEquator, body[focus].e2);
+	body[j].gps = ecefToGps(body[j].ecef, body[focus].radiusEquator,
+		body[focus].e2);
+}
+
 // stage separation request. array in case multiple separations during pause
 let stageSepReq = [];
 function separateStage() {
@@ -2259,18 +2278,7 @@ function performStageSep(i) {
 	body[i].cartes.vy -= body[i].pointingV3.y * 2;
 	body[i].cartes.vz -= body[i].pointingV3.z * 2;
 
-	// prep stats for displayText
-	let focus = body[j].focus;
-	body[j].cartesEci = icrfToEci(body[j].cartes, body[focus].rightAscension,
-		body[focus].declination);
-	body[j].mu = GRAVITY * (body[focus].mass + body[j].mass);
-	body[j].kepler = toKepler(body[j].cartesEci, body[j].mu);
-	body[j].ecef = eciToEcef(body[j].cartesEci,
-		body[focus].spun,
-		body[focus].angularVelocity,
-		body[focus].radiusEquator, body[focus].e2);
-	body[j].gps = ecefToGps(body[j].ecef, body[focus].radiusEquator,
-		body[focus].e2);
+	prepStats(j);
 
 	view = j;
 	viewFinalize();
@@ -2331,8 +2339,11 @@ function performFairingSep(i) {
 	body[j].cartes.vx += enu.upAxisV3.x * pneuForward;
 	body[j].cartes.vy += enu.upAxisV3.y * pneuForward;
 	body[j].cartes.vz += enu.upAxisV3.z * pneuForward;
+
 	body[j].xSpin = - 0.4;
-	
+
+	prepStats(j);
+
 	// repeat for Zenith fairing
 
 	// copy
@@ -2377,6 +2388,8 @@ function performFairingSep(i) {
 	body[j].cartes.vz += enu.upAxisV3.z * pneuForward;
 
 	body[j].xSpin = 0.4;
+
+	prepStats(j);
 }
 
 //let recycleReq = null;
@@ -2415,8 +2428,8 @@ function performRecycle(i) {
 			body[i].fairingN.mid.material.dispose();
 
 			body[i].fairingZ.mesh.remove(body[i].fairingZ.mid);
-			body[i].fairingZ.nose.geometry.dispose();
-			body[i].fairingZ.nose.material.dispose();
+			body[i].fairingZ.mid.geometry.dispose();
+			body[i].fairingZ.mid.material.dispose();
 
 			body[i].mesh.remove(body[i].fairingN.mesh);
 			body[i].fairingN.mesh.geometry.dispose();

@@ -8,6 +8,10 @@
 # UP NEXT
 ---------
 
+high wind speeds on foreign planets
+
+make "now" a variable in body.. like body.now ??
+
 make sure to dispose of launchpads, especially for reset
 
 finish atmosphere: add atmospheres of other planets, moons
