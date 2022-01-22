@@ -1,5 +1,8 @@
 "use strict";
 
+////////////////////////////////////////////////////////////////////////////////
+// gui
+
 function openPopUpMenu() {
 	document.querySelector(".popup").classList.add("open");
 }
@@ -226,7 +229,7 @@ function changeStars(value) {
 			break;
 		default:
 			scene.background = null;
-	} 
+	}
 }
 changeStars("1");
 
@@ -255,8 +258,6 @@ function starlightLock() {
 	}
 }
 
-
-// THIS IS THE SECOND PLACE THAT body[] IS REQUIRED
 
 // planets, moons, etc: oblate spheroids (with helpers)
 function makeNaturalBodyGraphics() {
@@ -575,9 +576,6 @@ function viewFinalize() {
 }
 
 
-
-
-
 function addRocketHelpers(i) {
 	body[i].axesHelper = new THREE.AxesHelper(250e3 * scale);
 	body[i].axesHelper.position.copy(body[i].mesh.position);
@@ -838,8 +836,13 @@ function addFalconGraphics(i) {
 }
 
 
-
-
+// gray "of course i still love you" launch pad
+const ofcPad_geo = new THREE.PlaneGeometry(200 * scale, 200 * scale);
+const ofcPad_mat = new THREE.MeshLambertMaterial({
+		map: new THREE.TextureLoader().load("graphics/ofcpadg.png"),
+		side: THREE.DoubleSide,
+		transparent: true
+});
 
 let pad = [];
 function addLaunchPad(gps, i) {
@@ -876,18 +879,11 @@ function addLaunchPad(gps, i) {
 	pad[p].rotateZ(- Math.PI / 2);
 
 	// should be globalized to share resource
-	let surface = new THREE.Mesh(new THREE.PlaneGeometry(
-		200 * scale, 200 * scale),
-		new THREE.MeshLambertMaterial({
-			map: new THREE.TextureLoader().load("graphics/ofcpadg.png"),
-			side: THREE.DoubleSide,
-			transparent: true
-		})
-	);
-	surface.material.map.magFilter = THREE.NearestFilter;
-	surface.material.map.minFilter = THREE.NearestFilter;
-	surface.position.set(0, 0, - (37.88/2 + 0.02) * scale);
-	pad[p].add(surface);
+	pad[p].surface = new THREE.Mesh(ofcPad_geo, ofcPad_mat);
+	pad[p].surface.material.map.magFilter = THREE.NearestFilter;
+	pad[p].surface.material.map.minFilter = THREE.NearestFilter;
+	pad[p].surface.position.set(0, 0, - (37.88/2 + 0.02) * scale);
+	pad[p].add(pad[p].surface);
 
 	// zero-out mesh position so the pad will be added in the right place
 	let x = body[i].mesh.position.x;
@@ -2521,6 +2517,12 @@ function reset() {
 function performReset() {
 	// dispose of everything
 	for (let i = body.length - 1; i > -1; i--) {
+		// pad array indices do not match body array indices, this is different 
+		if (pad[i] !== undefined) {
+			pad[i].remove(pad[i].surface);
+			pad[i].surface.geometry.dispose();
+			pad[i].surface.material.dispose();
+		}
 		if (body[i].type === "Natural") {
 			scene.remove(body[i].mesh);
 			body[i].mesh.geometry.dispose();

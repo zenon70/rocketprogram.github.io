@@ -773,4 +773,7 @@ let running = true;
 function playPause()
 
 
+# notes
+-------
+https://ccmc.gsfc.nasa.gov/modelweb/models_home.html
 
