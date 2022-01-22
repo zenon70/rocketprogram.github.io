@@ -569,7 +569,7 @@ function addFalcon() {
 		pointingM4: new THREE.Matrix4(),
 		type: "Artificial",
 		color: 0xe5e7e7,
-	
+
 		stage2: {
 			name: "f9s2" + "#" + String(rocketCount),
 			focus: earth,
@@ -591,7 +591,7 @@ function addFalcon() {
 			pointingM4: new THREE.Matrix4(),
 			type: "Artificial",
 			color: 0xe5e7e7,
-	
+
 			fairingN: {
 				name: "fairingPZ" + "#" + String(rocketCount),
 				focus: earth,
@@ -614,7 +614,7 @@ function addFalcon() {
 				type: "Artificial",
 				color: 0xe5e7e7,
 			},
-	
+
 			fairingZ: {
 				name: "fairingMZ" + "#" + String(rocketCount),
 				focus: earth,
@@ -639,13 +639,13 @@ function addFalcon() {
 			}
 		}
 	}) - 1;
-	
-	
+
+
 	// launch from ground
 	{
 		const i = rocket;
 		let focus = body[i].focus;
-	
+
 		if (rocketCount === 1) {
 			// guiana space center, kourou, french guiana
 			body[i].gps = {
@@ -685,19 +685,19 @@ function addFalcon() {
 				alt: 0
 			};
 		}
-	
-	
-	
-	
+
+
+
+
 		// convert to ecef then to cartes
 		body[i].ecef = gpsToEcef(body[i].gps, body[focus].radiusEquator,
 			body[focus].e2);
 		body[i].cartesEci = ecefToEci(body[i].ecef, body[focus].spun,
 			body[focus].angularVelocity, body[focus].radiusEquator, body[focus].e2);
-	
+
 		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
 		body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
-	
+
 		// not necessary for earth, but should be standard practice
 		body[i].cartes = eciToIcrf(body[i].cartesEci,
 			body[focus].rightAscension, body[focus].declination);
@@ -716,7 +716,7 @@ function addFalcon() {
 			w: 5 * Math.PI / 180,
 			meanAnom: 5 * Math.PI / 180
 		}
-	
+
 		// high orbit
 		let aTemp = getAxis(322000999, 418000999, body[focus].radiusEquator);
 		let eTemp = getEcc(322000999, 418000999, body[focus].radiusEquator);
@@ -728,7 +728,7 @@ function addFalcon() {
 			w: 61 * Math.PI / 180,
 			meanAnom: 146 * Math.PI / 180
 		}
-*/
+
 		// 401 orbit
 		body[i].focus = 11;
 		focus = 11;
@@ -742,7 +742,7 @@ function addFalcon() {
 			w: 1 * Math.PI / 180,
 			meanAnom: 1 * Math.PI / 180
 		}
-	
+
 		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
 		body[i].cartesEci = toCartes(body[i].kepler, body[i].mu);
 		body[i].ecef = eciToEcef(body[i].cartesEci,
@@ -754,7 +754,7 @@ function addFalcon() {
 		body[i].cartes = eciToIcrf(body[i].cartesEci, body[focus].rightAscension,
 			body[focus].declination);
 
-
+*/
 		document.getElementById("hudFuel").innerHTML =
 			body[i].fuelMass.toFixed(0) + "<br>kg fuel";
 		return i;
