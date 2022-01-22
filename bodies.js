@@ -17,7 +17,7 @@ let X, Y, Z, VX, VY, VZ;
 
 let sun, earth, planet4, moon, moon401, moon402;
 
-function loadBodies() {
+function loadBodies() { // no indentation
 
 body = [];
 

@@ -8,6 +8,8 @@
 # UP NEXT
 ---------
 
+validate html5, css3, javascript, and put emblems on readme
+
 high wind speeds on foreign planets
 
 make "now" a variable in body.. like body.now ??

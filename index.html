@@ -8,9 +8,9 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v125</pre>
-		<p class="hud" id="hudDateOrbit">Loading...</p>
-		<p class="hud" id="hudGpsInfo"></p>
+		<pre id="version">v126</pre>
+		<pre class="hud" id="hudDateOrbit">Loading...</pre>
+		<pre class="hud" id="hudGpsInfo"></pre>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
 		<p class="hud rocketPanel" id="hudThrottle">0%<br>off</p>
 		<p class="hud" id="hudStep">1</p>
@@ -62,7 +62,18 @@
 				<button id="refuel" class="inMenuButton rocketPanel" onclick="refuel()">refuel</button>
 				<div class="subtext">Refuel available when empty</div>
 				<h3>Multiple Rockets</h3>
-				<button class="inMenuButton" onclick="addRocket()">deploy</button>
+
+<!--
+				<select id="deployLocation">
+					<option value="kourou">Kourou, French Guiana</option>
+					<option value="boca">Boca Chica, Texas</option>
+					<option value="kennedy">LC-39A, Kennedy Space Center, Florida</option>
+					<option value="baikonur">Baikonur Cosmodrome, Kazakhstan</option>
+					<option value="random">random</option>
+				</select>
+-->
+
+				<button class="inMenuButton" onclick="deploy()">deploy</button>
 				<button id="recycle" class="inMenuButton rocketPanel" onclick="recycle()">recycle</button>
 				<div class="subtext">Recycle available when grounded</div>
 				<h3>Heads Up Display</h3>

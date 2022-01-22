@@ -1935,15 +1935,15 @@ let verbose = false;
 document.querySelector("#toggleHud").checked = false;
 function toggleHud() {
 	if (verbose === false) {
-		document.getElementById("hudDateOrbit").style.height = "134px";
-		document.getElementById("hudGpsInfo").style.height = "134px";
+		document.getElementById("hudDateOrbit").style.height = "142px";
+		document.getElementById("hudGpsInfo").style.height = "110px";
 		document.getElementById("hudDateOrbit").style.visibility = "visible";
 		document.getElementById("hudGpsInfo").style.visibility = "visible";
 		verbose = true;
 		displayText();
 	} else {
-		document.getElementById("hudDateOrbit").style.height = "12px";
-		document.getElementById("hudGpsInfo").style.height = "47px";
+		document.getElementById("hudDateOrbit").style.height = "36px";
+		document.getElementById("hudGpsInfo").style.height = "24px";
 		verbose = false;
 		displayText();
 	}
@@ -1957,15 +1957,19 @@ function simpleHud() {
 	}
 	document.getElementById("hudDateOrbit").style.visibility = "visible";
 	document.getElementById("hudGpsInfo").style.visibility = "visible";
+	let vFocus = body[view].focus;
 	// show mission time
 	document.getElementById("hudDateOrbit").innerHTML =
-	"T+ " + secondsToYears(body[view].missionTime);
-	//now.toLocaleTimeString();
-	//now.getUTCHours() + ":" + now.getUTCMinutes() + ":" + now.getUTCSeconds();
+	"T+ " + secondsToYears(body[view].missionTime) +
+	"<br>Apoapsis  " + ((body[view].kepler.apoapsis -
+		body[vFocus].radiusEquator)
+		/ 1000).toFixed(3) + " km" +
+	"<br>Periapsis " + ((body[view].kepler.periapsis -
+		body[vFocus].radiusEquator) / 1000).toFixed(3) + " km";
 
 	document.getElementById("hudGpsInfo").innerHTML =
-		"Altitude<br>" + (body[view].gps.alt / 1000).toFixed(1) + " km" +
-		"<br>Speed<br>" + (Math.sqrt(body[view].ecef.vx**2 +
+		"Altitude " + (body[view].gps.alt / 1000).toFixed(1) + " km" +
+		"<br>Speed    " + (Math.sqrt(body[view].ecef.vx**2 +
 			body[view].ecef.vy**2 +
 			body[view].ecef.vz**2) * 3.6).toFixed(0) + " km/h";
 }
@@ -2193,8 +2197,10 @@ function viewPrevious() {
 // add rocket, stage separation, fairing separation, recycle
 
 // save requests to process when ready. limit 1 during pause.
+//let deployLocation = "random";
 let addFalconReq = false;
-function addRocket() {
+function deploy() {
+	//deployLocation = document.getElementById("deployLocation").value;
 	addFalconReq = true;
 }
 
