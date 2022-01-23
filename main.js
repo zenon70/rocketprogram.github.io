@@ -2561,9 +2561,6 @@ function performReset() {
 	now = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
 	rocketCount = 0;
 
-	loadBodies();
-	addFalcon();
-
 	initialize();
 
 	resetReq = false;
@@ -2831,6 +2828,7 @@ function animate() {
 let mostMassiveBody = 0;
 function initialize() {
 
+	loadBodies();
 	// first use of body[]
 	makeNaturalBodyGraphics();
 
@@ -2868,6 +2866,7 @@ function initialize() {
 	}
 	*/
 
+	addFalcon();
 	// first use of mostMassiveBody
 	addFalconGraphics(rocket);
 	body[rocket].pad = addLaunchPad(body[rocket].gps, body[rocket].focus);
@@ -2884,4 +2883,3 @@ function initialize() {
 	body[mostMassiveBody].mesh.position.z = body[mostMassiveBody].z * scale;
 	systemPosition();
 }
-

@@ -524,7 +524,6 @@ for (let i = body.length - 1; i > -1; i--) {
  VX= 5.050274561890771E+00, VY=-3.943561492961989E-01, VZ=-3.098607080831567E-03
 
 } // end loadBodies()
-loadBodies();
 
 /*
 function idNaturalBodies() {
@@ -602,7 +601,7 @@ function addFalcon() {
 				thrustSea: 0,
 				sidereal: null,
 				xSpin: 0,
-				ySpin: 0, // will this work? spins when removed
+				ySpin: 0,
 				zSpin: 0,
 				throttleOn: false,
 				throttle: 0,
@@ -625,7 +624,7 @@ function addFalcon() {
 				thrustSea: 0,
 				sidereal: null,
 				xSpin: 0,
-				ySpin: 0, // will this work? spins when removed
+				ySpin: 0,
 				zSpin: 0,
 				throttleOn: false,
 				throttle: 0,
@@ -760,4 +759,3 @@ function addFalcon() {
 		return i;
 	}
 }
-addFalcon();

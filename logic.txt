@@ -783,3 +783,146 @@ function playPause()
 -------
 https://ccmc.gsfc.nasa.gov/modelweb/models_home.html
 
+
+# custom lat lon gps
+--------------------
+index.html:
+				<h3>Multiple Rockets</h3>
+
+
+
+				<label for="lat">Latitude (-90 to 90):</label>
+				<br>
+				<input type="number" id="latNum" name="latitude" min="-90" max="90">
+
+				<br>
+				<label for="lat">Longitude (-180 to 180):</label>
+				<br>
+				<input type="number" id="lonNum" name="longitude" min="-180" max="180">
+
+				<br>
+				<select id="deployLocation">
+					<option value="tour">Automatic Tour</option>
+					<option value="kourou">Kourou, French Guiana</option>
+					<option value="boca">Boca Chica, Texas</option>
+					<option value="kennedy">LC-39A, Kennedy Space Center, Florida</option>
+					<option value="baikonur">Baikonur Cosmodrome, Kazakhstan</option>
+					<option value="random">Random GPS Location</option>
+					<option value="custom">Custom (User Defined)</option>
+				</select>
+
+
+
+				<button class="inMenuButton" onclick="deploy()">deploy</button>
+
+main.js:
+let deployLocation = "tour";
+
+bodies.js:
+
+	// launch from ground
+	{
+		const i = rocket;
+		let focus = body[i].focus;
+
+		// automatic tour
+		if (deployLocation === "tour") {
+			if (rocketCount === 1) deployLocation = "kourou";
+			else if (rocketCount === 2) deployLocation = "boca";
+			else if (rocketCount === 3) deployLocation = "kennedy";
+			else if (rocketCount === 4) deployLocation = "baikonur";
+			else deployLocation = "random";
+		}
+
+		if (deployLocation === "kourou") {
+			// guiana space center, kourou, french guiana
+			body[i].gps = {
+				lat: 5.236 * Math.PI / 180,
+				lon: -52.775 * Math.PI / 180,
+				alt: 0  // actual unknown
+			};
+		} else if (deployLocation === "boca") {
+			// boca chica, texas
+			body[i].gps = {
+				lat: 25.997354305760496 * Math.PI / 180,
+				lon: -97.15698039306052 * Math.PI / 180,
+				alt: 0
+			};
+		} else if (deployLocation === "kennedy") {
+			// kennedy launch pad 39a
+			body[i].gps = {
+				lat: 28.60838889 * Math.PI / 180,
+				lon: -80.60444444 * Math.PI / 180,
+				alt: 0
+			};
+		} else if (deployLocation === "baikonur") {
+			// baikonur cosmodrome, kazakhstan
+			body[i].gps = {
+				lat: 45.92 * Math.PI / 180,
+				lon: 63.342 * Math.PI / 180,
+				alt: 0  // actually 90 meters, but this program doesn't have terrain yet
+			};
+		} else if (deployLocation === "custom" &&
+			document.getElementById("latNum").value !== undefined &&
+			document.getElementById("lonNum").value !== undefined) {
+			let latDeg = document.getElementById("latNum").value;
+			let lonDeg = document.getElementById("lonNum").value;
+			body[i].gps = {
+				lat: latDeg * Math.PI / 180,
+				lon: lonDeg * Math.PI / 180,
+				alt: 0  // actually 90 meters, but this program doesn't have terrain yet
+			};
+		} else {
+			// deployLocation === "random"
+			body[i].gps = {
+				//lat: (Math.random() * (90 - -90) + -90) * Math.PI / 180,
+				lat: (Math.acos(Math.random() * 2 - 1) - Math.PI / 2),
+				lon: (Math.random() * (180 - -180) + -180) * Math.PI / 180,
+				alt: 0
+			};
+		}
+
+
+		camera.position.set(-200 * scale, 0 * scale, -350 * scale); // kourou
+		camera.up.set(0.62, -0.5, 2); // kourou
+
+
+		// convert to ecef then to cartes
+
+style.css:
+input[type="number"] {
+	margin: 2%;
+	padding: 2%;
+	padding: 2%;
+	color: #dddddd;
+	background-color: rgba(55, 55, 55, 1);
+	vertical-align: middle;
+	accent-color: gray;
+}
+
+
+input[type="checkbox"] {
+	margin: 2%;
+	padding: 2%;
+	width: 30px;
+	height: 30px;
+	padding: 2%;
+	color: #dddddd;
+	//background: rgba(0, 0, 0, 0);
+	vertical-align: middle;
+	accent-color: gray;
+}
+
+input[type="radio"] {
+	margin: 2%;
+	padding: 2%;
+	width: 30px;
+	height: 30px;
+	padding: 2%;
+	color: #dddddd;
+	//background: rgba(0, 0, 0, 0);
+	vertical-align: middle;
+	accent-color: gray;
+}
+
+
