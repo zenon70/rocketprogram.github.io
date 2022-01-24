@@ -519,8 +519,25 @@ function viewFinalize() {
 	controls.target = body[view].mesh.position;
 	if (body[view].type === "Natural") {
 		controls.minDistance = body[view].radiusEquator * 1.2 * scale;
-	}
-	else {
+		scene2.visible = false;
+		let panel = document.getElementsByClassName("rocketPanel");
+		for (let i = panel.length - 1; i > -1; i--) {
+			panel[i].style.visibility = "hidden";
+		}
+	} else {
+		scene2.visible = true;
+		document.getElementById("hudFuel").innerHTML =
+			body[view].fuelMass.toFixed(0) + "<br>kg fuel";
+		document.getElementById("hudPitch").innerHTML =
+			Math.round(body[view].xSpin * 10) + "<br>pitch";
+		document.getElementById("hudYaw").innerHTML =
+			Math.round(- body[view].ySpin * 10) + "<br>yaw";
+		document.getElementById("hudRoll").innerHTML =
+			Math.round(body[view].zSpin * 10) + "<br>roll";
+		let panel = document.getElementsByClassName("rocketPanel");
+		for (let i = panel.length - 1; i > -1; i--) {
+			panel[i].style.visibility = "visible";
+		}
 		controls.minDistance = 60 * scale;
 	}
 	// sun view
@@ -538,27 +555,8 @@ function viewFinalize() {
 			body[body[view].focus].name;
 		document.querySelector("#singleOrbit").disabled = false;
 	}
-	if (body[view].type === "Artificial") {
-		scene2.visible = true;
-		document.getElementById("hudFuel").innerHTML =
-			body[view].fuelMass.toFixed(0) + "<br>kg fuel";
-		document.getElementById("hudPitch").innerHTML =
-			Math.round(body[view].xSpin * 10) + "<br>pitch";
-		document.getElementById("hudYaw").innerHTML =
-			Math.round(- body[view].ySpin * 10) + "<br>yaw";
-		document.getElementById("hudRoll").innerHTML =
-			Math.round(body[view].zSpin * 10) + "<br>roll";
-		let panel = document.getElementsByClassName("rocketPanel");
-		for (let i = panel.length - 1; i > -1; i--) {
-			panel[i].style.visibility = "visible";
-		}
-	} else {
-		scene2.visible = false;
-		let panel = document.getElementsByClassName("rocketPanel");
-		for (let i = panel.length - 1; i > -1; i--) {
-			panel[i].style.visibility = "hidden";
-		}
-	}
+
+	// hide throttle slider
 	document.getElementById("throttleAdjustContainer").style.visibility =
 		"hidden";
 	throttleShow();
