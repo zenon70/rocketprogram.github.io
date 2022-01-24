@@ -1055,7 +1055,7 @@ function slower() {
 }
 
 // start with J2000.0 date to match positions and rotations
-let now = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
+//let epoch = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
 
 ////////////////////////////////////////////////////////////////////////////////
 // rocket control (spin and thrust)
@@ -1457,6 +1457,8 @@ function refuel() {
 */
 //let currentFocus = body[8].focus;
 //let debugLog = 0;
+
+const GRAVITY = 6.6743e-11;
 
 function nBodyVelocity(/*body, GRAVITY, timestep*/) {
 	for (let i = body.length - 1; i > -1; i--) {
@@ -1984,7 +1986,8 @@ function displayText() {
 	let vFocus = body[view].focus;
 
 	if (view === mostMassiveBody) {
-		document.getElementById("hudDateOrbit").innerHTML = now.toISOString() +
+		document.getElementById("hudDateOrbit").innerHTML =
+			body.date.toISOString() +
 			"<br>r " +
 			(Math.sqrt(body[view].x**2 + body[view].y**2 + body[view].z**2) / 1000).
 			toFixed(3) + " km" +
@@ -2025,7 +2028,8 @@ function displayText() {
 		} else {
 			keplerShow = body[view].kepler;
 		}
-		document.getElementById("hudDateOrbit").innerHTML = now.toISOString() +
+		document.getElementById("hudDateOrbit").innerHTML =
+			body.date.toISOString() +
 			"<br>period " + secondsToYears(
 				2*Math.PI / Math.sqrt(body[view].mu) * keplerShow.a**(3/2)) +
 			"<br>a " + (keplerShow.a / 1000).toFixed(3) + " km" +
@@ -2557,9 +2561,7 @@ function performReset() {
 	timestep = 0.01;
 	document.getElementById("hudStep").innerHTML = "1";
 
-	// to save game, save body[], now (date), and rocketCount
-	now = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
-	rocketCount = 0;
+	// to save game, save body[]
 
 	initialize();
 
@@ -2802,7 +2804,7 @@ function main() {
 	systemPosition();
 
 	// increment time
-	now.setMilliseconds(now.getMilliseconds() + timestep * 1000);
+	body.date.setMilliseconds(body.date.getMilliseconds() + timestep * 1000);
 
 	displayText();
 
@@ -2866,10 +2868,10 @@ function initialize() {
 	}
 	*/
 
-	addFalcon();
+	let i = addFalcon();
 	// first use of mostMassiveBody
-	addFalconGraphics(rocket);
-	body[rocket].pad = addLaunchPad(body[rocket].gps, body[rocket].focus);
+	addFalconGraphics(i);
+	body[i].pad = addLaunchPad(body[i].gps, body[i].focus);
 
 	// initialize positions
 	body[mostMassiveBody].x = body[mostMassiveBody].cartes.x;

@@ -8,10 +8,9 @@
 // than satellite bodies, for each level. i.e., first the sun, then planets and
 // asteroids and comets (sun orbiters), then all moons, then all satellites of
 // moons, then (if possible), anything orbiting that, etc. so do not add a
-// planet, then its moons, then another planet. and do not add a moon, its
-// satellites, then another moon. systemPosition() requires this structure.
+// planet, then its moons, then another planet. instead add both planets, then
+// their moons. systemPosition() requires this structure.
 
-const GRAVITY = 6.6743e-11;
 let body = [];
 let X, Y, Z, VX, VY, VZ;
 
@@ -20,6 +19,10 @@ let sun, earth, planet4, moon, moon401, moon402;
 function loadBodies() { // no indentation
 
 body = [];
+
+body.date = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
+
+body.rocketCount = 0;
 
 // mass in kg, distance in m, sidereal in hours, axial tilt in degrees
 
@@ -492,14 +495,23 @@ for (let i = body.length - 1; i > -1; i--) {
 */
 }
 
+} // end loadBodies()
 
-
-
+/*
+function idNaturalBodies() {
+	for (let i = body.length; i > -1; i--) {
+		if (body[i].name === "10") sun = i;
+		else if (body[i].name === "399") earth = i;
+		// etc...
+	}
+}
+*/
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// noteworthy rocket vectors
 /*
-// LRO geocentric kms frame
+// LRO lunar reconnaisance orbiter geocentric kms frame
 // 2021-01-01 12:00
  X =-2.428758379542803E+05, Y = 2.624529692028076E+05, Z = 1.420844359324639E+05
  VX=-1.249780236123540E+00, VY=-1.730644095414864E+00, VZ= 9.128278036423180E-01
@@ -523,32 +535,16 @@ for (let i = body.length - 1; i > -1; i--) {
  X =-5.405605653409561E+03, Y =-4.180316246779086E+04, Z =-2.061177954249511E+00
  VX= 5.050274561890771E+00, VY=-3.943561492961989E-01, VZ=-3.098607080831567E-03
 
-} // end loadBodies()
-
-/*
-function idNaturalBodies() {
-	for (let i = body.length; i > -1; i--) {
-		if (body[i].name === "10") sun = i;
-		else if (body[i].name === "399") earth = i;
-		// etc...
-	}
-}
-*/
-
-
-
-// test
+// custom test
 // 2455198.000000000 = A.D. 2010-Jan-01 12:00:00.0000 TDB 
 //X =6378.137, Y =0, Z =0 
 //VX=0, VY=1e-5, VZ=0
 
-let rocket;
-let rocketCount = 0;
 
 function addFalcon() {
-	rocketCount++;
-	rocket = body.push({
-		name: "f9" + "#" + String(rocketCount),
+	body.rocketCount++;
+	const i = body.push({
+		name: "f9" + "#" + String(body.rocketCount),
 		focus: earth,
 		mass: 549054,
 		fuelMass: 411000,
@@ -570,7 +566,7 @@ function addFalcon() {
 		color: 0xe5e7e7,
 
 		stage2: {
-			name: "f9s2" + "#" + String(rocketCount),
+			name: "f9s2" + "#" + String(body.rocketCount),
 			focus: earth,
 			mass: 92670 + 3900,
 			fuelMass: 92670,
@@ -592,7 +588,7 @@ function addFalcon() {
 			color: 0xe5e7e7,
 
 			fairingN: {
-				name: "fairingPZ" + "#" + String(rocketCount),
+				name: "fairingPZ" + "#" + String(body.rocketCount),
 				focus: earth,
 				mass: 100,
 				fuelMass: 0,
@@ -615,7 +611,7 @@ function addFalcon() {
 			},
 
 			fairingZ: {
-				name: "fairingMZ" + "#" + String(rocketCount),
+				name: "fairingMZ" + "#" + String(body.rocketCount),
 				focus: earth,
 				mass: 100,
 				fuelMass: 0,
@@ -641,121 +637,118 @@ function addFalcon() {
 
 
 	// launch from ground
-	{
-		const i = rocket;
-		let focus = body[i].focus;
+	let focus = body[i].focus;
 
-		if (rocketCount === 1) {
-			// guiana space center, kourou, french guiana
-			body[i].gps = {
-				lat: 5.236 * Math.PI / 180,
-				lon: -52.775 * Math.PI / 180,
-				alt: 0  // actual unknown
-			};
-			camera.position.set(-200 * scale, 0 * scale, -350 * scale); // kourou
-			camera.up.set(0.62, -0.5, 2); // kourou
-		} else if (rocketCount === 2) {
-			// boca chica, texas
-			body[i].gps = {
-				lat: 25.997354305760496 * Math.PI / 180,
-				lon: -97.15698039306052 * Math.PI / 180,
-				alt: 0
-			};
-		} else if (rocketCount === 3) {
-			// kennedy launch pad 39a
-			body[i].gps = {
-				lat: 28.60838889 * Math.PI / 180,
-				lon: -80.60444444 * Math.PI / 180,
-				alt: 0
-			};
-		} else if (rocketCount === 4) {
-			// baikonur cosmodrome, kazakhstan
-			body[i].gps = {
-				lat: 45.92 * Math.PI / 180,
-				lon: 63.342 * Math.PI / 180,
-				alt: 0  // actually 90 meters, but this program doesn't have terrain yet
-			};
-		} else {
-			// anywhere
-			body[i].gps = {
-				//lat: (Math.random() * (90 - -90) + -90) * Math.PI / 180,
-				lat: Math.acos(Math.random() * 2 - 1) - Math.PI / 2,
-				lon: (Math.random() * (180 - -180) + -180) * Math.PI / 180,
-				alt: 0
-			};
-		}
+	if (body.rocketCount === 1) {
+		// guiana space center, kourou, french guiana
+		body[i].gps = {
+			lat: 5.236 * Math.PI / 180,
+			lon: -52.775 * Math.PI / 180,
+			alt: 0  // actual unknown
+		};
+		camera.position.set(-200 * scale, 0 * scale, -350 * scale); // kourou
+		camera.up.set(0.62, -0.5, 2); // kourou
+	} else if (body.rocketCount === 2) {
+		// boca chica, texas
+		body[i].gps = {
+			lat: 25.997354305760496 * Math.PI / 180,
+			lon: -97.15698039306052 * Math.PI / 180,
+			alt: 0
+		};
+	} else if (body.rocketCount === 3) {
+		// kennedy launch pad 39a
+		body[i].gps = {
+			lat: 28.60838889 * Math.PI / 180,
+			lon: -80.60444444 * Math.PI / 180,
+			alt: 0
+		};
+	} else if (body.rocketCount === 4) {
+		// baikonur cosmodrome, kazakhstan
+		body[i].gps = {
+			lat: 45.92 * Math.PI / 180,
+			lon: 63.342 * Math.PI / 180,
+			alt: 0  // actually 90 meters, but this program doesn't have terrain yet
+		};
+	} else {
+		// anywhere
+		body[i].gps = {
+			//lat: (Math.random() * (90 - -90) + -90) * Math.PI / 180,
+			lat: Math.acos(Math.random() * 2 - 1) - Math.PI / 2,
+			lon: (Math.random() * (180 - -180) + -180) * Math.PI / 180,
+			alt: 0
+		};
+	}
 
 
 
 
-		// convert to ecef then to cartes
-		body[i].ecef = gpsToEcef(body[i].gps, body[focus].radiusEquator,
-			body[focus].e2);
-		body[i].cartesEci = ecefToEci(body[i].ecef, body[focus].spun,
-			body[focus].angularVelocity, body[focus].radiusEquator, body[focus].e2);
+	// convert to ecef then to cartes
+	body[i].ecef = gpsToEcef(body[i].gps, body[focus].radiusEquator,
+		body[focus].e2);
+	body[i].cartesEci = ecefToEci(body[i].ecef, body[focus].spun,
+		body[focus].angularVelocity, body[focus].radiusEquator, body[focus].e2);
 
-		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
-		body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
+	body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
+	body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
 
-		// not necessary for earth, but should be standard practice
-		body[i].cartes = eciToIcrf(body[i].cartesEci,
-			body[focus].rightAscension, body[focus].declination);
+	// not necessary for earth, but should be standard practice
+	body[i].cartes = eciToIcrf(body[i].cartesEci,
+		body[focus].rightAscension, body[focus].declination);
 
 /*
-		// OVERWRITE PREVIOUS... do this instead..
+	// OVERWRITE PREVIOUS... do this instead..
 
-		// sputnik 1 orbit
-		let aTemp = getAxis(947000, 228000, body[focus].radiusEquator);
-		let eTemp = getEcc(947000, 228000, body[focus].radiusEquator);
-		body[i].kepler = {
-			a: aTemp,
-			e: eTemp,
-			i: 61 * Math.PI / 180,
-			lan: 5 * Math.PI / 180,
-			w: 5 * Math.PI / 180,
-			meanAnom: 5 * Math.PI / 180
-		}
+	// sputnik 1 orbit
+	let aTemp = getAxis(947000, 228000, body[focus].radiusEquator);
+	let eTemp = getEcc(947000, 228000, body[focus].radiusEquator);
+	body[i].kepler = {
+		a: aTemp,
+		e: eTemp,
+		i: 61 * Math.PI / 180,
+		lan: 5 * Math.PI / 180,
+		w: 5 * Math.PI / 180,
+		meanAnom: 5 * Math.PI / 180
+	}
 
-		// high orbit
-		let aTemp = getAxis(322000999, 418000999, body[focus].radiusEquator);
-		let eTemp = getEcc(322000999, 418000999, body[focus].radiusEquator);
-		body[i].kepler = {
-			a: aTemp,
-			e: eTemp,
-			i: 20 * Math.PI / 180,
-			lan: 12 * Math.PI / 180,
-			w: 61 * Math.PI / 180,
-			meanAnom: 146 * Math.PI / 180
-		}
+	// high orbit
+	let aTemp = getAxis(322000999, 418000999, body[focus].radiusEquator);
+	let eTemp = getEcc(322000999, 418000999, body[focus].radiusEquator);
+	body[i].kepler = {
+		a: aTemp,
+		e: eTemp,
+		i: 20 * Math.PI / 180,
+		lan: 12 * Math.PI / 180,
+		w: 61 * Math.PI / 180,
+		meanAnom: 146 * Math.PI / 180
+	}
 
-		// 401 orbit
-		body[i].focus = 11;
-		focus = 11;
-		let aTemp = getAxis(300, 200, body[focus].radiusEquator);
-		let eTemp = getEcc(300, 200, body[focus].radiusEquator);
-		body[i].kepler = {
-			a: aTemp,
-			e: eTemp,
-			i: 89.99 * Math.PI / 180,
-			lan: 1 * Math.PI / 180,
-			w: 1 * Math.PI / 180,
-			meanAnom: 1 * Math.PI / 180
-		}
+	// 401 orbit
+	body[i].focus = 11;
+	focus = 11;
+	let aTemp = getAxis(300, 200, body[focus].radiusEquator);
+	let eTemp = getEcc(300, 200, body[focus].radiusEquator);
+	body[i].kepler = {
+		a: aTemp,
+		e: eTemp,
+		i: 89.99 * Math.PI / 180,
+		lan: 1 * Math.PI / 180,
+		w: 1 * Math.PI / 180,
+		meanAnom: 1 * Math.PI / 180
+	}
 
-		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
-		body[i].cartesEci = toCartes(body[i].kepler, body[i].mu);
-		body[i].ecef = eciToEcef(body[i].cartesEci,
-			body[focus].spun,
-			body[focus].angularVelocity,
-			body[focus].radiusEquator, body[focus].e2);
-		body[i].gps = ecefToGps(body[i].ecef, body[focus].radiusEquator,
-			body[focus].e2);
-		body[i].cartes = eciToIcrf(body[i].cartesEci, body[focus].rightAscension,
-			body[focus].declination);
+	body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
+	body[i].cartesEci = toCartes(body[i].kepler, body[i].mu);
+	body[i].ecef = eciToEcef(body[i].cartesEci,
+		body[focus].spun,
+		body[focus].angularVelocity,
+		body[focus].radiusEquator, body[focus].e2);
+	body[i].gps = ecefToGps(body[i].ecef, body[focus].radiusEquator,
+		body[focus].e2);
+	body[i].cartes = eciToIcrf(body[i].cartesEci, body[focus].rightAscension,
+		body[focus].declination);
 
 */
-		document.getElementById("hudFuel").innerHTML =
-			body[i].fuelMass.toFixed(0) + "<br>kg fuel";
-		return i;
-	}
-}
+	document.getElementById("hudFuel").innerHTML =
+		body[i].fuelMass.toFixed(0) + "<br>kg fuel";
+	return i;
+} // end addFalcon()
