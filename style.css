@@ -132,10 +132,10 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 	bottom: 41px;
 	height: 200px;
 }
-/* these create console error messages for firefox. ignoring for now. */
+/* these may create console error messages for firefox */
 .vertSlider {
 	-webkit-appearance: slider-vertical;
-	writing-mode: bt-lr;
+	-ms-writing-mode: bt-lr;
 	height: 100%;
 }
 

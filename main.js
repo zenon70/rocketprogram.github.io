@@ -1054,8 +1054,6 @@ function slower() {
 	showStep();
 }
 
-// start with J2000.0 date to match positions and rotations
-//let epoch = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
 
 ////////////////////////////////////////////////////////////////////////////////
 // rocket control (spin and thrust)
@@ -1332,81 +1330,80 @@ function rocketControl() {
 	// rotate rocket(s)
 	for (let i = body.length - 1; i > -1; i--) {
 		if (body[i].type === "Artificial") {
+
+			if (body[i].missionTime !== undefined) {
+				body[i].missionTime += timestep;
+			}
+
 			body[i].mesh.rotateX(body[i].xSpin * timestep);
 			body[i].mesh.rotateY(body[i].ySpin * timestep);
 			body[i].mesh.rotateZ(body[i].zSpin * timestep);
-			
-			// use this loop to do all rocket maneuvers, without indenting
-		//}
-	//}
 
-	if (body[i].missionTime !== undefined) {
-		body[i].missionTime += timestep;
-	}
+			// process thrust
+			if (body[i].fuelMass > 0 && body[i].throttleOn && body[i].throttle > 0) {
+				// update the direction vector of rocket
+				body[i].pointingM4.extractRotation(body[i].mesh.matrix);
+				// get unit vector of direction
+				body[i].pointingV3 =
+					body[i].mesh.up.clone().applyMatrix4(body[i].pointingM4);
 
-	// process thrust
-	if (body[i].fuelMass > 0 && body[i].throttleOn && body[i].throttle > 0) {
-		// update the direction vector of rocket
-		body[i].pointingM4.extractRotation(body[i].mesh.matrix);
-		// get unit vector of direction
-		body[i].pointingV3 =
-			body[i].mesh.up.clone().applyMatrix4(body[i].pointingM4);
+				let airPressure = 0; // Pascals
+				// get current air pressure
+				if (body[i].focus === earth) {
+					if (body[i].gps.alt < 86000) {
+						let airData = earthAirData(body[i].gps.alt);
+						airPressure = airData.airPressure;
+					}
+				}
 
-		let airPressure = 0; // Pascals
-		// get current air pressure
-		if (body[i].focus === earth) {
-			if (body[i].gps.alt < 86000) {
-				let airData = earthAirData(body[i].gps.alt);
-				airPressure = airData.airPressure;
-			}
-		}
+				// decrease mass by fuel used, and reduce fuel amount
+				const fuelMassPerSecond = body[i].fuelMass / body[i].burnTime;
 
-		// decrease mass by fuel used, and reduce fuel amount
-		const fuelMassPerSecond = body[i].fuelMass / body[i].burnTime;
-		
-		let fuelUse = 1;
-		if (body[i].fuelMass - (fuelMassPerSecond * body[i].throttle/100 * timestep)
-			< 0) {
-			// get ratio
-			fuelUse = body[i].fuelMass / (fuelMassPerSecond * body[i].throttle/100
-				* timestep);
-			body[i].fuelMass = 0;
-			body[i].burnTime = 0;
-		} else {
-			body[i].fuelMass -= fuelMassPerSecond * body[i].throttle/100 * timestep;
-			body[i].burnTime -= body[i].throttle/100 * timestep;
-		}
-		body[i].mass -= fuelMassPerSecond * body[i].throttle/100 * timestep *
-			fuelUse;
+				let fuelUse = 1;
+				if (body[i].fuelMass - (fuelMassPerSecond * body[i].throttle / 100 *
+					timestep) < 0) {
+					// get ratio
+					fuelUse = body[i].fuelMass / (fuelMassPerSecond *
+						body[i].throttle / 100 * timestep);
+					body[i].fuelMass = 0;
+					body[i].burnTime = 0;
+				} else {
+					body[i].fuelMass -= fuelMassPerSecond * body[i].throttle / 100 *
+						timestep;
+					body[i].burnTime -= body[i].throttle / 100 * timestep;
+				}
+				body[i].mass -= fuelMassPerSecond * body[i].throttle/100 * timestep *
+					fuelUse;
 
-		const thrustAccel = (body[i].thrustVac - (airPressure *
-			(body[i].thrustVac - body[i].thrustSea) / 101325))
-			/ body[i].mass * fuelUse;
+				const thrustAccel = (body[i].thrustVac - (airPressure *
+					(body[i].thrustVac - body[i].thrustSea) / 101325))
+					/ body[i].mass * fuelUse;
 
-		// apply thrust according to direction the rocket is pointing
-		body[i].vx +=
-			body[i].pointingV3.x * body[i].throttle/100 * thrustAccel * timestep;
-		body[i].vy +=
-			body[i].pointingV3.y * body[i].throttle/100 * thrustAccel * timestep;
-		body[i].vz +=
-			body[i].pointingV3.z * body[i].throttle/100 * thrustAccel * timestep;
+				// apply thrust according to direction the rocket is pointing
+				body[i].vx += body[i].pointingV3.x * body[i].throttle / 100 *
+					thrustAccel * timestep;
+				body[i].vy += body[i].pointingV3.y * body[i].throttle / 100 *
+					thrustAccel * timestep;
+				body[i].vz += body[i].pointingV3.z * body[i].throttle / 100 *
+					thrustAccel * timestep;
 
-		if (i === view) {
-			document.getElementById("hudFuel").innerHTML =
-				body[i].fuelMass.toFixed(0) + "<br>kg fuel";
-		}
+				if (i === view) {
+					document.getElementById("hudFuel").innerHTML =
+						body[i].fuelMass.toFixed(0) + "<br>kg fuel";
+				}
 
-		body[i].onSurface = false;
+				body[i].onSurface = false;
 
-		if (body[i].missionTime === undefined) {
-			body[i].missionTime = 0;
-		}
-
-			// missing closes from non-indentation
+				if (body[i].missionTime === undefined) {
+					body[i].missionTime = 0;
+				}
 			} // end process thrust
 		} // end Artificial
 	} // end for loop
 }
+
+
+
 
 //document.getElementById("refuel").disabled = true;
 function refuel() {

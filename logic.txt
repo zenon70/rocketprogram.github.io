@@ -3,14 +3,13 @@
 # IN-PROGRESS
 -------------
 
+401 & 402 not tidally locked properly
 
 
 # UP NEXT
 ---------
 
 
-
-401 & 402 not tidally locked properly
 
 shouldn't be able to rotate while landed
 make good camera position for new deployments
@@ -25,9 +24,6 @@ orbits toggles (all 3) can be toggled off when paused BUT not back on...
   seems like inconsistent behavior
 
 
-
-
-validate html5, css3, javascript, and put emblems on readme
 
 high wind speeds on foreign planets
 
@@ -175,6 +171,10 @@ improve body array naming system i.e. earth = 3 .name = 399,  planet4 = 4...
 
 use a json object file for solar system orbit data
 
+validate html5, css3, javascript
+  html5 isn't valid due to vertical slider, and warns about non-resizability
+  css3 is valid, and warns about vendor extensions
+  js es6 - haven't found suitable linter that accepts paste from mobile browser
 
 
 # SAVE / LOAD
@@ -278,9 +278,11 @@ why slow?
 - orbit lines
     recalculating some elements (i, lan, w) and redrawing on every frame
     ellipse with 500 points
-- rockets are part of n-body physics
+- rockets are (or were) part of n-body physics
 - gps velocity unnecessary?
 - general efficiency can probably be drastically improved
+  - how?
+  - using primitives instead of objects would help a tiny bit
 - orbMech settings for transcendental equation
 initialization-only
 - loading the whole threejs instead of just modules
@@ -296,7 +298,7 @@ initialization-only
 
 
 
-# PROGRAM FLOW (simplified logic)
+# PROGRAM FLOW (simplified logic) (old)
 ---------------------------------
 
 starlightSlider.oninput = function()
