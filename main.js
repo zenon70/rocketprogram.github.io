@@ -1053,15 +1053,15 @@ function showStep() {
 		state = "paused";
 	}
 	document.getElementById("hudStep").innerHTML =
-		Math.round(timestep * 100).toString() + "<br>" + state;
+		/*Math.round(*/timestep * 100/*).toString()*/ + "<br>" + state;
 }
 function faster() {
 	if (timestep < 80000) timestep *= 2;
 	showStep();
 }
 function slower() {
-	if (timestep > .01) timestep /= 2;
-	if (timestep < .01) timestep = .01;
+	if (timestep > .000625) timestep /= 2;
+	if (timestep < .000625) timestep = .000625;
 	showStep();
 }
 
@@ -2333,9 +2333,9 @@ function performFairingSep(i) {
 	body[i].pointingV3 =
 		body[i].mesh.up.clone().applyMatrix4(body[i].pointingM4);
 
-	body[i].fairingN.cartes.x += body[i].pointingV3.x * 7.55;
-	body[i].fairingN.cartes.y += body[i].pointingV3.y * 7.55;
-	body[i].fairingN.cartes.z += body[i].pointingV3.z * 7.55;
+	body[i].fairingN.cartes.x += body[i].pointingV3.x * (13.8/2 + 1.3 + 6.7/2);
+	body[i].fairingN.cartes.y += body[i].pointingV3.y * (13.8/2 + 1.3 + 6.7/2);
+	body[i].fairingN.cartes.z += body[i].pointingV3.z * (13.8/2 + 1.3 + 6.7/2);
 
 	// separate
 	body[i].mesh.remove(body[i].fairingN.mesh);
@@ -2349,7 +2349,8 @@ function performFairingSep(i) {
 	// pneumatic separation
 	let pneu = 20; // m/s² impulse
 	let pneuForward = 10;
-	
+
+	// this process is wrong. shouldn't depend on direction, just stage2 rotation
 	let enu = getDirections(body[j].cartes.x, body[j].cartes.y,
 		body[j].cartes.z, body[j].mesh.quaternion);
 	body[j].cartes.vx -= enu.northAxisV3.x * pneu;
@@ -2385,9 +2386,9 @@ function performFairingSep(i) {
 	body[i].fairingZ.zSpin = body[i].zSpin;
 
 	// move to graphics offset so it DOESN'T move
-	body[i].fairingZ.cartes.x += body[i].pointingV3.x * 7.55;
-	body[i].fairingZ.cartes.y += body[i].pointingV3.y * 7.55;
-	body[i].fairingZ.cartes.z += body[i].pointingV3.z * 7.55;
+	body[i].fairingZ.cartes.x += body[i].pointingV3.x * (13.8/2 + 1.3 + 6.7/2);
+	body[i].fairingZ.cartes.y += body[i].pointingV3.y * (13.8/2 + 1.3 + 6.7/2);
+	body[i].fairingZ.cartes.z += body[i].pointingV3.z * (13.8/2 + 1.3 + 6.7/2);
 
 	// separate
 	body[i].mesh.remove(body[i].fairingZ.mesh);
@@ -2398,6 +2399,7 @@ function performFairingSep(i) {
 	body[i].mass -= body[j].mass;
 	addRocketHelpers(j);
 
+	// this process is wrong. shouldn't depend on direction, just stage2 rotation
 	// pneumatic separation
 	body[j].cartes.vx += enu.northAxisV3.x * pneu;
 	body[j].cartes.vy += enu.northAxisV3.y * pneu;
