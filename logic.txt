@@ -8,13 +8,28 @@
 # UP NEXT
 ---------
 
+
+
+401 & 402 not tidally locked properly
+
+shouldn't be able to rotate while landed
+make good camera position for new deployments
+
+shouldn't be able to control spin of fairing
+fairing should spin from center, not base
+fairing separation: correct directions
+
+make aerodynamic drag specific to vehicle...
+
+orbits toggles (all 3) can be toggled off when paused BUT not back on...
+  seems like inconsistent behavior
+
+
+
+
 validate html5, css3, javascript, and put emblems on readme
 
 high wind speeds on foreign planets
-
-make "now" a variable in body.. like body.now ??
-
-make sure to dispose of launchpads, especially for reset
 
 finish atmosphere: add atmospheres of other planets, moons
 (add galilean moons and outer moons that have atmospheres)
@@ -22,27 +37,14 @@ finish atmosphere: add atmospheres of other planets, moons
 aerodynamics specific to spacecraft and different stages
 
 
-401 & 402 not tidally locked properly
 
-shouldn't be able to rotate while landed
-
-
-
-shouldn't be able to control spin of fairing
-fairing should spin from center, not base
 
 planet texture should always be below spacecraft
 
 refactoring: split up main.js
 
-orbits toggles (all 3) can be toggled off when paused BUT not back on...
-  seems like inconsistent behavior
-
 check and confirm memory is not leaking
 
-fairing separation: correct directions
-
-make aerodynamic drag specific to vehicle...
 
 isNaN safety before integration
 
@@ -65,7 +67,10 @@ glitchy when using custom kepler elements with 0 i, 0 lan, 0 w, 0 M.
 
 # GUI ISSUES
 ------------
+onscreen data is tiny (hard to read) on desktop
+
 gui hud numbers wrapping, and going outside of tinted background
+  desktop orbital verbose data goes outside tinted background
 
 hud overlaps on smartphone in widescreen if not fullscreened
 
