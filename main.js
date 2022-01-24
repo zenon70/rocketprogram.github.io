@@ -1062,49 +1062,49 @@ let spinPower = 0.1; // m/s²
 
 // onscreen buttons
 function up() {
-	if (body[view].type === "Artificial") {
+	if (body[view].rcs === true) {
 		body[view].xSpin += spinPower;
 	}
 	document.getElementById("hudPitch").innerHTML =
 		Math.round(body[view].xSpin * 10) + "<br>pitch";
 }
 function down() {
-	if (body[view].type === "Artificial") {
+	if (body[view].rcs === true) {
 		body[view].xSpin -= spinPower;
 	}
 	document.getElementById("hudPitch").innerHTML =
 		Math.round(body[view].xSpin * 10) + "<br>pitch";
 }
 function left() {
-	if (body[view].type === "Artificial") {
+	if (body[view].rcs === true) {
 		body[view].zSpin += spinPower;
 	}
 	document.getElementById("hudYaw").innerHTML =
 		Math.round(- body[view].zSpin * 10) + "<br>yaw";
 }
 function right() {
-	if (body[view].type === "Artificial") {
+	if (body[view].rcs === true) {
 		body[view].zSpin -= spinPower;
 	}
 	document.getElementById("hudYaw").innerHTML =
 		Math.round(- body[view].zSpin * 10) + "<br>yaw";
 }
 function rollLeft() {
-	if (body[view].type === "Artificial") {
+	if (body[view].rcs === true) {
 		body[view].ySpin -= spinPower;
 	}
 	document.getElementById("hudRoll").innerHTML =
 		Math.round(body[view].ySpin * 10) + "<br>roll";
 }
 function rollRight() {
-	if (body[view].type === "Artificial") {
+	if (body[view].rcs === true) {
 		body[view].ySpin += spinPower;
 	}
 	document.getElementById("hudRoll").innerHTML =
 		Math.round(body[view].ySpin * 10) + "<br>roll";
 }
 function stopSpin() {
-	if (body[view].type === "Artificial") {
+	if (body[view].rcs === true) {
 		body[view].xSpin = 0;
 		body[view].ySpin = 0;
 		body[view].zSpin = 0;
@@ -1217,7 +1217,7 @@ window.addEventListener("keyup", function(event) {
 function rocketControl() {
 	// e (pitch up)
 	if (keyState.KeyE && Date.now() - keyDelay.KeyE > repeatDelay) {
-		if (body[view].type === "Artificial") {
+		if (body[view].rcs === true) {
 			body[view].xSpin += spinPower;
 			keyDelay.KeyE = Date.now();
 			document.getElementById("hudPitch").innerHTML =
@@ -1227,7 +1227,7 @@ function rocketControl() {
 
 	// s (yaw left)
 	if (keyState.KeyS && Date.now() - keyDelay.KeyS > repeatDelay) {
-		if (body[view].type === "Artificial") {
+		if (body[view].rcs === true) {
 			body[view].zSpin += spinPower;
 			keyDelay.KeyS = Date.now();
 			document.getElementById("hudYaw").innerHTML =
@@ -1237,7 +1237,7 @@ function rocketControl() {
 
 	// d (pitch down)
 	if (keyState.KeyD && Date.now() - keyDelay.KeyD > repeatDelay) {
-		if (body[view].type === "Artificial") {
+		if (body[view].rcs === true) {
 			body[view].xSpin -= spinPower;
 			keyDelay.KeyD = Date.now();
 			document.getElementById("hudPitch").innerHTML =
@@ -1247,7 +1247,7 @@ function rocketControl() {
 
 	// f (yaw right)
 	if (keyState.KeyF && Date.now() - keyDelay.KeyF > repeatDelay) {
-		if (body[view].type === "Artificial") {
+		if (body[view].rcs === true) {
 			body[view].zSpin -= spinPower;
 			keyDelay.KeyF = Date.now();
 			document.getElementById("hudYaw").innerHTML =
@@ -1257,7 +1257,7 @@ function rocketControl() {
 
 	// w (roll left)
 	if (keyState.KeyW && Date.now() - keyDelay.KeyW > repeatDelay) {
-		if (body[view].type === "Artificial") {
+		if (body[view].rcs === true) {
 			body[view].ySpin -= spinPower;
 			keyDelay.KeyW = Date.now();
 			document.getElementById("hudRoll").innerHTML =
@@ -1267,7 +1267,7 @@ function rocketControl() {
 
 	// r (roll right)
 	if (keyState.KeyR && Date.now() - keyDelay.KeyR > repeatDelay) {
-		if (body[view].type === "Artificial") {
+		if (body[view].rcs === true) {
 			body[view].ySpin += spinPower;
 			keyDelay.KeyR = Date.now();
 			document.getElementById("hudRoll").innerHTML =
@@ -1277,7 +1277,7 @@ function rocketControl() {
 
 	// freeze all spin and thrust
 	if (keyState.KeyQ && Date.now() - keyDelay.KeyQ > repeatDelay) {
-		if (body[view].type === "Artificial") {
+		if (body[view].rcs === true) {
 			body[view].xSpin = 0;
 			body[view].ySpin = 0;
 			body[view].zSpin = 0;
