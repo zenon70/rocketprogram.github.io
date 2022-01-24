@@ -1418,10 +1418,10 @@ function refuel() {
 		body[view].mass += 92670;
 		body[view].fuelMass += 92670;
 		body[view].burnTime += 397;
-		if (body[view].refuel) {
-			body[view].refuel++;
+		if (body[view].refuelCount) {
+			body[view].refuelCount++;
 		} else {
-			body[view].refuel = 1;
+			body[view].refuelCount = 1;
 		}
 	}
 	// if it has or had stage 2, then it is stage 1
@@ -1431,12 +1431,14 @@ function refuel() {
 		body[view].mass += 411000;
 		body[view].fuelMass += 411000;
 		body[view].burnTime += 162;
-		if (body[view].refuel) {
-			body[view].refuel++;
+		if (body[view].refuelCount) {
+			body[view].refuelCount++;
 		} else {
-			body[view].refuel = 1;
+			body[view].refuelCount = 1;
 		}
 	}
+	document.getElementById("hudFuel").innerHTML =
+		body[view].fuelMass.toFixed(0) + "<br>kg fuel";
 }
 
 
@@ -2058,13 +2060,13 @@ function displayText() {
 				/ 1000).toFixed(3) + " km" +
 			"<br>Pe<sub>Eq</sub> " + ((body[view].kepler.periapsis -
 				body[vFocus].radiusEquator) / 1000).toFixed(3) + " km";
-		if (body[view].s1refuel) {
+		if (body[view].s1refuelCount) {
 			document.getElementById("hudGpsInfo").innerHTML +=
-			"<br>s1 refueled: " + body[view].s1refuel;
+			"<br>s1 refueled: " + body[view].s1refuelCount;
 		}
-		if (body[view].refuel) {
+		if (body[view].refuelCount) {
 			document.getElementById("hudGpsInfo").innerHTML +=
-			"<br>refueled: " + body[view].refuel;
+			"<br>refueled: " + body[view].refuelCount;
 		}
 	} else {
 		document.getElementById("hudGpsInfo").innerHTML =
@@ -2263,8 +2265,8 @@ function performStageSep(i) {
 	body[i].stage2.cartes.y += body[i].pointingV3.y * 30.56;
 	body[i].stage2.cartes.z += body[i].pointingV3.z * 30.56;
 	
-	if (body[i].refuel) {
-		body[i].stage2.s1refuel = body[i].refuel;
+	if (body[i].refuelCount) {
+		body[i].stage2.s1refuelCount = body[i].refuelCount;
 	}
 
 	// separate
