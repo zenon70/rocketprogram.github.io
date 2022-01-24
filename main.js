@@ -402,7 +402,7 @@ function makeNaturalBodyGraphics() {
 				map: map,
 				color: body[i].color,
 				sizeAttenuation: false}));
-			body[i].sprite.scale.set(100 * scale, 100 * scale, 1)
+			body[i].sprite.scale.set(100 * scale, 100 * scale, 1);
 			body[i].mesh.add(body[i].sprite);
 		}
 	}
@@ -504,12 +504,12 @@ let view = 0;
 
 function throttleShow() {
 	if (body[view].throttleOn) {
-		document.getElementById("hudThrottle").innerHTML = body[view].throttle
-			+ "%<br>on";
+		document.getElementById("hudThrottle").innerHTML = body[view].throttle +
+			"%<br>on";
 	// make sure it's false, not undefined as if a "Natural" body
 	} else if (body[view].throttleOn === false) {
-		document.getElementById("hudThrottle").innerHTML = body[view].throttle
-			+ "%<br>off";
+		document.getElementById("hudThrottle").innerHTML = body[view].throttle +
+			"%<br>off";
 	} else {
 		document.getElementById("hudThrottle").innerHTML = "";
 	}
