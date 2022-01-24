@@ -633,6 +633,8 @@ body[i] = {
 called other things like cap, mid, and nose.
 */
 
+// STAGE 1
+
 // stage 1
 const f9s1_geo = new THREE.CylinderGeometry(
 	1.83 * scale, 1.83 * scale, 37.88 * scale, 16);
@@ -659,6 +661,8 @@ const f9s1_intMat = new THREE.MeshLambertMaterial({
 	side: THREE.DoubleSide, color:0x000000});
 
 
+// STAGE 2
+
 // add stage 2 mesh
 const f9s2_geo = new THREE.CylinderGeometry(
 	1.83 * scale, 1.83 * scale, 13.8 * scale, 16);
@@ -680,16 +684,17 @@ const f9s2_pafMat = new THREE.MeshLambertMaterial({
 	side: THREE.DoubleSide, color:0xaaaaaa});
 
 
-// fairing base expansion section, Nadir +Z
+// plain lambert double-sided material
+const f9f_lamDouble = new THREE.MeshLambertMaterial({side: THREE.DoubleSide});
+
+
+// NADIR FAIRING
+
+// fairing base expansion section, Nadir
 const f9fn_baseGeo = new THREE.CylinderGeometry(
 	2.6 * scale, 1.83 * scale, 1.3 * scale, 16, 1, true, Math.PI / 2, Math.PI);
-const f9fn_baseMat = new THREE.MeshLambertMaterial({side: THREE.DoubleSide});
 
-// fairing base expansion section, Zenith -Z
-const f9fz_baseGeo = new THREE.CylinderGeometry(2.6 * scale, 1.83 * scale,
-	1.3 * scale, 16, 1, true, Math.PI + Math.PI / 2, Math.PI);
-const f9fz_baseMat = new THREE.MeshLambertMaterial({side: THREE.DoubleSide});
-
+// fairing mid section, Nadir
 const f9fn_texture = new THREE.TextureLoader().load("graphics/f9fairingN.png");
 f9fn_texture.magFilter = THREE.NearestFilter;
 f9fn_texture.minFilter = THREE.NearestFilter;
@@ -697,6 +702,17 @@ const f9fn_midGeo = new THREE.CylinderGeometry(
 	2.6 * scale, 2.6 * scale, 6.7 * scale, 16, 1, true, Math.PI / 2, Math.PI);
 const f9fn_midMat = new THREE.MeshLambertMaterial({
 	side: THREE.DoubleSide, map: f9fn_texture});
+
+// fairing nose aerodynamic shape, Nadir
+const f9fn_noseGeo = new THREE.SphereGeometry(
+	2.6 * scale, 16, 8, Math.PI, Math.PI, 0, Math.PI / 2);
+
+
+// ZENITH FAIRING
+
+// fairing base expansion section, Zenith
+const f9fz_baseGeo = new THREE.CylinderGeometry(2.6 * scale, 1.83 * scale,
+	1.3 * scale, 16, 1, true, Math.PI + Math.PI / 2, Math.PI);
 
 // fairing mid section, Zenith
 const f9fz_texture = new THREE.TextureLoader().load("graphics/f9fairingZ.png");
@@ -707,16 +723,9 @@ const f9fz_midGeo = new THREE.CylinderGeometry(2.6 * scale, 2.6 * scale,
 const f9fz_midMat = new THREE.MeshLambertMaterial({
 	side: THREE.DoubleSide, map: f9fz_texture});
 
-
-// fairing nose aerodynamic shape, Nadir
-const f9fn_noseGeo = new THREE.SphereGeometry(
-	2.6 * scale, 16, 8, Math.PI, Math.PI, 0, Math.PI / 2);
-const f9fn_noseMat = new THREE.MeshLambertMaterial({side: THREE.DoubleSide});
-
 // fairing nose aerodynamic shape, Zenith
 const f9fz_noseGeo = new THREE.SphereGeometry(
 	2.6 * scale, 16, 8, 0, Math.PI, 0, Math.PI / 2);
-const f9fz_noseMat = new THREE.MeshLambertMaterial({side: THREE.DoubleSide});
 
 
 function addFalconGraphics(i) {
@@ -759,36 +768,40 @@ function addFalconGraphics(i) {
 	body[i].stage2.mesh.add(body[i].stage2.paf);
 
 
-	// fairing base expansion section, Nadir +Z
-	body[i].stage2.fairingN.mesh = new THREE.Mesh(f9fn_baseGeo, f9fn_baseMat);
-	body[i].stage2.fairingN.mesh.position.set(0, (13.8/2 + 1.3/2) * scale, 0);
+	// fairing mid section, Nadir
+	body[i].stage2.fairingN.mesh = new THREE.Mesh(f9fn_midGeo, f9fn_midMat);
+	body[i].stage2.fairingN.mesh.position.set(
+		0, (13.8/2 + 1.3 + 6.7/2) * scale, 0);
 	body[i].stage2.mesh.add(body[i].stage2.fairingN.mesh);
 
-	// fairing base expansion section, Zenith -Z
-	body[i].stage2.fairingZ.mesh = new THREE.Mesh(f9fz_baseGeo, f9fz_baseMat);
-	body[i].stage2.fairingZ.mesh.position.set(0, (13.8/2 + 1.3/2) * scale, 0);
-	body[i].stage2.mesh.add(body[i].stage2.fairingZ.mesh);
-
-	// fairing mid section, Nadir
-	body[i].stage2.fairingN.mid = new THREE.Mesh(f9fn_midGeo, f9fn_midMat);
-	body[i].stage2.fairingN.mid.position.set(0, (1.3/2 + 6.7/2) * scale, 0);
-	body[i].stage2.fairingN.mesh.add(body[i].stage2.fairingN.mid);
-
-	// fairing mid section, Zenith
-	body[i].stage2.fairingZ.mid = new THREE.Mesh(f9fz_midGeo, f9fz_midMat);
-	body[i].stage2.fairingZ.mid.position.set(0, (1.3/2 + 6.7/2) * scale, 0);
-	body[i].stage2.fairingZ.mesh.add(body[i].stage2.fairingZ.mid);
+	// fairing base expansion section, Nadir
+	body[i].stage2.fairingN.base = new THREE.Mesh(f9fn_baseGeo, f9f_lamDouble);
+	body[i].stage2.fairingN.base.position.set(0, - (6.7/2 + 1.3/2) * scale, 0);
+	body[i].stage2.fairingN.mesh.add(body[i].stage2.fairingN.base);
 
 	// fairing nose aerodynamic shape, Nadir
-	body[i].stage2.fairingN.nose = new THREE.Mesh(f9fn_noseGeo, f9fn_noseMat);
-	body[i].stage2.fairingN.nose.position.set(0, (1.3/2 + 6.7) * scale, 0);
+	body[i].stage2.fairingN.nose = new THREE.Mesh(f9fn_noseGeo, f9f_lamDouble);
+	body[i].stage2.fairingN.nose.position.set(0, (6.7/2) * scale, 0);
 	//body[i].stage2.fairingN.nose.rotation.set(0, Math.PI / 2, 0); // for texture
 	body[i].stage2.fairingN.nose.scale.y = 2;
 	body[i].stage2.fairingN.mesh.add(body[i].stage2.fairingN.nose);
 
+
+
+	// fairing mid section, Zenith
+	body[i].stage2.fairingZ.mesh = new THREE.Mesh(f9fz_midGeo, f9fz_midMat);
+	body[i].stage2.fairingZ.mesh.position.set(
+		0, (13.8/2 + 1.3 + 6.7/2) * scale, 0);
+	body[i].stage2.mesh.add(body[i].stage2.fairingZ.mesh);
+
+	// fairing base expansion section, Zenith
+	body[i].stage2.fairingZ.base = new THREE.Mesh(f9fz_baseGeo, f9f_lamDouble);
+	body[i].stage2.fairingZ.base.position.set(0, - (6.7/2 + 1.3/2) * scale, 0);
+	body[i].stage2.fairingZ.mesh.add(body[i].stage2.fairingZ.base);
+
 	// fairing nose aerodynamic shape, Zenith
-	body[i].stage2.fairingZ.nose = new THREE.Mesh(f9fz_noseGeo, f9fz_noseMat);
-	body[i].stage2.fairingZ.nose.position.set(0, (1.3/2 + 6.7) * scale, 0);
+	body[i].stage2.fairingZ.nose = new THREE.Mesh(f9fz_noseGeo, f9f_lamDouble);
+	body[i].stage2.fairingZ.nose.position.set(0, (6.7/2) * scale, 0);
 	//body[i].stage2.fairingZ.nose.rotation.set(0, Math.PI / 2, 0); // for texture
 	body[i].stage2.fairingZ.nose.scale.y = 2;
 	body[i].stage2.fairingZ.mesh.add(body[i].stage2.fairingZ.nose);
@@ -2409,10 +2422,10 @@ function performRecycle(i) {
 	scene.remove(body[i].mesh);
 
 	// what if it's fairingN? or fairingZ?
-	if (body[i].mid) {
-		body[i].mesh.remove(body[i].mid);
-		body[i].mid.geometry.dispose();
-		body[i].mid.material.dispose();
+	if (body[i].nose) {
+		body[i].mesh.remove(body[i].base);
+		body[i].base.geometry.dispose();
+		body[i].base.material.dispose();
 
 		body[i].mesh.remove(body[i].nose);
 		body[i].nose.geometry.dispose();
@@ -2426,22 +2439,23 @@ function performRecycle(i) {
 			body[i].fairingN.nose.geometry.dispose();
 			body[i].fairingN.nose.material.dispose();
 
-			body[i].fairingZ.mesh.remove(body[i].fairingZ.nose);
-			body[i].fairingZ.nose.geometry.dispose();
-			body[i].fairingZ.nose.material.dispose();
-
-			body[i].fairingN.mesh.remove(body[i].fairingN.mid);
-			body[i].fairingN.mid.geometry.dispose();
-			body[i].fairingN.mid.material.dispose();
-
-			body[i].fairingZ.mesh.remove(body[i].fairingZ.mid);
-			body[i].fairingZ.mid.geometry.dispose();
-			body[i].fairingZ.mid.material.dispose();
+			body[i].fairingN.mesh.remove(body[i].fairingN.base);
+			body[i].fairingN.base.geometry.dispose();
+			body[i].fairingN.base.material.dispose();
 
 			body[i].mesh.remove(body[i].fairingN.mesh);
 			body[i].fairingN.mesh.geometry.dispose();
 			body[i].fairingN.mesh.material.dispose();
-	
+
+
+			body[i].fairingZ.mesh.remove(body[i].fairingZ.nose);
+			body[i].fairingZ.nose.geometry.dispose();
+			body[i].fairingZ.nose.material.dispose();
+
+			body[i].fairingZ.mesh.remove(body[i].fairingZ.base);
+			body[i].fairingZ.base.geometry.dispose();
+			body[i].fairingZ.base.material.dispose();
+
 			body[i].mesh.remove(body[i].fairingZ.mesh);
 			body[i].fairingZ.mesh.geometry.dispose();
 			body[i].fairingZ.mesh.material.dispose();
