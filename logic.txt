@@ -3,11 +3,16 @@
 # IN-PROGRESS
 -------------
 
+fairing separation: correct directions
 
 
 
 # UP NEXT
 ---------
+
+streamline and recycle addRocketHelpers
+
+make nabvball more efficient by not making new things
 
 401 & 402 not tidally locked properly
 
@@ -15,7 +20,6 @@
 shouldn't be able to rotate while landed
 make good camera position for new deployments
 
-fairing separation: correct directions
 
 make aerodynamic drag specific to vehicle...
 

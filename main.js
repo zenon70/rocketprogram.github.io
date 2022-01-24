@@ -2347,19 +2347,20 @@ function performFairingSep(i) {
 	addRocketHelpers(j);
 
 	// pneumatic separation
-	let pneu = 20; // m/s² impulse
-	let pneuForward = 10;
+	const pneu = 8; // m/s² impulse
+	const pneuForward = 4;
 
-	// this process is wrong. shouldn't depend on direction, just stage2 rotation
-	let enu = getDirections(body[j].cartes.x, body[j].cartes.y,
-		body[j].cartes.z, body[j].mesh.quaternion);
-	body[j].cartes.vx -= enu.northAxisV3.x * pneu;
-	body[j].cartes.vy -= enu.northAxisV3.y * pneu;
-	body[j].cartes.vz -= enu.northAxisV3.z * pneu;
+	// get unit vector of direction. zAxis will give Zenith direction
+	const zenith = zAxis.clone().applyMatrix4(body[i].pointingM4);
+
+	body[j].cartes.vx -= zenith.x * pneu;
+	body[j].cartes.vy -= zenith.y * pneu;
+	body[j].cartes.vz -= zenith.z * pneu;
 	
-	body[j].cartes.vx += enu.upAxisV3.x * pneuForward;
-	body[j].cartes.vy += enu.upAxisV3.y * pneuForward;
-	body[j].cartes.vz += enu.upAxisV3.z * pneuForward;
+	body[j].cartes.vx += body[i].pointingV3.x * pneuForward;
+	body[j].cartes.vy += body[i].pointingV3.y * pneuForward;
+	body[j].cartes.vz += body[i].pointingV3.z * pneuForward;
+
 
 	body[j].xSpin = - 0.4;
 
@@ -2399,15 +2400,14 @@ function performFairingSep(i) {
 	body[i].mass -= body[j].mass;
 	addRocketHelpers(j);
 
-	// this process is wrong. shouldn't depend on direction, just stage2 rotation
 	// pneumatic separation
-	body[j].cartes.vx += enu.northAxisV3.x * pneu;
-	body[j].cartes.vy += enu.northAxisV3.y * pneu;
-	body[j].cartes.vz += enu.northAxisV3.z * pneu;
-
-	body[j].cartes.vx += enu.upAxisV3.x * pneuForward;
-	body[j].cartes.vy += enu.upAxisV3.y * pneuForward;
-	body[j].cartes.vz += enu.upAxisV3.z * pneuForward;
+	body[j].cartes.vx += zenith.x * pneu;
+	body[j].cartes.vy += zenith.y * pneu;
+	body[j].cartes.vz += zenith.z * pneu;
+	
+	body[j].cartes.vx += body[i].pointingV3.x * pneuForward;
+	body[j].cartes.vy += body[i].pointingV3.y * pneuForward;
+	body[j].cartes.vz += body[i].pointingV3.z * pneuForward;
 
 	body[j].xSpin = 0.4;
 
