@@ -3,7 +3,7 @@
 # IN-PROGRESS
 -------------
 
-fairing separation: correct directions
+
 
 
 
@@ -16,6 +16,8 @@ make nabvball more efficient by not making new things
 
 401 & 402 not tidally locked properly
 
+dispose of axesHelpers
+check and confirm memory is not leaking
 
 shouldn't be able to rotate while landed
 make good camera position for new deployments
@@ -30,8 +32,7 @@ orbits toggles (all 3) can be toggled off when paused BUT not back on...
 
 high wind speeds on foreign planets
 
-finish atmosphere: add atmospheres of other planets, moons
-(add galilean moons and outer moons that have atmospheres)
+add galilean moons and outer moons that have atmospheres
 
 aerodynamics specific to spacecraft and different stages
 
@@ -42,7 +43,6 @@ planet texture should always be below spacecraft
 
 refactoring: split up main.js
 
-check and confirm memory is not leaking
 
 
 isNaN safety before integration
