@@ -1,5 +1,5 @@
 "use strict";
-// revision 14
+// revision 15
 // getDirections() depends on three.js
 //   ECI<->ECEF depends on getDirections
 
@@ -261,7 +261,7 @@ function eciToEcef(eci, angle, angularVelocity, radiusEquator, e2) {
 	let centerToSurface = gpsToEcef(gpsNow, radiusEquator, e2);
 
 	// surface speed is xy (not xyz) distance from origin to surface
-	let distance = Math.sqrt(centerToSurface.x**2 + centerToSurface.y**2);
+	let distance = Math.hypot(centerToSurface.x, centerToSurface.y);
 	let tangentVelocity = angularVelocity * distance;
 
 	// get eastAxisV3 (don't use quaternion!)
@@ -298,7 +298,7 @@ function ecefToEci(ecef, angle, angularVelocity, radiusEquator, e2) {
 	let centerToSurface = gpsToEcef(gpsNow, radiusEquator, e2);
 
 	// surface speed is xy (not xyz) distance from origin to surface
-	let distance = Math.sqrt(centerToSurface.x**2 + centerToSurface.y**2);
+	let distance = Math.hypot(centerToSurface.x, centerToSurface.y);
 	let tangentVelocity = angularVelocity * distance;
 
 	// get eastAxisV3 (don't use a quaternion!)
@@ -447,7 +447,8 @@ function dragEquation(airDensity, velocity, mass, dragCoefficient) {
 	const payloadDiameter = 1.5; // meters. sputnik 1 is 58cm with whiskers
 	const dragArea = (payloadDiameter / 2)**2 * Math.PI; // m^2
 
-	return (airDensity * velocity**2 * (dragCoefficient * dragArea/mass)) / 2;
+	return (airDensity * (velocity * velocity) *
+		(dragCoefficient * dragArea/mass)) / 2;
 }
 
 // https://www.spaceacademy.net.au/watch/debris/atmosmod.htm

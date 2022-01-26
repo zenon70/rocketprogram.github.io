@@ -1489,13 +1489,13 @@ function nBodyVelocity(/*body, GRAVITY, timestep*/) {
 			let distanceX = body[j].x - body[i].x;
 			let distanceY = body[j].y - body[i].y;
 			let distanceZ = body[j].z - body[i].z;
-			let distance = Math.sqrt(distanceX**2 + distanceY**2 + distanceZ**2);
+			let distance = Math.hypot(distanceX, distanceY, distanceZ);
 
 			// avoid division by zero
 			if (distance === 0) continue;
 
 			// newton's law of universal gravitation, but only in one direction
-			let force = GRAVITY * (body[j].mass / distance**2);
+			let force = GRAVITY * (body[j].mass / (distance * distance));
 
 			/* dangerous with nbody physics if anything is ejected
 			// do NOT dynamically re-assign these objects. just update.
@@ -1773,10 +1773,8 @@ function keplerPosition() {
 						body[i].gps.alt);
 				}
 
-					let velocity = Math.sqrt(
-						body[i].ecef.vx**2 +
-						body[i].ecef.vy**2 +
-						body[i].ecef.vz**2);
+					let velocity = Math.hypot(body[i].ecef.vx, body[i].ecef.vy,
+						body[i].ecef.vz);
 
 					// this should be specific to spacecraft
 					// do this for now
@@ -1869,8 +1867,8 @@ function drawEllipse(draw, shade, scale) {
 	const lan = kepi.lan;
 	const w = kepi.w;
 
-	const b = a * Math.sqrt(1 - e**2);
-	const c = -Math.sqrt(a**2 - b**2);
+	const b = a * Math.sqrt(1 - e*e);
+	const c = -Math.sqrt(a*a - b*b);
 
 	const curve = new THREE.EllipseCurve(
 		c, 0,                  // aX, aY (center of rotation)
@@ -1981,9 +1979,8 @@ function simpleHud() {
 
 	document.getElementById("hudGpsInfo").innerHTML =
 		"Altitude " + (body[view].gps.alt / 1000).toFixed(1) + " km" +
-		"<br>Speed    " + (Math.sqrt(body[view].ecef.vx**2 +
-			body[view].ecef.vy**2 +
-			body[view].ecef.vz**2) * 3.6).toFixed(0) + " km/h";
+		"<br>Speed    " + (Math.hypot(body[view].ecef.vx, body[view].ecef.vy,
+			body[view].ecef.vz) * 3.6).toFixed(0) + " km/h";
 }
 
 function displayText() {
@@ -1999,7 +1996,7 @@ function displayText() {
 		document.getElementById("hudDateOrbit").innerHTML =
 			body.date.toISOString() +
 			"<br>r " +
-			(Math.sqrt(body[view].x**2 + body[view].y**2 + body[view].z**2) / 1000).
+			(Math.hypot(body[view].x, body[view].y, body[view].z) / 1000).
 			toFixed(3) + " km" +
 			"<br>x " + (body[view].x / 1000).toFixed(3) + " km" +
 			"<br>y " + (body[view].y / 1000).toFixed(3) + " km" +
@@ -2008,7 +2005,7 @@ function displayText() {
 			"<br>vy " + (body[view].vy / 1000).toFixed(3) + " km/s" +
 			"<br>vz " + (body[view].vz / 1000).toFixed(3) + " km/s" +
 			"<br>v " +
-			(Math.sqrt(body[view].vx**2 + body[view].vy**2 + body[view].vz**2) /
+			(Math.hypot(body[view].vx, body[view].vy, body[view].vz) /
 			1000).toFixed(3) + " km/s";
 	} else {
 		let keplerShow;
@@ -2056,9 +2053,8 @@ function displayText() {
 	if (body[view].type === "Artificial") {
 		document.getElementById("hudGpsInfo").innerHTML =
 			"Alt " + (body[view].gps.alt / 1000).toFixed(6) + " km" +
-			"<br>v<sub>s</sub> " + (Math.sqrt(body[view].ecef.vx**2 +
-				body[view].ecef.vy**2 +
-				body[view].ecef.vz**2) * 3.6).toFixed(0) + " km/h" +
+			"<br>v<sub>s</sub> " + (Math.hypot(body[view].ecef.vx, body[view].ecef.vy,
+				body[view].ecef.vz) * 3.6).toFixed(0) + " km/h" +
 			"<br>drag " + body[view].drag.toExponential(2) + " m/s²" +
 			"<br>Mass " + body[view].mass.toExponential(3) + " kg" +
 			"<br>Lat " + (body[view].gps.lat * 180 / Math.PI).toFixed(6) + "°" +

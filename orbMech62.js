@@ -1,5 +1,5 @@
 "use strict";
-// revision 61
+// revision 62
 // return values are not accurate for distances or velocities ~0
 // hyperbolic results beyond maxIterations will output NaN values
 
@@ -17,8 +17,8 @@ function toKepler(cartes, mu) {
 	let {x, y, z, vx, vy, vz} = cartes;
 
 	// distance and speed
-	let r = Math.sqrt(x*x + y*y + z*z);
-	let v = Math.sqrt(vx*vx + vy*vy + vz*vz);
+	let r = Math.hypot(x, y, z);
+	let v = Math.hypot(vx, vy, vz);
 
 	// radial velocity
 	// if > 0, spacecraft is flying away from perigee
@@ -31,7 +31,7 @@ function toKepler(cartes, mu) {
 	let hz = x*vy - y*vx;
 
 	// magnitude of the specific angular momentum
-	let h = Math.sqrt(hx*hx + hy*hy + hz*hz);
+	let h = Math.hypot(hx, hy, hz);
 
 	// inclination
 	let i = Math.acos(hz/h);
@@ -43,9 +43,9 @@ function toKepler(cartes, mu) {
 	//let nx = 0 * hz - 1 * hy; // simplified: use -hy in place of nx
 	//let ny = 1 * hx - 0 * hz; // simplified: use hx in place of ny
 	//let nz = 0 * hy - 0 * hx; // simplified: use 0 in place of nz
-	//let n = Math.sqrt(nx*nx + ny*ny + nz*nz);
+	//let n = Math.hypot(nx, ny, nz);
 	// simplified
-	let n = Math.sqrt(hy*hy + hx*hx); // use hy not -hy because squared = positive
+	let n = Math.hypot(hy, hx); // use hy not -hy because squared = positive
 
 	// longitude of the ascending node (also known as RAAN or Node)
 	let lan = 0;
@@ -62,7 +62,7 @@ function toKepler(cartes, mu) {
 	let ex = 1/mu * ((v*v - mu/r) * x - r * vRadial * vx);
 	let ey = 1/mu * ((v*v - mu/r) * y - r * vRadial * vy);
 	let ez = 1/mu * ((v*v - mu/r) * z - r * vRadial * vz);
-	//let e = Math.sqrt(ex*ex + ey*ey + ez*ez);
+	//let e = Math.hypot(ex, ey, ez);
 	// sample output: 0.17121234628445342
 
 	// eccentricity (depending only on the scalars obtained thus far)
@@ -412,8 +412,8 @@ function toKepi(cartes, mu) {
 	let {x, y, z, vx, vy, vz} = cartes;
 
 	// distance and speed
-	let r = Math.sqrt(x*x + y*y + z*z);
-	let v = Math.sqrt(vx*vx + vy*vy + vz*vz);
+	let r = Math.hypot(x, y, z);
+	let v = Math.hypot(vx, vy, vz);
 
 	// radial velocity
 	// if > 0, spacecraft is flying away from perigee
@@ -426,7 +426,7 @@ function toKepi(cartes, mu) {
 	let hz = x*vy - y*vx;
 
 	// magnitude of the specific angular momentum
-	let h = Math.sqrt(hx*hx + hy*hy + hz*hz);
+	let h = Math.hypot(hx, hy, hz);
 
 	// inclination
 	let i = Math.acos(hz/h);
@@ -438,9 +438,9 @@ function toKepi(cartes, mu) {
 	//let nx = 0 * hz - 1 * hy; // simplified: use -hy in place of nx
 	//let ny = 1 * hx - 0 * hz; // simplified: use hx in place of ny
 	//let nz = 0 * hy - 0 * hx; // simplified: use 0 in place of nz
-	//let n = Math.sqrt(nx*nx + ny*ny + nz*nz);
+	//let n = Math.hypot(nx, ny, nz);
 	// simplified
-	let n = Math.sqrt(hy*hy + hx*hx); // use hy not -hy because squared = positive
+	let n = Math.hypot(hy, hx); // use hy not -hy because squared = positive
 
 	// longitude of the ascending node (also known as RAAN or Node)
 	let lan = 0;
@@ -457,7 +457,7 @@ function toKepi(cartes, mu) {
 	let ex = 1/mu * ((v*v - mu/r) * x - r * vRadial * vx);
 	let ey = 1/mu * ((v*v - mu/r) * y - r * vRadial * vy);
 	let ez = 1/mu * ((v*v - mu/r) * z - r * vRadial * vz);
-	//let e = Math.sqrt(ex*ex + ey*ey + ez*ez);
+	//let e = Math.hypot(ex, ey, ez);
 	// sample output: 0.17121234628445342
 
 	// eccentricity (depending only on the scalars obtained thus far)

@@ -10,39 +10,32 @@
 # UP NEXT
 ---------
 
-streamline and recycle addRocketHelpers
 
-make nabvball more efficient by not making new things
 
 401 & 402 not tidally locked properly
 
-dispose of axesHelpers
-check and confirm memory is not leaking
 
-shouldn't be able to rotate while landed
-make good camera position for new deployments
+dispose
+  streamline and recycle addRocketHelpers
+  dispose of axesHelpers
+  check and confirm memory is not leaking
+  
+make nabvball more efficient by not making new things
 
-
-make aerodynamic drag specific to vehicle...
-
-orbits toggles (all 3) can be toggled off when paused BUT not back on...
-  seems like inconsistent behavior
+refactoring: split up main.js
 
 
+
+
+
+make drag coefficient specific to vehicle
 
 high wind speeds on foreign planets
 
 add galilean moons and outer moons that have atmospheres
 
-aerodynamics specific to spacecraft and different stages
-
-
-
 
 planet texture should always be below spacecraft
-
-refactoring: split up main.js
-
 
 
 isNaN safety before integration
@@ -79,6 +72,9 @@ firefox mobile 96.0.0-beta.5:
 
 epiphany browser: near frustum culling
 
+orbits toggles (all 3) can be toggled off when paused BUT not back on...
+  seems like inconsistent behavior
+
 
 # PHYSICS
 ---------
@@ -104,10 +100,9 @@ not rotating with surface while landed
   set with rotation of rocket. copy that rotation.
   if the rocket is rotated manually then rotate the clone.
 
-spacecraft rotation from warp is wrong.. requires complicated formula.
+spacecraft rotation from warp is wrong.. requires "complicated formula".
 
-air density on other planets
-  and re-entry heat
+re-entry heat
 
 add major moons, asteroids, comets for sure, all ~200 moons hopefully
 

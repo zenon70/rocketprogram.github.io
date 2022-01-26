@@ -465,7 +465,7 @@ for (let i = body.length - 1; i > -1; i--) {
 			body[i].flattening = 0;
 		}
 	}
-	body[i].e2 = 2 * body[i].flattening - body[i].flattening**2;
+	body[i].e2 = 2 * body[i].flattening - body[i].flattening * body[i].flattening;
 
 	if (body[i].radiusPole === undefined) {
 		body[i].radiusPole = body[i].radiusEquator - (body[i].radiusEquator *
