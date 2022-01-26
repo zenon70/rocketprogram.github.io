@@ -1734,13 +1734,10 @@ function keplerPosition() {
 					body[i].ecef.vx = 0;
 					body[i].ecef.vy = 0;
 					body[i].ecef.vz = 0;
+					body[i].xSpin = 0;
+					body[i].ySpin = 0;
+					body[i].zSpin = 0;
 					body[i].onSurface = true;
-					
-					//if (body[i].name === "fairingN" || body[i].name === "fairingZ") {
-						body[i].xSpin = 0;
-						body[i].ySpin = 0;
-						body[i].zSpin = 0;
-					//}
 				}
 			}
 
@@ -2634,7 +2631,18 @@ function toggleSingleOrbit() {
 
 
 //let skipDraw = 0;
+
+// keep these variables for navball efficiency
+let navM4 = new THREE.Matrix4();
 let navQ = new THREE.Quaternion();
+const navFunctionalOrientation =
+	new THREE.Quaternion().setFromAxisAngle(zAxis, Math.PI)
+	.multiply(new THREE.Quaternion().setFromAxisAngle(xAxis, -Math.PI / 2));
+const navTextureOrientation =
+	new THREE.Quaternion().setFromAxisAngle(xAxis, Math.PI)
+	.multiply(new THREE.Quaternion().setFromAxisAngle(yAxis, Math.PI));
+
+
 let oldViewX = 0;
 let oldViewY = 0;
 let oldViewZ = 0;
@@ -2692,22 +2700,18 @@ function preAnimate() {
 		let enu = getDirections(body[view].cartes.x, body[view].cartes.y,
 			body[view].cartes.z, body[focus].mesh.quaternion);
 
-		let navM4 = new THREE.Matrix4().makeBasis(
-			enu.northAxisV3, enu.upAxisV3, enu.eastAxisV3);
-
+		navM4.makeBasis(enu.northAxisV3, enu.upAxisV3, enu.eastAxisV3);
 		navQ.setFromRotationMatrix(navM4);
 
 		navBall.quaternion.copy(
-			// functional orientation before applying navQ (rotations in world space)
-			new THREE.Quaternion().setFromAxisAngle(zAxis, Math.PI)
-			.multiply(new THREE.Quaternion().setFromAxisAngle(xAxis, -Math.PI / 2))
+			// functional orientation before applying navQ (world space rotations)
+			navFunctionalOrientation.clone()
 
 			// apply nav
 			.multiply(navQ)
 
-			// texture orientation after applying nav (rotations in local/object space)
-			.multiply(new THREE.Quaternion().setFromAxisAngle(xAxis, Math.PI))
-			.multiply(new THREE.Quaternion().setFromAxisAngle(yAxis, Math.PI))
+			// texture orientation after applying nav (local/object space rotations)
+			.multiply(navTextureOrientation)
 		);
 
 		// apply spacecraft rotation relative to stars
