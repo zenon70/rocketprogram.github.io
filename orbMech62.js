@@ -234,8 +234,6 @@ function toKepler(cartes, mu) {
 		meanAnom = e * Math.sinh(eAnom) - eAnom;
 	}
 
-	// if hyperbolic: a (semimajor axis) will return positive, while apoapsis and
-	//     period will return "Infinity"
 	return {a, e, i, lan, w, meanAnom, truAnom, v, periapsis, apoapsis};
 }
 
@@ -333,7 +331,6 @@ function toCartes(kepler, mu) {
 		// true anomaly for a hyperbola. source: valispace cheat sheet
 		// this formula seems to perform better
 		truAnom = Math.acos((e - Math.cosh(eAnom)) / (e * Math.cosh(eAnom) - 1));
-
 
 		// experimental!
 		if (meanAnom < 0) {

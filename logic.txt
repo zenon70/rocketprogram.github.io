@@ -3,7 +3,7 @@
 # IN-PROGRESS
 -------------
 
-401 & 402 not tidally locked properly
+301, 401, and 402 now locked facing parent, which is better, but not realistic
 
 
 
@@ -19,8 +19,7 @@ dispose
   streamline and recycle addRocketHelpers
   dispose of axesHelpers
   check and confirm memory is not leaking
-  
-make nabvball more efficient by not making new things
+
 
 refactoring: split up main.js
 
