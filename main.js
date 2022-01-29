@@ -333,9 +333,10 @@ function makeNaturalBodyGraphics() {
 		//body[i].mesh.material.transparent = true;
 		//body[i].mesh.material.opacity = 0.8;
 
+
 		body[i].mesh.scale.y = body[i].radiusPole / body[i].radiusEquator;
 		if (body[i].radiusWest !== undefined) {
-			body[i].mesh.scale.z = body[i].radiusPole / body[i].radiusEquator;
+			body[i].mesh.scale.z = body[i].radiusWest / body[i].radiusEquator;
 		}
 
 
@@ -355,13 +356,104 @@ function makeNaturalBodyGraphics() {
 			body[i].mesh.attach(body[i].rings);
 		}
 
-		// turn to z-up, then Dec, thrn RA, then W.
+		// turn to z-up, then Dec, then RA, then W.
 		body[i].mesh.rotation.set(Math.PI / 2, 0, -Math.PI / 2 +
 			body[i].declination);
 		body[i].mesh.rotateOnWorldAxis(zAxis, body[i].rightAscension);
 		body[i].mesh.rotateY(Math.PI / 2 + body[i].primeMeridian);
 
 		scene.add(body[i].mesh);
+
+
+// dev1
+
+/*
+// create prime meridian arrow (scales WITH parent body)
+body[i].primeArrow = new THREE.ArrowHelper(
+	new THREE.Vector3(1, 0, 0),
+	body[i].mesh.position,
+	body[i].radiusEquator * 5000 * scale,
+	0xff0000);
+body[i].mesh.add(body[i].primeArrow);
+*/
+
+
+
+
+
+
+/*
+// prime arrow from vector.. does NOT work when parent body is scaled
+let prime = new THREE.Vector3();
+body[i].mesh.rotateY(Math.PI/2);
+body[i].mesh.getWorldDirection(prime);
+body[i].mesh.rotateY(-Math.PI/2);
+
+let primeArrow = new THREE.ArrowHelper(
+	prime,
+	body[i].mesh.position,
+	body[i].radiusEquator * 5000 * scale,
+	0x00ffff);
+body[i].mesh.attach(primeArrow);
+
+
+let pole = new THREE.Vector3();
+body[i].mesh.rotateX(-Math.PI/2);
+body[i].mesh.getWorldDirection(pole);
+body[i].mesh.rotateX(Math.PI/2);
+
+let poleArrow = new THREE.ArrowHelper(
+	pole,
+	body[i].mesh.position,
+	body[i].radiusEquator * 5000 * scale,
+	0xff00ff);
+body[i].mesh.attach(poleArrow);
+*/
+
+
+
+
+
+
+
+
+
+/*
+// create axis arrow
+body[i].primeArrow = new THREE.ArrowHelper(
+	new THREE.Vector3(0, 1, 0),
+	body[i].mesh.position,
+	body[i].radiusEquator * 5000 * scale,
+	0xff0000);
+body[i].mesh.add(body[i].primeArrow);
+body[i].primeArrow.visible = true;
+*/
+
+/*
+// create prime meridian arrow ---- the hard way
+body[i].primeArrow = new THREE.ArrowHelper(
+	yAxis, // not v1
+	body[i].mesh.position,
+	body[i].radiusEquator * 5000 * scale,
+	0xff0000);
+
+body[i].primeArrow.rotation.set(Math.PI / 2, 0, -Math.PI / 2 +
+	body[i].declination);
+body[i].primeArrow.rotateOnWorldAxis(zAxis, body[i].rightAscension);
+body[i].primeArrow.rotateY(Math.PI / 2 + body[i].primeMeridian);
+body[i].primeArrow.rotateZ(-Math.PI / 2);
+
+body[i].mesh.attach(body[i].primeArrow);
+body[i].primeArrow.visible = true;
+*/
+
+
+
+
+
+
+
+
 
 		// create ecef axes helper
 		body[i].axesHelper = new THREE.AxesHelper(body[i].radiusEquator * 1.5 *
@@ -1450,6 +1542,7 @@ function refuel() {
 }
 
 
+
 ////////////////////////////////////////////////////////////////////////////////
 // nbody physics
 // calculate all nbody forces at a point in time, and update velocities
@@ -1546,6 +1639,7 @@ function nBodyVelocity(/*body, GRAVITY, timestep*/) {
 
 
 
+
 ////////////////////////////////////////////////////////////////////////////////
 // keplerian physics
 // compute local position, subtract greatest force (use it through
@@ -1608,7 +1702,13 @@ function keplerPosition() {
 		// tilt the orbit to match parent body frame (axial tilt)
 		body[i].cartesEci = icrfToEci(body[i].cartes, body[focus].rightAscension,
 			body[focus].declination);
-
+/*
+		if (body[i].tidallyLocked === true) {
+			body[i].cartesEciOldX = body[i].cartesEci.x;
+			body[i].cartesEciOldY = body[i].cartesEci.y;
+			body[i].cartesEciOldZ = body[i].cartesEci.z;
+		}
+*/
 		// use the updated vectors and mu to get keplerian elements
 		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
 		body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
@@ -1709,10 +1809,123 @@ function keplerPosition() {
 					body[i].clouds.rotateY(body[i].angularVelocity * timestep / 12);
 				}
 			} else {
-				// cartes.truAnom is new, kepler.truAnom is old
-				body[i].mesh.rotateY(body[i].cartesEci.truAnom -
-					body[i].kepler.truAnom);
-				body[i].spun += body[i].cartesEci.truAnom - body[i].kepler.truAnom;
+				// cartesEci.truAnom is new, kepler.truAnom is old
+				//body[i].mesh.rotateY(body[i].cartesEci.truAnom - body[i].kepler.truAnom);
+				//body[i].spun += body[i].cartesEci.truAnom - body[i].kepler.truAnom;
+
+// dev2
+// new testing
+
+// get moon facing direction as vector (prime meridian)
+// works despite being off a few degrees south from oblate scaling
+let prime = new THREE.Vector3();
+body[i].mesh.rotateY(Math.PI/2);
+body[i].mesh.getWorldDirection(prime);
+body[i].mesh.rotateY(-Math.PI/2);
+// convert to eci
+let primeEci = icrfToEci(prime, body[focus].rightAscension, body[focus].declination);
+
+
+// get vector pointing TO origin, from current eci position
+//let xOrigin = - body[i].cartesEci.x;
+//let yOrigin = - body[i].cartesEci.y;
+//let zOrigin = - body[i].cartesEci.z;
+//let toOrigin = new THREE.Vector3(xOrigin, yOrigin, zOrigin);
+
+
+// get normal: relative to orbital plane AND simply the y-axis of moon
+let pole = new THREE.Vector3();
+body[i].mesh.rotateX(-Math.PI/2);
+body[i].mesh.getWorldDirection(pole);
+body[i].mesh.rotateX(Math.PI/2);
+// convert to eci
+let poleEci = icrfToEci(pole, body[focus].rightAscension, body[focus].declination);
+
+
+
+// dot product, to get angle
+let dot = primeEci.x * - body[i].cartesEci.x +
+					primeEci.y * - body[i].cartesEci.y +
+					primeEci.z * - body[i].cartesEci.z;
+
+// determinant
+// the tidally locked object may travel more than 180 degrees in its orbit in
+// a single timestep, so...
+// this will determine whether the angle is under or over 180 in a
+// counter-clockwise direction.
+// ... in case timestep is so fast it goes more than 180 in a step, but...
+// this may be unnecessary because maybe nothing can go more than 180 before
+// the simulation breaks down, like around 1 billion to 1 trillion timestep
+let det =
+	primeEci.x * - body[i].cartesEci.y * poleEci.z +
+	primeEci.z * - body[i].cartesEci.x * poleEci.y +
+	primeEci.y * - body[i].cartesEci.z * poleEci.x -
+	primeEci.z * - body[i].cartesEci.y * poleEci.x -
+	primeEci.x * - body[i].cartesEci.z * poleEci.y -
+	primeEci.y * - body[i].cartesEci.x * poleEci.z;
+
+let angle = Math.atan2(det, dot);
+if (angle < 0) {
+	angle += Math.PI * 2;
+}
+
+// unrealistic tidal locking
+// - angular momentum increases & decreases wildly
+// - no horizontal libration
+// this can be improved by adding code here to slow down or speed up the
+// angular momentum depending on angle, instead of just matching it exactly
+// ...also, use dampening so it locks instead of persistent wobbling
+
+// do this for now
+body[i].mesh.rotateY(angle);
+body[i].spun += angle;
+
+
+
+//t.push(body[i].cartesEci.truAnom - body[i].kepler.truAnom);
+/*
+				let dot = body[i].cartesEciOldX * body[i].cartesEci.x +
+					body[i].cartesEciOldY * body[i].cartesEci.y +
+					body[i].cartesEciOldZ * body[i].cartesEci.z;
+*/
+/*
+				body[i].pointingV3 = new THREE.Vector3(0, 1, 0); // loads y-up
+				body[i].pointingM4 = new THREE.Matrix4();
+				// update pointing before using
+				body[i].pointingM4.extractRotation(body[i].mesh.matrix);
+				// get unit vector of direction
+				body[i].pointingV3 =
+					body[i].mesh.up.clone().applyMatrix4(body[i].pointingM4);
+*/
+/*
+p.push(body[i].pointingV3);
+
+				body[i].pointingV3 = new THREE.Vector3(0, 0, 1); // loads y-up
+
+				//let det = x1*y2*zn + x2*yn*z1 + xn*y1*z2 - z1*y2*xn - z2*yn*x1 - zn*y1*x2;
+				let det =
+					body[i].cartesEciOldX * body[i].cartesEci.y * body[i].pointingV3.z +
+					body[i].cartesEciOldZ * body[i].cartesEci.x * body[i].pointingV3.y +
+					body[i].cartesEciOldY * body[i].cartesEci.z * body[i].pointingV3.x -
+					body[i].cartesEciOldZ * body[i].cartesEci.y * body[i].pointingV3.x -
+					body[i].cartesEciOldX * body[i].cartesEci.z * body[i].pointingV3.y -
+					body[i].cartesEciOldY * body[i].cartesEci.x * body[i].pointingV3.z;
+
+				let angle = Math.atan2(det, dot);
+				if (angle < 0) {
+					angle += Math.PI * 2;
+				}
+
+				body[i].mesh.rotateY(angle);
+				body[i].spun += angle;
+
+
+//a.push(angle);
+
+*/
+
+
+
 			}
 			body[i].spun %= 2 * Math.PI;
 		} else {
@@ -2477,13 +2690,13 @@ function performRecycle(i) {
 		body[i].stage2.fairingZ.nose.material.dispose();
 
 
-		body[i].stage2.fairingN.mesh.remove(body[i].stage2.fairingN.mid);
-		body[i].stage2.fairingN.mid.geometry.dispose();
-		body[i].stage2.fairingN.mid.material.dispose();
+		body[i].stage2.fairingN.mesh.remove(body[i].stage2.fairingN.base);
+		body[i].stage2.fairingN.base.geometry.dispose();
+		body[i].stage2.fairingN.base.material.dispose();
 
-		body[i].stage2.fairingZ.mesh.remove(body[i].stage2.fairingZ.mid);
-		body[i].stage2.fairingZ.mid.geometry.dispose();
-		body[i].stage2.fairingZ.mid.material.dispose();
+		body[i].stage2.fairingZ.mesh.remove(body[i].stage2.fairingZ.base);
+		body[i].stage2.fairingZ.base.geometry.dispose();
+		body[i].stage2.fairingZ.base.material.dispose();
 
 
 		body[i].stage2.mesh.remove(body[i].stage2.fairingN.mesh);

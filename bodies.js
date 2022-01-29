@@ -373,7 +373,7 @@ moon = body.push({
 	J2: 202.7E-6,
 	radiusEquator: 1738100,
 	flattening: 0.0012,
-	sidereal: 655.728,
+	sidereal: 655.728, // real data: 655.728
 	tidallyLocked: true,
 
 	rightAscension: 269.9949,
@@ -428,9 +428,9 @@ moon402 = body.push({
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
 	mass: 1476188406600740,
-	radiusEquator: 7.8e3,
-	radiusPole: 6e3,
-	radiusWest: 6.0e3,
+	radiusEquator: 7.5e3,
+	radiusPole: 5.2e3,
+	radiusWest: 6.1e3,
 	sidereal: 1.263 * 24,
 	tidallyLocked: true,
 

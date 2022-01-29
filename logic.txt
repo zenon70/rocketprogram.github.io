@@ -3,6 +3,7 @@
 # IN-PROGRESS
 -------------
 
+401 & 402 not tidally locked properly
 
 
 
@@ -10,9 +11,8 @@
 # UP NEXT
 ---------
 
+always show this orbit + local orbits is messed up, toggles cancel out
 
-
-401 & 402 not tidally locked properly
 
 
 dispose
