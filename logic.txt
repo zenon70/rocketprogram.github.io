@@ -11,6 +11,10 @@
 # UP NEXT
 ---------
 
+blowing up - graphics upon impact
+
+intelligent automatic restore points
+
 always show this orbit + local orbits is messed up, toggles cancel out
 
 

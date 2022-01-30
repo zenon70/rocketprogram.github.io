@@ -422,7 +422,7 @@ body[i].mesh.attach(poleArrow);
 
 
 
-/*
+
 // create prime meridian arrow (scales WITH parent body)
 body[i].primeArrow = new THREE.ArrowHelper(
 	new THREE.Vector3(1, 0, 0),
@@ -430,18 +430,18 @@ body[i].primeArrow = new THREE.ArrowHelper(
 	body[i].radiusEquator * 5000 * scale,
 	0xff0000);
 body[i].mesh.add(body[i].primeArrow);
-*/
 
-/*
+
+
 // create axis arrow
 body[i].primeArrow = new THREE.ArrowHelper(
 	new THREE.Vector3(0, 1, 0),
 	body[i].mesh.position,
 	body[i].radiusEquator * 5000 * scale,
-	0xff0000);
+	0x00ffff);
 body[i].mesh.add(body[i].primeArrow);
 body[i].primeArrow.visible = true;
-*/
+
 
 /*
 // create prime meridian arrow ---- the hard way
@@ -1721,6 +1721,7 @@ function keplerPosition() {
 		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
 		body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
 
+//body[i].meanAnomOld = body[i].kepler.meanAnom;
 
 		if (!body[i].onSurface) {
 			// increment position (this code IS compatible with hyperbolic)
@@ -1810,25 +1811,28 @@ function keplerPosition() {
 
 		// celestial body rotations
 		if (body[i].type === "Natural") {
-			if (body[i].tidallyLocked !== true) {
+			//if (body[i].tidallyLocked !== true) {
 				body[i].mesh.rotateY(body[i].angularVelocity * timestep);
 				body[i].spun += body[i].angularVelocity * timestep;
 				if (i === earth) {
 					body[i].clouds.rotateY(body[i].angularVelocity * timestep / 12);
 				}
-			} else {
+				
+			//} else {
+
+
 				// cartesEci.truAnom is new, kepler.truAnom is old
 				//body[i].mesh.rotateY(body[i].cartesEci.truAnom -
 				//	body[i].kepler.truAnom);
 				//body[i].spun += body[i].cartesEci.truAnom - body[i].kepler.truAnom;
 
+				// this is somehow worse than using truAnom
+				//body[i].mesh.rotateY(body[i].kepler.meanAnom -
+				//	body[i].meanAnomOld);
+				//body[i].spun += body[i].kepler.meanAnom - body[i].meanAnomOld;
 
 
-
-
-
-
-
+			if (body[i].tidallyLocked === true) {
 
 
 
@@ -1872,23 +1876,53 @@ let det =
 	primeEci.z * - body[i].cartesEci.y * poleEci.x -
 	primeEci.x * - body[i].cartesEci.z * poleEci.y -
 	primeEci.y * - body[i].cartesEci.x * poleEci.z;
-let angle = Math.atan2(det, dot);
+const angle = Math.atan2(det, dot);
+
+
+if (body[i].angleOld === undefined) {
+	body[i].angleOld = angle;
+	body[i].angleMax = 0;
+}
+
+
+const oscillationVelocity = body[i].angleOld - angle;
+
+body[i].angularVelocity += angle/1e10 - oscillationVelocity/1e8;
+
+body[i].angleOld = angle;
+
+
+const deg1 = 1 * Math.PI/180
+const angleAbs = Math.abs(angle);
+
+if (angleAbs < deg1) {
+	body[i].angleMax = 0;
+}
+
+if (angleAbs > Math.abs(body[i].angleMax)) {
+	body[i].angleMax = angle;
+}
+
+
+
+
+//let damping = 1e-8;
+//if (angle < 0) damping = - 1e-8;
+// only change angular momentum if getting worse
+//if (Math.abs(angle) > Math.abs(body[i].angleOld)) {
+//	body[i].angularVelocity += angle / 1e10;
+//}
+//body[i].angleOld = angle;
+
+
+/*
+// always face parent. unrealistic, but do this for now
 if (angle < 0) {
 	angle += Math.PI * 2;
 }
-
-// unrealistic tidal locking
-// - angular momentum increases & decreases wildly
-// - no horizontal libration
-// this can be improved by adding code here to slow down or speed up the
-// angular momentum depending on angle, eventually averaging it,
-// instead of just matching it exactly
-// ...also, use dampening so it locks instead of persistent wobbling
-
-// do this for now
 body[i].mesh.rotateY(angle);
 body[i].spun += angle;
-
+*/
 
 
 
@@ -1897,16 +1931,18 @@ body[i].spun += angle;
 		} else {
 		// get Earth-Centered-Earth-Fixed and GPS coordinates
 			if (!body[i].onSurface) {
-				body[i].ecef = eciToEcef(body[i].cartesEci,
-					body[focus].spun,
-					body[focus].angularVelocity,
-					body[focus].radiusEquator, body[focus].e2);
+				body[i].ecef = eciToEcef(body[i].cartesEci, body[focus].spun,
+					body[focus].angularVelocity, body[focus].radiusEquator,
+					body[focus].e2);
 				body[i].gps = ecefToGps(body[i].ecef, body[focus].radiusEquator,
 					body[focus].e2);
+				// save last flight velocity before touchdown
+				if (body[i].gps.alt > 0) {
+					body[i].ecefLastVX = body[i].ecef.vx;
+					body[i].ecefLastVY = body[i].ecef.vy;
+					body[i].ecefLastVZ = body[i].ecef.vz;
+				}
 				if (body[i].gps.alt < 0) {
-					// pop back up to surface (this has issues)
-					//body[i].gps.alt = 0;
-
 					// obstruction of ground eliminates velocity
 					body[i].ecef.vx = 0;
 					body[i].ecef.vy = 0;
@@ -2227,7 +2263,7 @@ function displayText() {
 	if (body[view].type === "Artificial") {
 		document.getElementById("hudGpsInfo").innerHTML =
 			"Alt " + (body[view].gps.alt / 1000).toFixed(6) + " km" +
-			"<br>v<sub>s</sub> " + (Math.hypot(body[view].ecef.vx, body[view].ecef.vy,
+			"<br>vel<sub>s</sub> " + (Math.hypot(body[view].ecef.vx, body[view].ecef.vy,
 				body[view].ecef.vz) * 3.6).toFixed(0) + " km/h" +
 			"<br>drag " + body[view].drag.toExponential(2) + " m/s²" +
 			"<br>Mass " + body[view].mass.toExponential(3) + " kg" +
@@ -2240,18 +2276,27 @@ function displayText() {
 				body[vFocus].radiusEquator) / 1000).toFixed(3) + " km";
 		if (body[view].s1refuelCount) {
 			document.getElementById("hudGpsInfo").innerHTML +=
-			"<br>s1 refueled: " + body[view].s1refuelCount;
+				"<br>s1 refueled: " + body[view].s1refuelCount;
 		}
 		if (body[view].refuelCount) {
 			document.getElementById("hudGpsInfo").innerHTML +=
-			"<br>refueled: " + body[view].refuelCount;
+				"<br>refueled: " + body[view].refuelCount;
 		}
+		document.getElementById("hudGpsInfo").innerHTML +=
+			//"<br>surface vx: " + body[view].ecefLastVX +
+			//"<br>surface vy: " + body[view].ecefLastVY +
+			//"<br>surface vz: " + body[view].ecefLastVZ +
+			"<br>vel<sub>s</sub> of landing " +
+			(Math.hypot(body[view].ecefLastVX, body[view].ecefLastVY,
+				body[view].ecefLastVZ) * 3.6).toFixed(1);
 	} else {
 		document.getElementById("hudGpsInfo").innerHTML =
 			"Mass " + body[view].mass.toExponential(3) + " kg" +
 			"<br>EqRad " + (body[view].radiusEquator / 1000).toFixed(0) + " km" +
 			"<br>PoRad " + (body[view].radiusPole / 1000).toFixed(0) + " km" +
-			"<br>Sidereal " + body[view].sidereal.toFixed(2) + " hr";
+			"<br>Sidereal " + body[view].sidereal.toFixed(2) + " hr" +
+			"<br>libration " + body[view].angleMax * 180/Math.PI + "°" +
+			"<br>sidereal " + (1/((body[view].angularVelocity/Math.PI)/2))/3600 + "°";
 	}
 
 	// update in case object is now orbiting something else
