@@ -422,7 +422,7 @@ body[i].mesh.attach(poleArrow);
 
 
 
-
+/*
 // create prime meridian arrow (scales WITH parent body)
 body[i].primeArrow = new THREE.ArrowHelper(
 	new THREE.Vector3(1, 0, 0),
@@ -441,7 +441,7 @@ body[i].primeArrow = new THREE.ArrowHelper(
 	0x00ffff);
 body[i].mesh.add(body[i].primeArrow);
 body[i].primeArrow.visible = true;
-
+*/
 
 /*
 // create prime meridian arrow ---- the hard way
@@ -1811,16 +1811,16 @@ function keplerPosition() {
 
 		// celestial body rotations
 		if (body[i].type === "Natural") {
-			//if (body[i].tidallyLocked !== true) {
+			if (body[i].tidallyLocked !== true) {
 				body[i].mesh.rotateY(body[i].angularVelocity * timestep);
 				body[i].spun += body[i].angularVelocity * timestep;
 				if (i === earth) {
 					body[i].clouds.rotateY(body[i].angularVelocity * timestep / 12);
 				}
 				
-			//} else {
+			} else {
 
-
+				// this had bad degridation issues due to compounding
 				// cartesEci.truAnom is new, kepler.truAnom is old
 				//body[i].mesh.rotateY(body[i].cartesEci.truAnom -
 				//	body[i].kepler.truAnom);
@@ -1832,9 +1832,7 @@ function keplerPosition() {
 				//body[i].spun += body[i].kepler.meanAnom - body[i].meanAnomOld;
 
 
-			if (body[i].tidallyLocked === true) {
-
-
+			//if (body[i].tidallyLocked === true) {
 
 // dev2
 // get moon facing direction as vector (prime meridian)
@@ -1876,53 +1874,35 @@ let det =
 	primeEci.z * - body[i].cartesEci.y * poleEci.x -
 	primeEci.x * - body[i].cartesEci.z * poleEci.y -
 	primeEci.y * - body[i].cartesEci.x * poleEci.z;
-const angle = Math.atan2(det, dot);
+let angle = Math.atan2(det, dot);
 
-
+/*
+// experimental tidal locking formula
 if (body[i].angleOld === undefined) {
 	body[i].angleOld = angle;
 	body[i].angleMax = 0;
 }
-
-
 const oscillationVelocity = body[i].angleOld - angle;
-
 body[i].angularVelocity += angle/1e10 - oscillationVelocity/1e8;
-
 body[i].angleOld = angle;
-
-
 const deg1 = 1 * Math.PI/180
 const angleAbs = Math.abs(angle);
-
 if (angleAbs < deg1) {
 	body[i].angleMax = 0;
 }
-
 if (angleAbs > Math.abs(body[i].angleMax)) {
 	body[i].angleMax = angle;
 }
+*/
 
 
-
-
-//let damping = 1e-8;
-//if (angle < 0) damping = - 1e-8;
-// only change angular momentum if getting worse
-//if (Math.abs(angle) > Math.abs(body[i].angleOld)) {
-//	body[i].angularVelocity += angle / 1e10;
-//}
-//body[i].angleOld = angle;
-
-
-/*
 // always face parent. unrealistic, but do this for now
 if (angle < 0) {
 	angle += Math.PI * 2;
 }
 body[i].mesh.rotateY(angle);
 body[i].spun += angle;
-*/
+
 
 
 
@@ -2294,9 +2274,9 @@ function displayText() {
 			"Mass " + body[view].mass.toExponential(3) + " kg" +
 			"<br>EqRad " + (body[view].radiusEquator / 1000).toFixed(0) + " km" +
 			"<br>PoRad " + (body[view].radiusPole / 1000).toFixed(0) + " km" +
-			"<br>Sidereal " + body[view].sidereal.toFixed(2) + " hr" +
-			"<br>libration " + body[view].angleMax * 180/Math.PI + "°" +
-			"<br>sidereal " + (1/((body[view].angularVelocity/Math.PI)/2))/3600 + "°";
+			"<br>Sidereal " + body[view].sidereal.toFixed(2) + " hr";
+			//"<br>libration " + body[view].angleMax * 180/Math.PI + "°" +
+			//"<br>sidereal " + (1/((body[view].angularVelocity/Math.PI)/2))/3600 + "°";
 	}
 
 	// update in case object is now orbiting something else
