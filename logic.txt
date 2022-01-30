@@ -3,21 +3,28 @@
 # IN-PROGRESS
 -------------
 
+save/load
+
+launch from gps location
+
+tidal locking
+301, 401, and 402 now locked facing parent, which is better, but not realistic.
+with the moon's angularVelocity changing wildly to face earth, how does that
+affect spaceflight and landing?
+
 
 
 
 # ON DECK
 ---------
 
-
 make drag coefficient specific to vehicle
+
 
 
 
 # GENERAL ISSUES
 ----------------
-
-
 
 
 always show this orbit + local orbits is messed up, toggles cancel out
@@ -27,7 +34,8 @@ planet texture should always be below spacecraft, like launchpad
 
 
 ORBITAL MECHANICS
-  glitchy when using custom kepler elements with 0 i, 0 lan, 0 w, 0 M.
+  glitchy when using custom kepler elements with 0 i, 0 lan, 0 w, 0 M
+  needs testing
 
 
 dispose
@@ -35,12 +43,6 @@ dispose
   dispose of axesHelpers
   check and confirm memory is not leaking
 
-
-tidal locking
-301, 401, and 402 now locked facing parent, which is better, but not realistic.
-with the moon's angularVelocity changing wildly to face earth, how does that
-affect spaceflight? hoe is local space handled? does the rocket automatically
-get spun with the planet? i don't think so but could use a code review
 
 
 HARD CRASH: isNaN safety before integration
@@ -176,6 +178,9 @@ could use better organization of functions and globals
 
 # GENERAL FEATURE REQUESTS
 --------------------------
+
+calculate exact velocity at touchdown
+calculate exact moment of touchdown
 
 high wind speeds on foreign planets
 
