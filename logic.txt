@@ -3,20 +3,31 @@
 # IN-PROGRESS
 -------------
 
-301, 401, and 402 now locked facing parent, which is better, but not realistic
 
 
 
-
-# UP NEXT
+# ON DECK
 ---------
 
-blowing up - graphics upon impact
 
-intelligent automatic restore points
+make drag coefficient specific to vehicle
+
+
+
+# GENERAL ISSUES
+----------------
+
+
+
 
 always show this orbit + local orbits is messed up, toggles cancel out
 
+
+planet texture should always be below spacecraft, like launchpad
+
+
+ORBITAL MECHANICS
+  glitchy when using custom kepler elements with 0 i, 0 lan, 0 w, 0 M.
 
 
 dispose
@@ -25,49 +36,66 @@ dispose
   check and confirm memory is not leaking
 
 
-refactoring: split up main.js
+tidal locking
+301, 401, and 402 now locked facing parent, which is better, but not realistic.
+with the moon's angularVelocity changing wildly to face earth, how does that
+affect spaceflight? hoe is local space handled? does the rocket automatically
+get spun with the planet? i don't think so but could use a code review
 
 
-
-
-
-make drag coefficient specific to vehicle
-
-high wind speeds on foreign planets
-
-add galilean moons and outer moons that have atmospheres
-
-
-planet texture should always be below spacecraft
-
-
-isNaN safety before integration
-
-
-
-# HARD CRASH
-------------
-known & intended hyperbolic "safe crash" needs proper exit
+HARD CRASH: isNaN safety before integration
+  known & intended hyperbolic "safe crash" needs proper exit
   when iterations > 9999 to solve, NaN occurs
   need proper exit / catch
-crash at center of planet
-8 million timestep + thrust straight up...
+  crash at center of planet
+  8 million timestep + thrust straight up...
 
 
-# ORBITAL MECHANICS
--------------------
-glitchy when using custom kepler elements with 0 i, 0 lan, 0 w, 0 M.
+not rotating with surface while landed
+  rotate with parent
+  attach independent child object at location of landing.
+  set with rotation of rocket. copy that rotation.
+  if the rocket is rotated manually then rotate the clone.
+
+camera should start UP, wherever you start
+restore camera zoom level on view change?
+
+
+not appearing on surface
+  rotate earth mesh so rocket is at peak point?
+  collision with surface graphics, with accurate gps
+  surface graphics and gps ARE accurate??, if using
+  1024 segments... so it just depends on segment
+  heights.. use phi&theta to make sphere portion? how to texture?
+    terrain: bump/relief map w/collision detection
+    aerodynamics and negative altitude loss of momentum will need to be revised
+
+
+rocket goes down when low thrust on surface
+
+
+spacecraft rotation from warp is wrong.. requires "complicated formula".
+
+
+simulation accuracy
+moons's sidereal should be 655hrs but it needs to got at about 640hrs to stay
+facing earth - why is it so far off?
+ecliptic lan parameter of earth is off by almost precisely 90 deg, not sure why
+  (ecliptic notes below) (may be perfectly ok)
 
 
 
 # GUI ISSUES
 ------------
-onscreen data is tiny (hard to read) on desktop
+onscreen data is tiny (hard to read) on desktop.. allow scaling?
+make menu look nice, nicer user interface (menus, info, more options)
+  gui buttons sizes mobile (normal) vs desktop etc
+  make menu larger for big screens, ok for smaller screens?
 
 gui hud numbers wrapping, and going outside of tinted background
   desktop orbital verbose data goes outside tinted background
 
-hud overlaps on smartphone in widescreen if not fullscreened
+hud fuel overlaps on smartphone in widescreen if not fullscreened
 
 firefox mobile 96.0.0-beta.5:
   exiting fullscreen doesn't resize properly
@@ -79,35 +107,82 @@ orbits toggles (all 3) can be toggled off when paused BUT not back on...
   seems like inconsistent behavior
 
 
-# PHYSICS
----------
 
-not appearing on surface
-  rotate earth mesh so rocket is at peak point?
-  collision with surface graphics, with accurate gps
-  surface graphics and gps ARE accurate??, if using
-  1024 segments... so it just depends on segment
-  heights.. use phi&theta to make sphere portion? how to texture?
 
-terrain: bump/relief map w/collision detection
-  aerodynamics and negative altitude loss of momentum will need to be revised
 
-rocket goes down when low thrust on surface
 
-ecliptic lan parameter is off by almost precisely 90 deg, not sure why
-  (ecliptic notes below) (may be perfectly ok)
 
-not rotating with surface while landed
-  rotate with parent
-  attach independent child object at location of landing.
-  set with rotation of rocket. copy that rotation.
-  if the rocket is rotated manually then rotate the clone.
 
-spacecraft rotation from warp is wrong.. requires "complicated formula".
+
+
+===========================================================================
+# CODE MAINENTANCE
+
+
+# EFFICIENCY
+------------
+
+livestream crashes on 2gb phone, need super low-res startup, set hi-res maps
+  running 9 planets and 3 moons and a sun and rocket.. is slow.. especially
+  with orbit lines... so efficiency needs to be improved.
+  
+  
+- loading all planets & moons with textures at the same time
+- high res textures
+- polygon count
+- two scenes
+- orbit lines
+    recalculating some elements (i, lan, w) and redrawing on every frame
+    ellipse with 500 points
+- gps data for other rockets may be unnecessary unless current view object
+
+
+- loading the whole threejs instead of just modules
+    but i prefer console use (n/a with modules)
+
+
+
+- using primitives instead of objects would help a tiny bit
+
+- orbMech settings for transcendental equation
+
+- processing space data (instead of it being pre-processed)
+
+
+
+
+# CODE REFACTORING
+------------------
+use an actual convention for orbital parameter variable names
+  like IAU or mpcorb or NASA or UCS.. whichever i want to import from most
+
+improve body array naming system i.e. earth = 3 .name = 399,  planet4 = 4...
+
+use a json object file for solar system orbit data
+
+validate html5, css3, javascript
+  html5 isn't valid due to vertical slider, and warns about non-resizability
+  css3 is valid, and warns about vendor extensions
+  js es6 - haven't found suitable linter that accepts paste from mobile browser
+
+could use better organization of functions and globals
+
+
+===========================================================================
+
+
+
+
+
+# GENERAL FEATURE REQUESTS
+--------------------------
+
+high wind speeds on foreign planets
 
 re-entry heat
 
-add major moons, asteroids, comets for sure, all ~200 moons hopefully
+add galilean moons and outer moons that have atmospheres
+  add major moons, asteroids, comets for sure, all ~200 moons hopefully
 
 navball prograde, radial, normal markers for eci & ecef
   target anti-target marker
@@ -119,12 +194,6 @@ navball prograde, radial, normal markers for eci & ecef
 ----------------
 add impulse power for spin controls
 
-make menu look nice, nicer user interface (menus, info, more options)
-  show/hide axes (planets, etc)
-  show/hide individual orbit lines
-  gui buttons sizes mobile (normal) vs desktop etc
-  make menu larger for big screens, ok for smaller screens?
-
 have deltaV stats
 
 show "maxq" on screen when passed
@@ -133,15 +202,14 @@ add orbitcontrols option for large bodies, with min zoom, compatible with tilt
 
 add real-time sync (already coded in an old version)
 
+translation controls
 
 
 # 3D VISUALS
 ------------
 first person camera
 
-camera should start UP, wherever you start
-
-restore camera zoom level on view change?
+blowing up - graphics upon impact
 
 visual clouds on a few planets: 299, 399, maybe 499, a few moons
 
@@ -163,20 +231,6 @@ audio.play();
 
 
 
-# CODE REFACTORING
-------------------
-use an actual convention for orbital parameter variable names
-  like IAU or mpcorb or NASA or UCS.. whichever i want to import from most
-
-improve body array naming system i.e. earth = 3 .name = 399,  planet4 = 4...
-
-use a json object file for solar system orbit data
-
-validate html5, css3, javascript
-  html5 isn't valid due to vertical slider, and warns about non-resizability
-  css3 is valid, and warns about vendor extensions
-  js es6 - haven't found suitable linter that accepts paste from mobile browser
-
 
 # SAVE / LOAD
 -------------
@@ -192,6 +246,7 @@ save/load state
   multiplayer
     send/receive orbit info
     login
+      intelligent automatic restore points
 
 SPACECRAFT
   spacecraft detail
@@ -265,30 +320,7 @@ BROWSER INFO
 ----------------------------------------------------------------
 
 
-# EFFICIENCY
-------------
 
-livestream crashes on 2gb phone, need super low-res startup, set hi-res maps
-  running 9 planets and 3 moons and a sun and rocket.. is slow.. especially
-  with orbit lines... so efficiency needs to be improved.
-why slow?
-- loading all planets & moons with textures at the same time
-- polygons, gltf models
-- high res textures
-- two scenes
-- orbit lines
-    recalculating some elements (i, lan, w) and redrawing on every frame
-    ellipse with 500 points
-- rockets are (or were) part of n-body physics
-- gps velocity unnecessary?
-- general efficiency can probably be drastically improved
-  - how?
-  - using primitives instead of objects would help a tiny bit
-- orbMech settings for transcendental equation
-initialization-only
-- loading the whole threejs instead of just modules
-    but i prefer console use (n/a with modules)
-- processing space data (instead of it being pre-processed)
 
 
 
@@ -593,42 +625,10 @@ STAGE 1
 
 
 
-# FALCON 9 3D MODELING
-----------------------
 
 
-3.66 / 2 = 1.83 rocket width
-5.2  / 2 = 2.6  fairing width
-
-FAIRING
-5.2  nose stretched x2
-6.7  core
-1.3  expansion
-----
-13.2
-
- 42.6 stage1
-+12.6 stage2
-+13.2 fairing
------
- 68.4
-so 1.6 short of 70m.
-
-42.6 / 2 = 21.3 
-21.3 + 6.3 = 27.6 stage 2
-21.3 + 12.6 + 1.3/2 = 34.55 expansion
-21.3 + 12.6 + 1.3 + 6.7/2 = 38.55 core
-21.3 + 12.6 + 1.3 + 6.7 = 41.9 nose
-
-
-# viewNext() logic
-------------------
-
-next is the object that's orbiting the same thing with the next highest periapsis,
-or if there are no such things, the object that's orbiting the focus at the next highest periapsis,
-or if there are no such things, the object that's orbiting THAT focus at the next highest periapsis
-
-(that's actually over-simplified, as i found out.)
+# viewNext() and viewPrevious() logic
+-------------------------------------
 
 next is the object that's orbiting the same thing with the next highest periapsis,
 unless the object being viewed has children, in which case the child with the lowest periapsis, unless THAT has its own children, etc.
