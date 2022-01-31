@@ -1560,6 +1560,9 @@ function recycle() {
 function performRecycle(i) {
 	scene.remove(body[i].mesh);
 
+	body[i].mesh.remove(body[i].axesHelper);
+	body[i].axesHelper.dispose();
+
 	// what if it's fairingN? or fairingZ?
 	if (body[i].nose) {
 		body[i].mesh.remove(body[i].base);

@@ -5,7 +5,7 @@
 
 save/load
 
-launch from gps location
+launch from gps location or orbit, anywhere
   need to avoid overlap
 
 tidal locking
@@ -40,18 +40,7 @@ ORBITAL MECHANICS
 
 
 dispose
-  streamline and recycle addRocketHelpers
-  dispose of axesHelpers
   check and confirm memory is not leaking
-
-
-
-HARD CRASH: isNaN safety before integration
-  known & intended hyperbolic "safe crash" needs proper exit
-  when iterations > 9999 to solve, NaN occurs
-  need proper exit / catch
-  crash at center of planet
-  8 million timestep + thrust straight up...
 
 
 not rotating with surface while landed

@@ -679,7 +679,8 @@ function viewFinalize() {
 	document.querySelector("#localAxes").checked = body[view].axesHelper.visible;
 }
 
-
+const spriteTriangleMap =
+	new THREE.TextureLoader().load("graphics/triangle-64.png");
 function addRocketHelpers(i) {
 	body[i].axesHelper = new THREE.AxesHelper(250e3 * scale);
 	body[i].axesHelper.position.copy(body[i].mesh.position);
@@ -709,7 +710,7 @@ function addRocketHelpers(i) {
 
 
 	body[i].sprite = new THREE.Sprite(new THREE.SpriteMaterial({
-		map: new THREE.TextureLoader().load("graphics/triangle-64.png"),
+		map: spriteTriangleMap,
 		color: body[i].color,
 		sizeAttenuation: false}));
 
