@@ -1405,6 +1405,12 @@ function performStageSep(i) {
 
 	body[i].mass -= body[j].mass;
 	addRocketHelpers(j);
+	if (body[i].axesHelper.visible === true) {
+		body[i].axesHelper.visible = false;
+		body[i].thrustArrow.visible = false;
+		body[j].axesHelper.visible = true;
+		body[j].thrustArrow.visible = true;
+	}
 
 	// separation velocities should be distributed by mass
 	// do this for now

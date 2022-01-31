@@ -19,7 +19,6 @@ affect spaceflight and landing?
 # ON DECK
 ---------
 
-make drag coefficient specific to vehicle
 
 
 
