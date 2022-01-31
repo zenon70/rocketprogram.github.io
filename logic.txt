@@ -28,7 +28,8 @@ affect spaceflight and landing?
 
 
 always show this orbit + local orbits is messed up, toggles cancel out
-
+  need duplication
+  i think refreshing the page may cause this
 
 planet texture should always be below spacecraft, like launchpad
 

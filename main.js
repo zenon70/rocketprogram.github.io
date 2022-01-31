@@ -643,8 +643,6 @@ function keplerPosition() {
 		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
 		body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
 
-//body[i].meanAnomOld = body[i].kepler.meanAnom;
-
 		if (!body[i].onSurface) {
 			// increment position (this code IS compatible with hyperbolic)
 			// add to mean anomaly (rene schwarz method). units in seconds
@@ -704,24 +702,29 @@ function keplerPosition() {
 		}
 		*/
 
-		/*
+		// error checking
 		{
 			let {x, y, z, vx, vy, vz} = body[i].cartesEci;
 
 			if (isNaN(x) || isNaN(y) || isNaN(z) ||
 				isNaN(vx) || isNaN(vy) || isNaN(vz)) {
 
-				console.log("ERROR. index: " + i + ", name: " + body[i].name);
+				console.log(x, y, z, vx, vy, vz);
+				console.log("NaN coordinate for object: " + i + ", name: " +
+					body[i].name + ". No longer tracking.");
 				//console.log(ct);
 				//console.log(kt);
-				console.log("onSurface: " + body[i].onSurface);
+				//console.log("onSurface: " + body[i].onSurface);
 				//console.log(m1, m2);
-				console.log(body[i].kepler);
-				console.log(body[i].cartesEci);
-				console.log(x, y, z, vx, vy, vz);
+				//console.log(body[i].kepler);
+				//console.log(body[i].cartesEci);
+				console.log(body[i]);
 
-				clearInterval(loop);
-				return;
+				performRecycle(i);
+
+				continue;
+				//clearInterval(loop);
+				//return;
 				//playPause();
 				//debugger;
 				//throw new Error("just stop...");
@@ -729,7 +732,7 @@ function keplerPosition() {
 				//new new;
 			}
 		}
-		*/
+		
 
 		// celestial body rotations
 		if (body[i].type === "Natural") {
