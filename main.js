@@ -754,7 +754,7 @@ function keplerPosition() {
 				//body[i].spun += body[i].kepler.meanAnom - body[i].meanAnomOld;
 
 
-			//if (body[i].tidallyLocked === true) {
+				//if (body[i].tidallyLocked === true) {
 
 // dev2
 // get moon facing direction as vector (prime meridian)
@@ -831,7 +831,7 @@ body[i].spun += angle;
 			}
 			body[i].spun %= 2 * Math.PI;
 		} else {
-		// get Earth-Centered-Earth-Fixed and GPS coordinates
+			// get Earth-Centered-Earth-Fixed and GPS coordinates
 			if (!body[i].onSurface) {
 				body[i].ecef = eciToEcef(body[i].cartesEci, body[focus].spun,
 					body[focus].angularVelocity, body[focus].radiusEquator,
@@ -885,76 +885,79 @@ body[i].spun += angle;
 						body[i].gps.alt);
 				}
 
-					let velocity = Math.hypot(body[i].ecef.vx, body[i].ecef.vy,
-						body[i].ecef.vz);
+				let velocity = Math.hypot(body[i].ecef.vx, body[i].ecef.vy,
+					body[i].ecef.vz);
+/*
+				// this should be specific to spacecraft
+				// do this for now
+				let dragCoefficient = 0.5; // drag coefficient for a cone
+				if (body[i].gps.alt > 100000) {
+					dragCoefficient = 2.2; // cubesat standard coefficient
+					//dragCoefficient = 0.75; // irregular sphere est. for sputnik 1
+				}
+*/
+				body[i].drag = dragEquation(density, velocity, body[i].mass,
+					body[i].dragCoefficient, body[i].dragArea);
 
-					// this should be specific to spacecraft
-					// do this for now
-					let dragCoefficient = 0.5; // drag coefficient for a cone
-					if (body[i].gps.alt > 100000) {
-						dragCoefficient = 2.2; // cubesat standard coefficient
-						//dragCoefficient = 0.75; // irregular sphere est. for sputnik 1
-					}
+				// get prograde vector from velocity
+				body[i].ecef.prograde = new THREE.Vector3(
+					body[i].ecef.vx,
+					body[i].ecef.vy,
+					body[i].ecef.vz);
+				body[i].ecef.prograde.normalize();
 
-					body[i].drag = dragEquation(density, velocity, body[i].mass,
-						dragCoefficient);
+				// prepare for safety checks (could be optimized)
+				let vxSign = Math.sign(body[i].ecef.vx);
+				let vySign = Math.sign(body[i].ecef.vy);
+				let vzSign = Math.sign(body[i].ecef.vz);
+				let vxDrag = 
+					-body[i].ecef.prograde.x * body[i].drag * timestep;
+				let vyDrag = 
+					-body[i].ecef.prograde.y * body[i].drag * timestep;
+				let vzDrag = 
+					-body[i].ecef.prograde.z * body[i].drag * timestep;
 
-					// get prograde vector from velocity
-					body[i].ecef.prograde = new THREE.Vector3(
-						body[i].ecef.vx,
-						body[i].ecef.vy,
-						body[i].ecef.vz);
-					body[i].ecef.prograde.normalize();
-
-					// prepare for safety checks (could be optimized)
-					let vxSign = Math.sign(body[i].ecef.vx);
-					let vySign = Math.sign(body[i].ecef.vy);
-					let vzSign = Math.sign(body[i].ecef.vz);
-					let vxDrag = 
+				// if adding drag results in the same direction, apply it
+				if (Math.sign(body[i].ecef.vx + vxDrag) === vxSign) {
+					// apply drag. negative prograde is retrograde.
+					body[i].ecef.vx +=
 						-body[i].ecef.prograde.x * body[i].drag * timestep;
-					let vyDrag = 
+					// if it results in going backwards (an issue with timestepping
+					// and/or super fast drag calculated on a 0 or negative altitude),
+					// then just zero the velocity instead
+				} else {
+					body[i].ecef.vx = 0;
+				}
+
+				// repeat for y and z
+				if (Math.sign(body[i].ecef.vy + vyDrag) === vySign) {
+					body[i].ecef.vy +=
 						-body[i].ecef.prograde.y * body[i].drag * timestep;
-					let vzDrag = 
+				} else {
+					body[i].ecef.vy = 0;
+				}
+				if (Math.sign(body[i].ecef.vz + vzDrag) === vzSign) {
+					body[i].ecef.vz +=
 						-body[i].ecef.prograde.z * body[i].drag * timestep;
+				} else {
+					body[i].ecef.vz = 0;
+				}
+				// independent safety checks on all 3 vectors, instead of checking
+				// final prograde direction, may have an issue, or may be better
 
-					// if adding drag results in the same direction, apply it
-					if (Math.sign(body[i].ecef.vx + vxDrag) === vxSign) {
-						// apply drag. negative prograde is retrograde.
-						body[i].ecef.vx +=
-							-body[i].ecef.prograde.x * body[i].drag * timestep;
-						// if it results in going backwards (an issue with timestepping
-						// and/or super fast drag calculated on a 0 or negative altitude),
-						// then just zero the velocity instead
-					} else {
-						body[i].ecef.vx = 0;
-					}
+				// send info back up the chain
+				body[i].cartesEci = ecefToEci(body[i].ecef,
+				body[focus].spun,
+				body[focus].angularVelocity, body[focus].radiusEquator,
+				body[focus].e2);
+			} // end process drag
+		} // end body[i].type === Artificial
 
-					// repeat for y and z
-					if (Math.sign(body[i].ecef.vy + vyDrag) === vySign) {
-						body[i].ecef.vy +=
-							-body[i].ecef.prograde.y * body[i].drag * timestep;
-					} else {
-						body[i].ecef.vy = 0;
-					}
-					if (Math.sign(body[i].ecef.vz + vzDrag) === vzSign) {
-						body[i].ecef.vz +=
-							-body[i].ecef.prograde.z * body[i].drag * timestep;
-					} else {
-						body[i].ecef.vz = 0;
-					}
-					// independent safety checks on all 3 vectors, instead of checking
-					// final prograde direction, may have an issue, or may be better
 
-					// send info back up the chain
-					body[i].cartesEci = ecefToEci(body[i].ecef,
-					body[focus].spun,
-					body[focus].angularVelocity, body[focus].radiusEquator,
-					body[focus].e2);
-				} // end process drag
-			} // end body[i].type === Artificial
 		// tilt back, to match icrf frame
 		body[i].cartes = eciToIcrf(body[i].cartesEci,
 			body[focus].rightAscension, body[focus].declination);
+
 	} // end for loop
 }
 
@@ -1415,6 +1418,10 @@ function performStageSep(i) {
 	body[i].cartes.vy -= body[i].pointingV3.y * 2;
 	body[i].cartes.vz -= body[i].pointingV3.z * 2;
 
+	// apply new drag values for stage 1
+	body[i].dragCoefficient = 2.2;
+	body[i].dragArea = 3.7;
+
 	prepStats(j);
 
 	view = j;
@@ -1527,6 +1534,10 @@ function performFairingSep(i) {
 	body[j].cartes.vz += body[i].pointingV3.z * pneuForward;
 
 	body[j].xSpin = 0.4;
+
+	// apply new drag values for stage 2
+	body[i].dragCoefficient = 2.2;
+	body[i].dragArea = 3.7;
 
 	prepStats(j);
 }

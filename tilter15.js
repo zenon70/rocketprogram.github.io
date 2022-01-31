@@ -443,14 +443,18 @@ function earthAirData(altitude) {
 // https://en.wikipedia.org/wiki/Drag_equation
 // No attempt to address sound barrier resistance
 //let drag_now = 0; // N
-function dragEquation(airDensity, velocity, mass, dragCoefficient) {
+function dragEquation(airDensity, velocity, mass, dragCoefficient, dragArea) {
 	//const dragCoefficient = 0.342; // nosecone. avg of 0.237 and 0.447
 	//const dragCoefficient = 2.2; // cube sat
-	if (!dragCoefficient) { dragCoefficient = 2.2 }
+	if (dragCoefficient === undefined) { dragCoefficient = 2.2 }
+
 	//const payloadDiameter = 5.2; // meters. falcon 9 with payload fairing
 	//const payloadDiameter = 9; // meters. starship
-	const payloadDiameter = 1.5; // meters. sputnik 1 is 58cm with whiskers
-	const dragArea = (payloadDiameter / 2)**2 * Math.PI; // m^2
+	//const payloadDiameter = 1.5; // meters. sputnik 1 is 58cm with whiskers
+	//const dragArea = (payloadDiameter / 2)**2 * Math.PI; // m^2
+
+	// use falcon 9's default 5.2m diameter fairing
+	if (dragArea === undefined) { dragArea = 21.237166338267 }
 
 	return (airDensity * (velocity * velocity) *
 		(dragCoefficient * dragArea/mass)) / 2;

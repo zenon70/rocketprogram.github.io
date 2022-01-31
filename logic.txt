@@ -6,6 +6,7 @@
 save/load
 
 launch from gps location
+  need to avoid overlap
 
 tidal locking
 301, 401, and 402 now locked facing parent, which is better, but not realistic.
@@ -182,6 +183,7 @@ could use better organization of functions and globals
 calculate exact velocity at touchdown
 calculate exact moment of touchdown
 
+aerodynamics based on angle of incident
 high wind speeds on foreign planets
 
 re-entry heat

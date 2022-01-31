@@ -561,6 +561,7 @@ function addFalcon() {
 		cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 			vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 		drag: 0,
+		dragCoefficient: 0.5,
 		pointingV3: new THREE.Vector3(0, 1, 0), // loads y-up
 		pointingM4: new THREE.Matrix4(),
 		type: "Artificial",
@@ -584,6 +585,7 @@ function addFalcon() {
 			cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 				vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 			drag: 0,
+			dragCoefficient: 0.5,
 			pointingV3: new THREE.Vector3(0, 1, 0), // loads y-up
 			pointingM4: new THREE.Matrix4(),
 			type: "Artificial",
@@ -606,6 +608,7 @@ function addFalcon() {
 				cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 					vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 				drag: 0,
+				dragCoefficient: 2.2,
 				pointingV3: new THREE.Vector3(0, 1, 0), // loads y-up
 				pointingM4: new THREE.Matrix4(),
 				type: "Artificial",
@@ -629,6 +632,7 @@ function addFalcon() {
 				cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 					vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 				drag: 0,
+				dragCoefficient: 2.2,
 				pointingV3: new THREE.Vector3(0, 1, 0), // loads y-up
 				pointingM4: new THREE.Matrix4(),
 				type: "Artificial",
