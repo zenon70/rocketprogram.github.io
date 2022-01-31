@@ -370,7 +370,9 @@ function rocketControl() {
 	for (let i = body.length - 1; i > -1; i--) {
 		if (body[i].type === "Artificial") {
 
-			body[i].missionTime += timestep;
+			if (body[i].missionTime !== undefined) {
+				body[i].missionTime += timestep;
+			}
 
 			body[i].mesh.rotateX(body[i].xSpin * timestep);
 			body[i].mesh.rotateY(body[i].ySpin * timestep);
@@ -431,6 +433,9 @@ function rocketControl() {
 
 				body[i].onSurface = false;
 
+				if (body[i].missionTime === undefined) {
+					body[i].missionTime = 0;
+				}
 			} // end process thrust
 		} // end Artificial
 	} // end for loop

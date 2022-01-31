@@ -546,7 +546,6 @@ function addFalcon() {
 	const i = body.push({
 		name: "f9" + "#" + String(body.rocketCount),
 		focus: earth,
-		missionTime: 0,
 		mass: 549054,
 		fuelMass: 411000,
 		burnTime: 162,
