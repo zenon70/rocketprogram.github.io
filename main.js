@@ -1883,7 +1883,7 @@ function preAnimate() {
 ////////////////////////////////////////////////////////////////////////////////
 // finish animation
 
-	// attach/add camera as child to object doesn't work so well
+/*
 	// keep the camera relative to its target
 	camera.position.x += body[view].mesh.position.x - oldViewX;
 	camera.position.y += body[view].mesh.position.y - oldViewY;
@@ -1891,6 +1891,17 @@ function preAnimate() {
 	oldViewX = body[view].mesh.position.x;
 	oldViewY = body[view].mesh.position.y;
 	oldViewZ = body[view].mesh.position.z;
+*/
+
+
+	camera.position.x += body[view].x * scale - oldViewX;
+	camera.position.y += body[view].y * scale - oldViewY;
+	camera.position.z += body[view].z * scale - oldViewZ;
+	oldViewX = body[view].x * scale;
+	oldViewY = body[view].y * scale;
+	oldViewZ = body[view].z * scale;
+
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////

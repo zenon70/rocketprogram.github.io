@@ -667,8 +667,6 @@ function viewFinalize() {
 		"hidden";
 	throttleShow();
 
-	//body[view].mesh.attach(camera); // first person?
-
 	// manage check boxes in menu
 	if (body[view].alwaysShowOrbit === undefined) {
 		document.querySelector("#singleOrbit").checked = false;
@@ -949,7 +947,6 @@ function addFalconGraphics(i) {
 	// post-setup global adjustments
 	view = i;
 	viewFinalize();
-	controls.target = body[view].mesh.position;
 	controls.minDistance = 75 * scale;
 }
 
