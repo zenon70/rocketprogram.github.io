@@ -11,6 +11,7 @@ function closePopUpMenu() {
 }
 
 /*
+// dev8
 // this really works to stop firefox's autohide address bar...
 // but it's overkill and prevents scrolling the menu
 window.addEventListener('touchmove', event => {
@@ -362,7 +363,7 @@ function makeNaturalBodyGraphics() {
 
 		scene.add(body[i].mesh);
 
-// dev1
+// dev4
 
 
 /*

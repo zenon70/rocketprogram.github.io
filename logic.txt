@@ -3,16 +3,28 @@
 # IN-PROGRESS
 -------------
 
+// dev9
+remove throttleUp throttleDown buttons, need to change keyboard access
+
+// dev8
+stop scrolling when using vertical slider
+
+// dev2
 save/load
 
+// dev3
 launch from gps location or orbit, anywhere
   need to avoid overlap
 
+// dev4
 tidal locking
 301, 401, and 402 now locked facing parent, which is better, but not realistic.
 with the moon's angularVelocity changing wildly to face earth, how does that
 affect spaceflight and landing?
+use a-b point masses to represent tidal bulge, receive nbody velocity changes
 
+// dev5
+camera improvements
 
 
 
@@ -23,27 +35,34 @@ affect spaceflight and landing?
 
 
 
-# GENERAL ISSUES
-----------------
-
-
-hyperbolic to not back and forth slows performance
-
-
-always show this orbit + local orbits is messed up, toggles cancel out
-  need duplication
-  i think refreshing the page may cause this
-
-planet texture should always be below spacecraft, like launchpad
+# ISSUES
+--------
 
 
 ORBITAL MECHANICS
-  glitchy when using custom kepler elements with 0 i, 0 lan, 0 w, 0 M
+  glitchy when using custom kepler elements with 0 e, 0 i, 0 lan, 0 w, 0 M
   needs testing
+  user feedback indicates issue with 0 eccentricity from maneuvers in-game
+
+gui
+  hud numbers wrapping, and going outside of tinted background
+  desktop orbital verbose data goes outside tinted background
+  hud fuel overlaps on smartphone in widescreen if not fullscreened
+
+hyperbolic to not hyperbolic, back and forth, slows performance
+  needs duplication
 
 
 dispose
-  check and confirm memory is not leaking
+  check and confirm memory is not leaking, even after recycle
+  dispose of sprite?
+
+
+# IMPORTANT FEATURE REQUESTS
+----------------------------
+
+
+planet texture should always be below spacecraft, like launchpad
 
 
 not rotating with surface while landed
@@ -73,28 +92,25 @@ spacecraft rotation from warp is wrong.. requires "complicated formula".
 
 
 simulation accuracy
-moons's sidereal should be 655hrs but it needs to got at about 640hrs to stay
-facing earth - why is it so far off?
-ecliptic lan parameter of earth is off by almost precisely 90 deg, not sure why
-  (ecliptic notes below) (may be perfectly ok)
+  moons's sidereal should be 655hrs but it needs to got at about 640hrs to stay
+    facing earth - why is it so far off?
+    gravity of earth (mu)?
+  ecliptic lan parameter of earth is off by almost precisely 90 deg, not sure why
+    (ecliptic notes below) (may be perfectly ok)
 
 
 
-# GUI ISSUES
-------------
+# IMPORTANT GUI FEATURE REQUESTS
+--------------------------------
 onscreen data is tiny (hard to read) on desktop.. allow scaling?
-make menu look nice, nicer user interface (menus, info, more options)
+make menu look nice, nicer user interface (font, menus, info, more options)
   gui buttons sizes mobile (normal) vs desktop etc
   make menu larger for big screens, ok for smaller screens?
-
-gui hud numbers wrapping, and going outside of tinted background
-  desktop orbital verbose data goes outside tinted background
-
-hud fuel overlaps on smartphone in widescreen if not fullscreened
 
 firefox mobile 96.0.0-beta.5:
   exiting fullscreen doesn't resize properly
   scrolling to hide address bar causes screen to resize wrong
+  using throttle slider scrolls screen
 
 epiphany browser: near frustum culling
 

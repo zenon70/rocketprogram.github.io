@@ -736,7 +736,7 @@ function keplerPosition() {
 			} else {
 			//if (body[i].tidallyLocked === true) {
 
-				// dev1
+				// dev4
 				// get moon facing direction as vector (prime meridian)
 				// works despite being off a few degrees south from oblate scaling,
 				// because normal vector is used and ignores irrelevent angle
@@ -1809,7 +1809,7 @@ function preAnimate() {
 			local = view;
 		}
 		for (let i = body.length - 1; i > 0; i--) {
-			if (body[i].focus === local) {
+			if (body[i].focus === local || body[i].alwaysShowOrbit) {
 				drawEllipse(i, body[i].color, scale);
 				body[i].ellipse.visible = true;
 			} else {
