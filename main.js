@@ -725,14 +725,14 @@ function keplerPosition() {
 
 		// celestial body rotations
 		if (body[i].type === "Natural") {
-			if (body[i].tidallyLocked !== true) {
+			//if (body[i].tidallyLocked !== true) {
 				body[i].mesh.rotateY(body[i].angularVelocity * timestep);
 				body[i].spun += body[i].angularVelocity * timestep;
 				if (i === earth) {
 					body[i].clouds.rotateY(body[i].angularVelocity * timestep / 12);
 				}
 				
-			} else {
+			//} else {
 
 				// this had bad degridation issues due to compounding
 				// cartesEci.truAnom is new, kepler.truAnom is old
@@ -746,7 +746,7 @@ function keplerPosition() {
 				//body[i].spun += body[i].kepler.meanAnom - body[i].meanAnomOld;
 
 
-				//if (body[i].tidallyLocked === true) {
+				if (body[i].tidallyLocked === true) {
 
 // dev2
 // get moon facing direction as vector (prime meridian)
