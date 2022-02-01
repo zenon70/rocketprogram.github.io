@@ -1198,9 +1198,9 @@ function displayText() {
 			"Mass " + body[view].mass.toExponential(3) + " kg" +
 			"<br>EqRad " + (body[view].radiusEquator / 1000).toFixed(0) + " km" +
 			"<br>PoRad " + (body[view].radiusPole / 1000).toFixed(0) + " km" +
-			"<br>Sidereal " + body[view].sidereal.toFixed(2) + " hr";
-			//"<br>libration " + body[view].angleMax * 180/Math.PI + "°" +
-			//"<br>sidereal " + (1/((body[view].angularVelocity/Math.PI)/2))/3600 + "°";
+			"<br>Sidereal " + body[view].sidereal.toFixed(2) + " hr" +
+			"<br>libration " + body[view].angleMax * 180/Math.PI + "°" +
+			"<br>sidereal " + (1/((body[view].angularVelocity/Math.PI)/2))/3600 + "°";
 	}
 
 	// update in case object is now orbiting something else
