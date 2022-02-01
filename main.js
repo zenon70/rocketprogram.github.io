@@ -699,22 +699,23 @@ function keplerPosition() {
 ////////////////////////////////////////////////////////////////////////////////
 
 		/*
+		// what if it is a focus when ejected? potential bug
 		if (body[i].cartesEci.iterations === body[i].cartesEci.maxIterations) {
 			console.log(body[i].name + " is being ejected.");
 			body.splice(i);
 			continue;
-			// what if it is a focus when ejected? potential bug
 		}
 		*/
 
 		// error checking
+		// what if it is a focus when ejected? potential bug
 		{
 			if (isNaN(body[i].cartesEci.x) ||
-			    isNaN(body[i].cartesEci.y) ||
-			    isNaN(body[i].cartesEci.z) ||
-			    isNaN(body[i].cartesEci.vx) ||
-			    isNaN(body[i].cartesEci.vy) ||
-			    isNaN(body[i].cartesEci.vz)) {
+					isNaN(body[i].cartesEci.y) ||
+					isNaN(body[i].cartesEci.z) ||
+					isNaN(body[i].cartesEci.vx) ||
+					isNaN(body[i].cartesEci.vy) ||
+					isNaN(body[i].cartesEci.vz)) {
 				console.log("NaN coordinate for object: " + i + ", name: " +
 					body[i].name + ". No longer tracking.");
 				console.log(body[i]);
@@ -725,99 +726,88 @@ function keplerPosition() {
 
 		// celestial body rotations
 		if (body[i].type === "Natural") {
-			//if (body[i].tidallyLocked !== true) {
+			if (body[i].tidallyLocked !== true) {
 				body[i].mesh.rotateY(body[i].angularVelocity * timestep);
 				body[i].spun += body[i].angularVelocity * timestep;
 				if (i === earth) {
 					body[i].clouds.rotateY(body[i].angularVelocity * timestep / 12);
 				}
-				
-			//} else {
 
-				// this had bad degridation issues due to compounding
-				// cartesEci.truAnom is new, kepler.truAnom is old
-				//body[i].mesh.rotateY(body[i].cartesEci.truAnom -
-				//	body[i].kepler.truAnom);
-				//body[i].spun += body[i].cartesEci.truAnom - body[i].kepler.truAnom;
+			} else {
+			//if (body[i].tidallyLocked === true) {
 
-				// this is somehow worse than using truAnom
-				//body[i].mesh.rotateY(body[i].kepler.meanAnom -
-				//	body[i].meanAnomOld);
-				//body[i].spun += body[i].kepler.meanAnom - body[i].meanAnomOld;
-
-
-				if (body[i].tidallyLocked === true) {
-
-// dev2
-// get moon facing direction as vector (prime meridian)
-// works despite being off a few degrees south from oblate scaling,
-// because normal vector is used and ignores irrelevent angle
-// uncomment the unscale/rescale code if there are issues
-let prime = new THREE.Vector3();
-//body[i].mesh.scale.set(1, 1, 1);
-body[i].mesh.rotateY(Math.PI/2);
-body[i].mesh.getWorldDirection(prime);
-body[i].mesh.rotateY(-Math.PI/2);
-//body[i].mesh.scale.y = body[i].radiusPole / body[i].radiusEquator;
-//if (body[i].radiusWest !== undefined) {
-//	body[i].mesh.scale.z = body[i].radiusWest / body[i].radiusEquator;
-//}
-// convert to eci
-let primeEci = icrfToEci(prime, body[focus].rightAscension, body[focus].declination);
+				// dev1
+				// get moon facing direction as vector (prime meridian)
+				// works despite being off a few degrees south from oblate scaling,
+				// because normal vector is used and ignores irrelevent angle
+				// uncomment the unscale/rescale code if there are issues
+				let prime = new THREE.Vector3();
+				//body[i].mesh.scale.set(1, 1, 1);
+				body[i].mesh.rotateY(Math.PI/2);
+				body[i].mesh.getWorldDirection(prime);
+				body[i].mesh.rotateY(-Math.PI/2);
+				//body[i].mesh.scale.y = body[i].radiusPole / body[i].radiusEquator;
+				//if (body[i].radiusWest !== undefined) {
+				//	body[i].mesh.scale.z = body[i].radiusWest / body[i].radiusEquator;
+				//}
+				// convert to eci
+				let primeEci = icrfToEci(prime, body[focus].rightAscension,
+					body[focus].declination);
 
 
-// get normal: relative to orbital plane AND simply the y-axis of moon
-let pole = new THREE.Vector3();
-body[i].mesh.rotateX(-Math.PI/2);
-body[i].mesh.getWorldDirection(pole);
-body[i].mesh.rotateX(Math.PI/2);
-// convert to eci
-let poleEci = icrfToEci(pole, body[focus].rightAscension, body[focus].declination);
+				// get normal: relative to orbital plane AND simply the y-axis of moon
+				let pole = new THREE.Vector3();
+				body[i].mesh.rotateX(-Math.PI/2);
+				body[i].mesh.getWorldDirection(pole);
+				body[i].mesh.rotateX(Math.PI/2);
+				// convert to eci
+				let poleEci = icrfToEci(pole, body[focus].rightAscension,
+					body[focus].declination);
 
 
-// dot product, to get angle
-let dot = primeEci.x * - body[i].cartesEci.x +
-	primeEci.y * - body[i].cartesEci.y +
-	primeEci.z * - body[i].cartesEci.z;
+				// dot product, to get angle
+				let dot = primeEci.x * - body[i].cartesEci.x +
+					primeEci.y * - body[i].cartesEci.y +
+					primeEci.z * - body[i].cartesEci.z;
 
-// determinant, for >180 deg movement within orbit
-let det =
-	primeEci.x * - body[i].cartesEci.y * poleEci.z +
-	primeEci.z * - body[i].cartesEci.x * poleEci.y +
-	primeEci.y * - body[i].cartesEci.z * poleEci.x -
-	primeEci.z * - body[i].cartesEci.y * poleEci.x -
-	primeEci.x * - body[i].cartesEci.z * poleEci.y -
-	primeEci.y * - body[i].cartesEci.x * poleEci.z;
-let angle = Math.atan2(det, dot);
+				// determinant, for >180 deg movement within orbit
+				let det =
+					primeEci.x * - body[i].cartesEci.y * poleEci.z +
+					primeEci.z * - body[i].cartesEci.x * poleEci.y +
+					primeEci.y * - body[i].cartesEci.z * poleEci.x -
+					primeEci.z * - body[i].cartesEci.y * poleEci.x -
+					primeEci.x * - body[i].cartesEci.z * poleEci.y -
+					primeEci.y * - body[i].cartesEci.x * poleEci.z;
+				let angle = Math.atan2(det, dot);
+
+				/*
+				// experimental tidal locking formula
+				if (body[i].angleOld === undefined) {
+					body[i].angleOld = angle;
+					body[i].angleMax = 0;
+				}
+				const oscillationVelocity = body[i].angleOld - angle;
+				body[i].angularVelocity += angle/1e10 - oscillationVelocity/1e8;
+				body[i].angleOld = angle;
+
+				const deg1 = 1 * Math.PI/180
+				const angleAbs = Math.abs(angle);
+				if (angleAbs < deg1) {
+					body[i].angleMax = 0;
+				}
+				if (angleAbs > Math.abs(body[i].angleMax)) {
+					body[i].angleMax = angle;
+				}
+				*/
 
 
-// experimental tidal locking formula
-if (body[i].angleOld === undefined) {
-	body[i].angleOld = angle;
-	body[i].angleMax = 0;
-}
-const oscillationVelocity = body[i].angleOld - angle;
-body[i].angularVelocity += angle/1e10 - oscillationVelocity/1e8;
-body[i].angleOld = angle;
+				// always face parent exactly. unrealistic, but do this for now
+				if (angle < 0) {
+					angle += Math.PI * 2;
+				}
+				body[i].mesh.rotateY(angle);
+				body[i].spun += angle;
 
-const deg1 = 1 * Math.PI/180
-const angleAbs = Math.abs(angle);
-if (angleAbs < deg1) {
-	body[i].angleMax = 0;
-}
-if (angleAbs > Math.abs(body[i].angleMax)) {
-	body[i].angleMax = angle;
-}
-
-
-/*
-// always face parent. unrealistic, but do this for now
-if (angle < 0) {
-	angle += Math.PI * 2;
-}
-body[i].mesh.rotateY(angle);
-body[i].spun += angle;
-*/
 
 
 
