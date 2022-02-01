@@ -672,7 +672,6 @@ function viewFinalize() {
 	} else {
 		document.querySelector("#singleOrbit").checked = body[view].alwaysShowOrbit;
 	}
-	
 	document.querySelector("#localAxes").checked = body[view].axesHelper.visible;
 }
 

@@ -704,35 +704,19 @@ function keplerPosition() {
 
 		// error checking
 		{
-			let {x, y, z, vx, vy, vz} = body[i].cartesEci;
-
-			if (isNaN(x) || isNaN(y) || isNaN(z) ||
-				isNaN(vx) || isNaN(vy) || isNaN(vz)) {
-
-				console.log(x, y, z, vx, vy, vz);
+			if (isNaN(body[i].cartesEci.x) ||
+			    isNaN(body[i].cartesEci.y) ||
+			    isNaN(body[i].cartesEci.z) ||
+			    isNaN(body[i].cartesEci.vx) ||
+			    isNaN(body[i].cartesEci.vy) ||
+			    isNaN(body[i].cartesEci.vz)) {
 				console.log("NaN coordinate for object: " + i + ", name: " +
 					body[i].name + ". No longer tracking.");
-				//console.log(ct);
-				//console.log(kt);
-				//console.log("onSurface: " + body[i].onSurface);
-				//console.log(m1, m2);
-				//console.log(body[i].kepler);
-				//console.log(body[i].cartesEci);
 				console.log(body[i]);
-
 				performRecycle(i);
-
 				continue;
-				//clearInterval(loop);
-				//return;
-				//playPause();
-				//debugger;
-				//throw new Error("just stop...");
-				//failerFunction();
-				//new new;
 			}
 		}
-		
 
 		// celestial body rotations
 		if (body[i].type === "Natural") {
