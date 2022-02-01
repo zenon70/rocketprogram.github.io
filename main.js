@@ -1883,21 +1883,8 @@ function preAnimate() {
 	}
 
 
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // finish animation
-
-/*
-	// keep the camera relative to its target
-	camera.position.x += body[view].mesh.position.x - oldViewX;
-	camera.position.y += body[view].mesh.position.y - oldViewY;
-	camera.position.z += body[view].mesh.position.z - oldViewZ;
-	oldViewX = body[view].mesh.position.x;
-	oldViewY = body[view].mesh.position.y;
-	oldViewZ = body[view].mesh.position.z;
-*/
-
 
 	camera.position.x += body[view].x * scale - oldViewX;
 	camera.position.y += body[view].y * scale - oldViewY;
@@ -1906,7 +1893,9 @@ function preAnimate() {
 	oldViewY = body[view].y * scale;
 	oldViewZ = body[view].z * scale;
 
-
+	controls.target.x = body[view].x * scale;
+	controls.target.y = body[view].y * scale;
+	controls.target.z = body[view].z * scale;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

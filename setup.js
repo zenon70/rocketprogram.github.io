@@ -622,7 +622,6 @@ function throttleShow() {
 }
 
 function viewFinalize() {
-	controls.target = body[view].mesh.position;
 	if (body[view].type === "Natural") {
 		controls.minDistance = body[view].radiusEquator * 1.2 * scale;
 		scene2.visible = false;
