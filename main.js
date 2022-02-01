@@ -799,6 +799,7 @@ if (body[i].angleOld === undefined) {
 const oscillationVelocity = body[i].angleOld - angle;
 body[i].angularVelocity += angle/1e10 - oscillationVelocity/1e8;
 body[i].angleOld = angle;
+
 const deg1 = 1 * Math.PI/180
 const angleAbs = Math.abs(angle);
 if (angleAbs < deg1) {
@@ -1200,7 +1201,8 @@ function displayText() {
 			"<br>PoRad " + (body[view].radiusPole / 1000).toFixed(0) + " km" +
 			"<br>Sidereal " + body[view].sidereal.toFixed(2) + " hr" +
 			"<br>libration " + body[view].angleMax * 180/Math.PI + "°" +
-			"<br>sidereal " + (1/((body[view].angularVelocity/Math.PI)/2))/3600 + "°";
+			"<br>sidereal " + (1/((body[view].angularVelocity/Math.PI)/2))/3600 
+				+ " hr";
 	}
 
 	// update in case object is now orbiting something else
