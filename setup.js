@@ -422,7 +422,7 @@ body[i].mesh.attach(poleArrow);
 
 
 
-/*
+
 // create prime meridian arrow (scales WITH parent body)
 body[i].primeArrow = new THREE.ArrowHelper(
 	new THREE.Vector3(1, 0, 0),
@@ -441,7 +441,7 @@ body[i].primeArrow = new THREE.ArrowHelper(
 	0x00ffff);
 body[i].mesh.add(body[i].primeArrow);
 body[i].primeArrow.visible = true;
-*/
+
 
 /*
 // create prime meridian arrow ---- the hard way
@@ -679,7 +679,13 @@ const spriteTriangleMap =
 	new THREE.TextureLoader().load("graphics/triangle-64.png");
 function addRocketHelpers(i) {
 	body[i].axesHelper = new THREE.AxesHelper(250e3 * scale);
-	body[i].axesHelper.position.copy(body[i].mesh.position);
+/*
+	// dev5
+	//body[i].axesHelper.position.copy(body[i].mesh.position);
+	body[i].axesHelper.position.x = body[i].x * scale;
+	body[i].axesHelper.position.y = body[i].y * scale;
+	body[i].axesHelper.position.z = body[i].z * scale;
+*/
 	body[i].axesHelper.rotation.copy(body[i].mesh.rotation);
 	// rotate to NED (north, east, down) convention for spacecraft
 	// +x forward, -x aft

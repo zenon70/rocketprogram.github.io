@@ -27,6 +27,9 @@ affect spaceflight and landing?
 ----------------
 
 
+hyperbolic to not back and forth slows performance
+
+
 always show this orbit + local orbits is messed up, toggles cancel out
   need duplication
   i think refreshing the page may cause this
@@ -168,6 +171,8 @@ could use better organization of functions and globals
 
 # GENERAL FEATURE REQUESTS
 --------------------------
+
+collision detection so stages don't go through each other
 
 calculate exact velocity at touchdown
 calculate exact moment of touchdown

@@ -59,11 +59,13 @@ function systemPosition() {
 				focus = body[focus].focus;
 			}
 		}
-
-		// apply the system coordinates for rendering
-		body[i].mesh.position.x = body[i].x * scale;
-		body[i].mesh.position.y = body[i].y * scale;
-		body[i].mesh.position.z = body[i].z * scale;
+		// dev5
+		//if (body[i].onSurface !== true) {
+			// apply the system coordinates for rendering
+			body[i].mesh.position.x = body[i].x * scale;
+			body[i].mesh.position.y = body[i].y * scale;
+			body[i].mesh.position.z = body[i].z * scale;
+		//}
 	}
 }
 
@@ -433,6 +435,9 @@ function rocketControl() {
 
 				body[i].onSurface = false;
 
+				// dev5
+				//body[i].mesh.removeFromParent();
+
 				if (body[i].missionTime === undefined) {
 					body[i].missionTime = 0;
 				}
@@ -785,7 +790,7 @@ let det =
 	primeEci.y * - body[i].cartesEci.x * poleEci.z;
 let angle = Math.atan2(det, dot);
 
-/*
+
 // experimental tidal locking formula
 if (body[i].angleOld === undefined) {
 	body[i].angleOld = angle;
@@ -802,16 +807,16 @@ if (angleAbs < deg1) {
 if (angleAbs > Math.abs(body[i].angleMax)) {
 	body[i].angleMax = angle;
 }
-*/
 
 
+/*
 // always face parent. unrealistic, but do this for now
 if (angle < 0) {
 	angle += Math.PI * 2;
 }
 body[i].mesh.rotateY(angle);
 body[i].spun += angle;
-
+*/
 
 
 
@@ -840,6 +845,9 @@ body[i].spun += angle;
 					body[i].ySpin = 0;
 					body[i].zSpin = 0;
 					body[i].onSurface = true;
+
+					// dev5
+					//body[focus].mesh.attach(body[i].mesh);
 				}
 			}
 
@@ -1009,7 +1017,11 @@ function drawEllipse(draw, shade, scale) {
 
 	const focus = body[draw].focus;
 
-	body[draw].ellipse.position.copy(body[focus].mesh.position);
+	// dev5
+	//body[draw].ellipse.position.copy(body[focus].mesh.position);
+	body[draw].ellipse.position.x = body[focus].x * scale;
+	body[draw].ellipse.position.y = body[focus].y * scale;
+	body[draw].ellipse.position.z = body[focus].z * scale;
 
 }
 
@@ -1859,10 +1871,18 @@ function preAnimate() {
 	// icrf
 	for (let i = body.length - 1; i > -1; i--) {
 		if (body[i].axesHelperIcrf) {
-			body[i].axesHelperIcrf.position.copy(body[i].mesh.position);
+			// dev5
+			//body[i].axesHelperIcrf.position.copy(body[i].mesh.position);
+			body[i].axesHelperIcrf.position.x = body[i].x * scale;
+			body[i].axesHelperIcrf.position.y = body[i].y * scale;
+			body[i].axesHelperIcrf.position.z = body[i].z * scale;
 		}
 		if (body[i].axesHelperEci) {
-			body[i].axesHelperEci.position.copy(body[i].mesh.position);
+			// dev5
+			//body[i].axesHelperEci.position.copy(body[i].mesh.position);
+			body[i].axesHelperEci.position.x = body[i].x * scale;
+			body[i].axesHelperEci.position.y = body[i].y * scale;
+			body[i].axesHelperEci.position.z = body[i].z * scale;
 		}
 	}
 
