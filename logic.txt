@@ -7,7 +7,7 @@
 remove throttleUp throttleDown buttons, need to change keyboard access
 
 // dev8
-stop scrolling when using vertical slider
+firefox mobile: stop scrolling when using vertical slider
 
 // dev2
 save/load
@@ -28,6 +28,19 @@ camera improvements
 
 
 
+ORBITAL MECHANICS
+  glitchy when using custom kepler elements with 0 e, 0 i, 0 lan, 0 w, 0 M
+  needs testing
+  0 eccentricity definitely has issues
+  0 inclination functions fine. lan resets at unexpected times, but it's ok.
+  90 inclination ok
+  180 inclination ok
+  0 lan ok
+  0 w ok
+  0 M ok
+  UPDATE: e 0 still not perfect, but way better. i 0 behavior unchanged
+
+
 # ON DECK
 ---------
 
@@ -38,11 +51,6 @@ camera improvements
 # ISSUES
 --------
 
-
-ORBITAL MECHANICS
-  glitchy when using custom kepler elements with 0 e, 0 i, 0 lan, 0 w, 0 M
-  needs testing
-  user feedback indicates issue with 0 eccentricity from maneuvers in-game
 
 gui
   hud numbers wrapping, and going outside of tinted background

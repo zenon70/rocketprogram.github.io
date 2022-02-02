@@ -644,9 +644,27 @@ function keplerPosition() {
 		body[i].cartesEci = icrfToEci(body[i].cartes, body[focus].rightAscension,
 			body[focus].declination);
 
+body[i].testCartesEci = {
+	x: body[i].cartesEci.x,
+	y: body[i].cartesEci.y,
+	z: body[i].cartesEci.z,
+	vx: body[i].cartesEci.vx,
+	vy: body[i].cartesEci.vy,
+	vz: body[i].cartesEci.vz
+}
+
 		// use the updated vectors and mu to get keplerian elements
 		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
 		body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
+
+body[i].testKepler = {
+	a: body[i].kepler.a,
+	e: body[i].kepler.e,
+	i: body[i].kepler.i,
+	lan: body[i].kepler.lan,
+	w: body[i].kepler.w,
+	M: body[i].kepler.M,
+}
 
 		if (!body[i].onSurface) {
 			// increment position (this code IS compatible with hyperbolic)
@@ -1144,15 +1162,15 @@ function displayText() {
 			body.date.toISOString() +
 			"<br>period " + secondsToYears(
 				2*Math.PI / Math.sqrt(body[view].mu) * keplerShow.a**(3/2)) +
-			"<br>a " + (keplerShow.a / 1000).toFixed(3) + " km" +
-			"<br>e " + (keplerShow.e).toFixed(9) +
-			"<br>i " + (keplerShow.i * 180 / Math.PI).toFixed(7) + "°" +
-			"<br>Ω " + (keplerShow.lan * 180 / Math.PI).toFixed(5) + "°" +
-			"<br>ω " + (keplerShow.w * 180 / Math.PI).toFixed(7) + "°" +
-			"<br>M " + (keplerShow.meanAnom * 180 / Math.PI).toFixed(5) + "°" +
-			"<br>v<sub>o</sub> " + (keplerShow.v * 3.6).toFixed(0) + " km/h" +
-			"<br>Ap " + (keplerShow.apoapsis / 1000).toFixed(3) + " km" +
-			"<br>Pe " + (keplerShow.periapsis / 1000).toFixed(3) + " km";
+			"<br>a " + (keplerShow.a / 1000)/*.toFixed(3)*/ + " km" +
+			"<br>e " + (keplerShow.e)/*.toFixed(9)*/ +
+			"<br>i " + (keplerShow.i * 180 / Math.PI)/*.toFixed(7)*/ + "°" +
+			"<br>Ω " + (keplerShow.lan * 180 / Math.PI)/*.toFixed(5)*/ + "°" +
+			"<br>ω " + (keplerShow.w * 180 / Math.PI)/*.toFixed(7)*/ + "°" +
+			"<br>M " + (keplerShow.meanAnom * 180 / Math.PI)/*.toFixed(5)*/ + "°" +
+			"<br>v<sub>o</sub> " + (keplerShow.v * 3.6)/*.toFixed(0)*/ + " km/h" +
+			"<br>Ap " + (keplerShow.apoapsis / 1000)/*.toFixed(3)*/ + " km" +
+			"<br>Pe " + (keplerShow.periapsis / 1000)/*.toFixed(3)*/ + " km";
 	}
 
 	if (body[view].type === "Artificial") {
@@ -1164,7 +1182,7 @@ function displayText() {
 			"<br>Mass " + body[view].mass.toExponential(3) + " kg" +
 			"<br>Lat " + (body[view].gps.lat * 180 / Math.PI).toFixed(6) + "°" +
 			"<br>Lon " + (body[view].gps.lon * 180 / Math.PI).toFixed(6) + "°" +
-			"<br>Ap<sub>Eq</sub>  " + ((body[view].kepler.apoapsis -
+			"<br>Ap<sub>Eq</sub> " + ((body[view].kepler.apoapsis -
 				body[vFocus].radiusEquator)
 				/ 1000).toFixed(3) + " km" +
 			"<br>Pe<sub>Eq</sub> " + ((body[view].kepler.periapsis -

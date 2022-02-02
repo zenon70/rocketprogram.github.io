@@ -530,15 +530,16 @@ function idNaturalBodies() {
 // 2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
  X =-3.046470147980248E+09, Y =-1.071907829729028E+10, Z = 2.375878089046673E+09
  VX=-2.158004379031644E+00, VY=-1.674628408569401E+01, VZ= 3.691435233902702E+00
-*/
+
 // intelsat hyperbolic test
  X =-5.405605653409561E+03, Y =-4.180316246779086E+04, Z =-2.061177954249511E+00
  VX= 5.050274561890771E+00, VY=-3.943561492961989E-01, VZ=-3.098607080831567E-03
+*/
 
 // custom test
 // 2455198.000000000 = A.D. 2010-Jan-01 12:00:00.0000 TDB 
-//X =6378.137, Y =0, Z =0 
-//VX=0, VY=1e-5, VZ=0
+X =0, Y =0, Z =0;
+VX=0, VY=0, VZ=0;
 
 
 function addFalcon() {
@@ -641,7 +642,7 @@ function addFalcon() {
 		}
 	}) - 1;
 
-
+/*
 	// launch from ground
 	let focus = body[i].focus;
 
@@ -700,10 +701,10 @@ function addFalcon() {
 	// not necessary for earth, but should be standard practice
 	body[i].cartes = eciToIcrf(body[i].cartesEci,
 		body[focus].rightAscension, body[focus].declination);
+*/
 
-/*
 	// OVERWRITE PREVIOUS... do this instead..
-
+/*
 	// sputnik 1 orbit
 	let aTemp = getAxis(947000, 228000, body[focus].radiusEquator);
 	let eTemp = getEcc(947000, 228000, body[focus].radiusEquator);
@@ -741,6 +742,21 @@ function addFalcon() {
 		w: 1 * Math.PI / 180,
 		meanAnom: 1 * Math.PI / 180
 	}
+*/
+
+	// zero testing
+	body[i].focus = 3;
+	focus = 3;
+	let aTemp = getAxis(500000, 500000, body[focus].radiusEquator);
+	let eTemp = getEcc(500000, 500000, body[focus].radiusEquator);
+	body[i].kepler = {
+		a: aTemp,
+		e: eTemp,
+		i: 0 * Math.PI / 180,
+		lan: 0 * Math.PI / 180,
+		w: 0 * Math.PI / 180,
+		meanAnom: 0 * Math.PI / 180
+	}
 
 	body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
 	body[i].cartesEci = toCartes(body[i].kepler, body[i].mu);
@@ -753,7 +769,7 @@ function addFalcon() {
 	body[i].cartes = eciToIcrf(body[i].cartesEci, body[focus].rightAscension,
 		body[focus].declination);
 
-*/
+
 	document.getElementById("hudFuel").innerHTML =
 		body[i].fuelMass.toFixed(0) + "<br>kg fuel";
 	return i;

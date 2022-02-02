@@ -1,6 +1,8 @@
 "use strict";
-// revision 62
+// revision 63
 // return values are not accurate for distances or velocities ~0
+// e === 0 causes minor issues momentarily then drifts away from 0
+// i === 0 causes lan to reset unexpectedly, no flight problems 
 // hyperbolic results beyond maxIterations will output NaN values
 
 // ap and pe here are apoapsis and periapsis above mean sea level
@@ -62,7 +64,7 @@ function toKepler(cartes, mu) {
 	let ex = 1/mu * ((v*v - mu/r) * x - r * vRadial * vx);
 	let ey = 1/mu * ((v*v - mu/r) * y - r * vRadial * vy);
 	let ez = 1/mu * ((v*v - mu/r) * z - r * vRadial * vz);
-	//let e = Math.hypot(ex, ey, ez);
+	let e = Math.hypot(ex, ey, ez);
 	// sample output: 0.17121234628445342
 
 	// eccentricity (depending only on the scalars obtained thus far)
@@ -70,7 +72,9 @@ function toKepler(cartes, mu) {
 	//   other procedures. Lower is safer (and more accurate) for ~0 velocities.
 	//   This will help to avoid an ~0 velocity ellipse of 0.999... producing
 	//   an eccentricity value > 1, which would be a catastrophic failure.
-	let e = Math.sqrt(1 + h*h/(mu*mu) * (v*v - 2*mu/r));
+	// UPDATE: actually low is bad, because if e < 0, THAT is a fail. e > 0 is
+	// just hyperbolic, which this code can handle now.
+	//let e = Math.sqrt(1 + h*h/(mu*mu) * (v*v - 2*mu/r));
 	// sample output: 0.17121234628445206
 
 	// eccentricity (using semi-major axis)
@@ -108,8 +112,7 @@ function toKepler(cartes, mu) {
 	// argument of periapsis/pericenter/perigee/perihelion, etc. (lowercase omega)
 	let w = 0;
 	if (n !== 0) {
-		// why 1e-10 instead of 0 or Number.EPSILON or 1e-14 or 1e-12?
-		if (e > 1e-10) {
+		if (e > Number.EPSILON) {
 			// use safety to correct floating point errors and avoid failure
 			let wSafety = (-hy*ex + hx*ey) / (n*e);
 			if (wSafety < -1) {
@@ -143,8 +146,8 @@ function toKepler(cartes, mu) {
 
 	// true anomaly (often notated as "theta")
 	let truAnom = 0;
-	// why 1e-10 instead of 0 or Number.EPSILON or 1e-14 or 1e-12?
-	if (e > 1e-10) {
+	// use Number.EPSILON to accept lowest possible values
+	if (e > Number.EPSILON) {
 		// use safety to correct floating point errors and avoid failure
 		let taSafety = (ex*x + ey*y + ez*z) / (e*r);
 		if (taSafety < -1) {
@@ -159,6 +162,8 @@ function toKepler(cartes, mu) {
 			truAnom = 2*Math.PI - truAnom;
 		}
 	} else {
+		// THIS CODE DOES NOT WORK! e === 0... code needs fix
+		// this may never occur because of method used to get e.
 		if (-hy*y - hx*x >= 0) {
 			truAnom = Math.acos(-hy*x + hx*y / (n*r));
 		} else {
@@ -454,7 +459,7 @@ function toKepi(cartes, mu) {
 	let ex = 1/mu * ((v*v - mu/r) * x - r * vRadial * vx);
 	let ey = 1/mu * ((v*v - mu/r) * y - r * vRadial * vy);
 	let ez = 1/mu * ((v*v - mu/r) * z - r * vRadial * vz);
-	//let e = Math.hypot(ex, ey, ez);
+	let e = Math.hypot(ex, ey, ez);
 	// sample output: 0.17121234628445342
 
 	// eccentricity (depending only on the scalars obtained thus far)
@@ -462,7 +467,7 @@ function toKepi(cartes, mu) {
 	//   other procedures. Lower is safer (and more accurate) for ~0 velocities.
 	//   This will help to avoid an ~0 velocity ellipse of 0.999... producing
 	//   an eccentricity value > 1, which would be a catastrophic failure.
-	let e = Math.sqrt(1 + h*h/(mu*mu) * (v*v - 2*mu/r));
+	//let e = Math.sqrt(1 + h*h/(mu*mu) * (v*v - 2*mu/r));
 	// sample output: 0.17121234628445206
 
 	// eccentricity (using semi-major axis)
@@ -500,8 +505,7 @@ function toKepi(cartes, mu) {
 	// argument of periapsis/pericenter/perigee/perihelion, etc. (lowercase omega)
 	let w = 0;
 	if (n !== 0) {
-		// why 1e-10 instead of 0 or Number.EPSILON or 1e-14 or 1e-12?
-		if (e > 1e-10) {
+		if (e > Number.EPSILON) {
 			// use safety to correct floating point errors and avoid failure
 			let wSafety = (-hy*ex + hx*ey) / (n*e);
 			if (wSafety < -1) {
