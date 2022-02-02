@@ -39,6 +39,7 @@ ORBITAL MECHANICS
   0 w ok
   0 M ok
   UPDATE: e 0 still not perfect, but way better. i 0 behavior unchanged
+  still need real solution to e === 0
 
 
 # ON DECK
@@ -59,7 +60,7 @@ gui
 
 hyperbolic to not hyperbolic, back and forth, slows performance
   needs duplication
-
+  couldn't duplicate
 
 dispose
   check and confirm memory is not leaking, even after recycle
