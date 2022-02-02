@@ -643,7 +643,7 @@ function keplerPosition() {
 		// tilt the orbit to match parent body frame (axial tilt)
 		body[i].cartesEci = icrfToEci(body[i].cartes, body[focus].rightAscension,
 			body[focus].declination);
-
+/*
 body[i].testCartesEci = {
 	x: body[i].cartesEci.x,
 	y: body[i].cartesEci.y,
@@ -652,11 +652,11 @@ body[i].testCartesEci = {
 	vy: body[i].cartesEci.vy,
 	vz: body[i].cartesEci.vz
 }
-
+*/
 		// use the updated vectors and mu to get keplerian elements
 		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
 		body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
-
+/*
 body[i].testKepler = {
 	a: body[i].kepler.a,
 	e: body[i].kepler.e,
@@ -666,6 +666,11 @@ body[i].testKepler = {
 	M: body[i].kepler.M,
 }
 
+if (i === 13) {
+console.log(body[i].testCartesEci);
+console.log(body[i].testKepler);
+}
+*/
 		if (!body[i].onSurface) {
 			// increment position (this code IS compatible with hyperbolic)
 			// add to mean anomaly (rene schwarz method). units in seconds

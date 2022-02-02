@@ -161,6 +161,11 @@ function toKepler(cartes, mu) {
 		if (vRadial < 0) {
 			truAnom = 2*Math.PI - truAnom;
 		}
+	} else if (i === 0) {
+		truAnom = Math.acos(x/r);
+		if (vx > 0) {
+			truAnom = 2 * Math.PI - truAnom;
+		}
 	} else {
 		// THIS CODE DOES NOT WORK! e === 0... code needs fix
 		// this may never occur because of method used to get e.

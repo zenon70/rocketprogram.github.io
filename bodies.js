@@ -642,7 +642,7 @@ function addFalcon() {
 		}
 	}) - 1;
 
-/*
+
 	// launch from ground
 	let focus = body[i].focus;
 
@@ -701,7 +701,7 @@ function addFalcon() {
 	// not necessary for earth, but should be standard practice
 	body[i].cartes = eciToIcrf(body[i].cartesEci,
 		body[focus].rightAscension, body[focus].declination);
-*/
+
 
 	// OVERWRITE PREVIOUS... do this instead..
 /*
@@ -743,7 +743,7 @@ function addFalcon() {
 		meanAnom: 1 * Math.PI / 180
 	}
 */
-
+/*
 	// zero testing
 	body[i].focus = 3;
 	focus = 3;
@@ -768,7 +768,7 @@ function addFalcon() {
 		body[focus].e2);
 	body[i].cartes = eciToIcrf(body[i].cartesEci, body[focus].rightAscension,
 		body[focus].declination);
-
+*/
 
 	document.getElementById("hudFuel").innerHTML =
 		body[i].fuelMass.toFixed(0) + "<br>kg fuel";
