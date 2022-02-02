@@ -502,7 +502,7 @@ function refuel() {
 //let currentFocus = body[8].focus;
 //let debugLog = 0;
 
-const GRAVITY = 6.6743e-11;
+const GRAVITY = 6.67408e-11; // mohr 2016
 
 function nBodyVelocity(/*body, GRAVITY, timestep*/) {
 	for (let i = body.length - 1; i > -1; i--) {

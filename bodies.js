@@ -38,6 +38,7 @@ sun = body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
+	gm: 1.3271244004193938e20, // horizons ephemeris. updated 2018-08-15
 	mass: 1988500e+24,
 	J2: -6.13e-7,
 	radiusEquator: 696000000,
@@ -65,6 +66,7 @@ body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
+	gm: 2.203186855e13,
 	mass: 3.302E+23,
 	J2: 50.3e-6,
 	radiusEquator: 2439.7e+3,
@@ -90,6 +92,7 @@ body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
+	gm: 3.24858592e14,
 	mass: 48.685e+23,
 	J2: 4.458E-6,
 	radiusEquator: 6051800,
@@ -121,6 +124,7 @@ earth = body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
+	gm: 3.98600435436e14,
 	mass: 5.9723e+24,
 	J2: 1.08263e-3,
 	radiusEquator: 6378137,
@@ -152,6 +156,7 @@ planet4 = body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
+	gm: 4.2828375214e13,
 	mass: 6.4171e+23,
 	J2: 1960.45E-6,
 	radiusEquator: 3396200,
@@ -189,6 +194,7 @@ body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
+	gm: 1.26686531900e17,
 	mass: 1898.13e+24,
 	J2: 14736E-6,
 	radiusEquator: 71492000, // [1 bar level]
@@ -226,6 +232,7 @@ body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
+	gm: 3.7931206234e16,
 	mass: 5.6834e+26,
 	J2: 16298E-6,
 	radiusEquator: 60268000, // [1 bar level]
@@ -264,6 +271,7 @@ body.push(
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
+	gm: 5.793951256e15,
 	mass: 86.813e+24,
 	J2: 3343.43E-6,
 	radiusEquator: 25559000, // [1 bar level]
@@ -300,6 +308,7 @@ body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
+	gm: 6.83509997e15,
 	mass: 102.413e+24,
 	J2: 3411E-6,
 	radiusEquator: 24764000, // [1 bar level]
@@ -334,6 +343,7 @@ body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
+	gm: 8.6996e11,
 	mass: 1.307e+22,
 	J2: 0.000047386359048791577, // rough est. based on lunar j2/sidereal ratio
 	radiusEquator: 1188000,
@@ -369,6 +379,7 @@ moon = body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
+	gm: 4.902800066e12,
 	mass: 7.349e+22,
 	J2: 202.7E-6,
 	radiusEquator: 1738100,
@@ -399,7 +410,8 @@ moon401 = body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
-	mass: 10658529896187200,
+	gm: 7.0765e5, // after 2013 flyby. published 2021-12-15 matsumoto
+	mass: 1.0603e16, // matsumoto
 	radiusEquator: 13.1e3,
 	radiusPole: 9.3e3,
 	radiusWest: 11.1e3,
@@ -427,6 +439,7 @@ moon402 = body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
+	gm: 96200, // viking 2
 	mass: 1476188406600740,
 	radiusEquator: 7.5e3,
 	radiusPole: 5.2e3,
