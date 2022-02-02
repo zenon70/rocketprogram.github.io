@@ -529,7 +529,8 @@ function nBodyVelocity(/*body, GRAVITY, timestep*/) {
 			if (distance === 0) continue;
 
 			// newton's law of universal gravitation, but only in one direction
-			let force = GRAVITY * (body[j].mass / (distance * distance));
+			//let force = GRAVITY * (body[j].mass / (distance * distance));
+			let force = body[j].gm / (distance * distance);
 
 			/* dangerous with nbody physics if anything is ejected
 			// do NOT dynamically re-assign these objects. just update.
@@ -654,7 +655,11 @@ body[i].testCartesEci = {
 }
 */
 		// use the updated vectors and mu to get keplerian elements
-		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
+		//body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
+		if (body[i].type === "Artificial") {
+			body[i].gm = body[i].mass * GRAVITY;
+		}
+		body[i].mu = body[focus].gm + body[i].gm;
 		body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
 /*
 body[i].testKepler = {
@@ -713,7 +718,11 @@ console.log(body[i].testKepler);
 			body[focus].declination);
 
 		// get new kepler from cartes
-		body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
+		//body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
+		if (body[i].type === "Artificial") {
+			body[i].gm = body[i].mass * GRAVITY;
+		}
+		body[i].mu = body[focus].gm + body[i].gm;
 		body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
 //	}
 //}
@@ -749,15 +758,15 @@ console.log(body[i].testKepler);
 
 		// celestial body rotations
 		if (body[i].type === "Natural") {
-			if (body[i].tidallyLocked !== true) {
-				body[i].mesh.rotateY(body[i].angularVelocity * timestep);
-				body[i].spun += body[i].angularVelocity * timestep;
-				if (i === earth) {
-					body[i].clouds.rotateY(body[i].angularVelocity * timestep / 12);
-				}
+			//if (body[i].tidallyLocked !== true) {
+			body[i].mesh.rotateY(body[i].angularVelocity * timestep);
+			body[i].spun += body[i].angularVelocity * timestep;
+			if (i === earth) {
+				body[i].clouds.rotateY(body[i].angularVelocity * timestep / 12);
+			}
 
-			} else {
-			//if (body[i].tidallyLocked === true) {
+			//} else {
+			if (body[i].tidallyLocked === true) {
 
 				// dev4
 				// get moon facing direction as vector (prime meridian)
@@ -803,16 +812,19 @@ console.log(body[i].testKepler);
 					primeEci.y * - body[i].cartesEci.x * poleEci.z;
 				let angle = Math.atan2(det, dot);
 
-				/*
-				// experimental tidal locking formula
-				if (body[i].angleOld === undefined) {
-					body[i].angleOld = angle;
-					body[i].angleMax = 0;
-				}
-				const oscillationVelocity = body[i].angleOld - angle;
-				body[i].angularVelocity += angle/1e10 - oscillationVelocity/1e8;
-				body[i].angleOld = angle;
 
+				// experimental tidal locking formula
+				if (body[i].lonLibrationAngle === undefined) {
+					body[i].lonLibrationAngle = angle;
+					//body[i].angleMax = 0;
+				}
+				const oscillationVelocity = body[i].lonLibrationAngle - angle;
+				// add velocity to correct angle, minus damping
+				body[i].angularVelocity += angle/1e10 - oscillationVelocity/1e8;
+				body[i].lonLibrationAngle = angle;
+
+/*
+				// save max angle to display for dev purposes
 				const deg1 = 1 * Math.PI/180
 				const angleAbs = Math.abs(angle);
 				if (angleAbs < deg1) {
@@ -821,16 +833,16 @@ console.log(body[i].testKepler);
 				if (angleAbs > Math.abs(body[i].angleMax)) {
 					body[i].angleMax = angle;
 				}
-				*/
+*/
 
-
+/*
 				// always face parent exactly. unrealistic, but do this for now
 				if (angle < 0) {
 					angle += Math.PI * 2;
 				}
 				body[i].mesh.rotateY(angle);
 				body[i].spun += angle;
-
+*/
 
 
 
@@ -1212,9 +1224,9 @@ function displayText() {
 			"Mass " + body[view].mass.toExponential(3) + " kg" +
 			"<br>EqRad " + (body[view].radiusEquator / 1000).toFixed(0) + " km" +
 			"<br>PoRad " + (body[view].radiusPole / 1000).toFixed(0) + " km" +
-			"<br>Sidereal " + body[view].sidereal.toFixed(2) + " hr" +
-			"<br>libration " + body[view].angleMax * 180/Math.PI + "°" +
-			"<br>sidereal " + (1/((body[view].angularVelocity/Math.PI)/2))/3600 
+			"<br>Real Sidereal " + body[view].sidereal.toFixed(2) + " hr" +
+			"<br>Lon.Libration " + body[view].lonLibrationAngle * 180/Math.PI + "°" +
+			"<br>Sim. Sidereal " + (1/((body[view].angularVelocity/Math.PI)/2))/3600 
 				+ " hr";
 	}
 
@@ -1352,18 +1364,22 @@ function deploy() {
 	addFalconReq = true;
 }
 
-function prepStats(j) {
+function prepStats(i) {
 	// prep stats for displayText
-	let focus = body[j].focus;
-	body[j].cartesEci = icrfToEci(body[j].cartes, body[focus].rightAscension,
+	let focus = body[i].focus;
+	body[i].cartesEci = icrfToEci(body[i].cartes, body[focus].rightAscension,
 		body[focus].declination);
-	body[j].mu = GRAVITY * (body[focus].mass + body[j].mass);
-	body[j].kepler = toKepler(body[j].cartesEci, body[j].mu);
-	body[j].ecef = eciToEcef(body[j].cartesEci,
+	//body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
+	if (body[i].type === "Artificial") {
+		body[i].gm = body[i].mass * GRAVITY;
+	}
+	body[i].mu = body[focus].gm + body[i].gm;
+	body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
+	body[i].ecef = eciToEcef(body[i].cartesEci,
 		body[focus].spun,
 		body[focus].angularVelocity,
 		body[focus].radiusEquator, body[focus].e2);
-	body[j].gps = ecefToGps(body[j].ecef, body[focus].radiusEquator,
+	body[i].gps = ecefToGps(body[i].ecef, body[focus].radiusEquator,
 		body[focus].e2);
 }
 
