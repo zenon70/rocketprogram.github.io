@@ -57,6 +57,9 @@ ORBITAL MECHANICS issue:
 --------
 
 
+slider over yaw button in chrome
+
+
 gui
   hud numbers wrapping, and going outside of tinted background
   desktop orbital verbose data goes outside tinted background
