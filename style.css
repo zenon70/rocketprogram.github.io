@@ -313,12 +313,11 @@ div, label, sub {
 	background:rgba(0, 0, 0, 0);
 }
 
-
 ul, p {
 	margin: 1%;
 	padding: 1%;
 }
 
 #warn {
-	color: red;
+	font-weight: bold;
 }

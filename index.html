@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v152</pre>
+		<pre id="version">v153</pre>
 		<pre class="hud" id="hudDateOrbit">Loading...</pre>
 		<pre class="hud" id="hudGpsInfo"></pre>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -80,13 +80,15 @@
 				<br>
 
 
-				<input type="number" id="customLat" name="latitude" min="-90" max="90">
+				<input type="number" id="customLat" name="customLaunch" min="-90" max="90">
 				<label for="customLat">Latitude (-90 to 90)</label>
 				<br>
-				<input type="number" id="customLon" name="longitude" min="-180" max="180">
+				<input type="number" id="customLon" name="customLaunch" min="-180" max="180">
 				<label for="customLon">Longitude (-180 to 180)</label>
 				<br>
-
+				<input type="number" id="customBody" name="customLaunch">
+				<label for="customBody">Planet, Moon, etc.</label>
+				<br>
 
 				<button class="inMenuButton" onclick="deploy()">deploy</button>
 				<button id="recycle" class="inMenuButton rocketPanel" onclick="recycle()">recycle</button>

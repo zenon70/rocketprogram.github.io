@@ -708,6 +708,7 @@ function addFalcon() {
 		//document.getElementById("customLon").value !== undefined) {
 		let latDeg = document.getElementById("customLat").value;
 		let lonDeg = document.getElementById("customLon").value;
+		let customBody = document.getElementById("customBody").value;
 		latDeg = parseFloat(latDeg);
 		lonDeg = parseFloat(lonDeg);
 		if (latDeg >= -90 && latDeg <= 90) {
@@ -720,13 +721,24 @@ function addFalcon() {
 		} else {
 			lonDeg = 0;
 		}
-		console.log("User requested location: " + latDeg + " and " + lonDeg);
+		console.log(
+			"Deploy request: " + latDeg + ", " + lonDeg + " @" + customBody
+		);
+		for (let j = body.length - 1; j > -1; j--) {
+			if (body[j].type === "Natural" && body[j].name === customBody) {
+				body[i].focus = j;
+				focus = j;
+				break;
+			}
+		}
 		if (latDeg > 89.5) {
 			latDeg = 89.5;
 		} else if (latDeg < -89.5) {
 			latDeg = -89.5;
 		}
-		console.log("Deploying at location: " + latDeg + " and " + lonDeg);
+		console.log(
+			"Deploying at: " + latDeg + ", " + lonDeg + " @" + customBody
+		);
 		body[i].gps = {
 			lat: latDeg * Math.PI / 180,
 			lon: lonDeg * Math.PI / 180,
