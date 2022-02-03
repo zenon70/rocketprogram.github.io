@@ -659,11 +659,6 @@ function addFalcon() {
 	// launch from ground
 	let focus = body[i].focus;
 
-
-
-
-
-
 	// automatic tour
 	if (deployLocation === "tour") {
 		if (body.rocketCount === 1) deployLocation = "kourou";
@@ -704,8 +699,6 @@ function addFalcon() {
 			alt: 0  // actually 90 meters, but this program doesn't have terrain yet
 		};
 	} else if (deployLocation === "custom") {
-		//document.getElementById("customLat").value !== undefined &&
-		//document.getElementById("customLon").value !== undefined) {
 		let latDeg = document.getElementById("customLat").value;
 		let lonDeg = document.getElementById("customLon").value;
 		let customBody = document.getElementById("customBody").value;
@@ -752,50 +745,6 @@ function addFalcon() {
 		};
 	}
 
-
-
-
-/*
-	if (body.rocketCount === 1) {
-		// guiana space center, kourou, french guiana
-		body[i].gps = {
-			lat: 5.236 * Math.PI / 180,
-			lon: -52.775 * Math.PI / 180,
-			alt: 0  // actual unknown
-		};
-		camera.position.set(-200 * scale, 0 * scale, -350 * scale); // kourou
-		camera.up.set(0.62, -0.5, 2); // kourou
-	} else if (body.rocketCount === 2) {
-		// boca chica, texas
-		body[i].gps = {
-			lat: 25.997354305760496 * Math.PI / 180,
-			lon: -97.15698039306052 * Math.PI / 180,
-			alt: 0
-		};
-	} else if (body.rocketCount === 3) {
-		// kennedy launch pad 39a
-		body[i].gps = {
-			lat: 28.60838889 * Math.PI / 180,
-			lon: -80.60444444 * Math.PI / 180,
-			alt: 0
-		};
-	} else if (body.rocketCount === 4) {
-		// baikonur cosmodrome, kazakhstan
-		body[i].gps = {
-			lat: 45.92 * Math.PI / 180,
-			lon: 63.342 * Math.PI / 180,
-			alt: 0  // actually 90 meters, but this program doesn't have terrain yet
-		};
-	} else {
-		// anywhere
-		body[i].gps = {
-			//lat: (Math.random() * (90 - -90) + -90) * Math.PI / 180,
-			lat: Math.acos(Math.random() * 2 - 1) - Math.PI / 2,
-			lon: (Math.random() * (180 - -180) + -180) * Math.PI / 180,
-			alt: 0
-		};
-	}
-*/
 
 
 

@@ -75,6 +75,8 @@ dispose
 ----------------------------
 
 
+fix origin of rocket so 0 is ground, on legs
+
 planet texture should always be below spacecraft, like launchpad
 
 
