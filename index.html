@@ -201,58 +201,42 @@
 | ,__/|_| \___/ \__, |_| \__,_|_| |_| |_|
 |_|             |___/
 </pre>
+<!-- below is automatically formatted markdown to html -->
+
+
+
 <h1 id="this-is-a-rocket-program">this is a rocket program</h1>
 <p>this program simulates rocket launches, orbits, and interplanetary spaceflight.</p>
 <p><em>the file orbMech.js can be used to convert between Keplerian Orbital Elements and Cartesian State Vectors</em></p>
 <h2 id="main-features">main features</h2>
 <ul>
-<li><p>n-body physics integrated with keplerian physics</p>
-<ul>
-<li>lagrange points, lissajous orbits, horseshoe orbits, etc.</li>
-<li>more accurate and stable than simplectic euler n-body physics</li>
-</ul>
+<li><p>n-body physics integrated with keplerian physics: lagrange points, lissajous orbits, horseshoe orbits, etc.. more accurate and stable than simplectic euler n-body physics</p>
 </li>
-<li><p>oblate spheroids and nodal precession</p>
-<ul>
-<li>acheive special sun-synchronous orbits, etc.</li>
-</ul>
+<li><p>oblate spheroids and nodal precession! acheive special sun-synchronous orbits, etc.</p>
 </li>
-<li><p>accurate Global Positioning System, altitude, and surface speed</p>
-<ul>
-<li>track spacecraft in real-scale space, to millimeter precision</li>
-</ul>
+<li><p>tidal locking. pseudo-realistic tidal locking with horizontal libration as well as vertical</p>
 </li>
-<li><p>a navball, affected by both orbital position, and pitch, yaw, and roll</p>
-<ul>
-<li>a useful tool for monitoring spacecraft orientation</li>
-</ul>
+<li><p>accurate Global Positioning System, altitude, and surface speed. track spacecraft in real-scale space, to millimeter precision</p>
 </li>
-<li><p>US Standard Atmosphere air density model and aerodynamic drag</p>
-<ul>
-<li>simulate MaxQ (maximum aerodynamic pressure), and orbital decay</li>
-</ul>
+<li><p>a navball, affected by both orbital position, and pitch, yaw, and roll. a useful tool for monitoring spacecraft orientation</p>
 </li>
-<li><p>NASA space object parameters</p>
-<ul>
-<li>all space objects are placed according to NASA Horizons space data</li>
-</ul>
+<li><p>US Standard Atmosphere air density model and aerodynamic drag. simulate MaxQ (maximum aerodynamic pressure), and orbital decay</p>
 </li>
-<li><p>IAU (International Astronomical Union) data for space object axial tilt</p>
-<ul>
-<li>accurate right ascension, declination, and object rotation in time</li>
-</ul>
+<li><p>NASA space object parameters. all space objects are placed according to NASA Horizons space data</p>
+</li>
+<li><p>IAU (International Astronomical Union) data for space object axial tilt. accurate right ascension, declination, and object rotation in time</p>
 </li>
 </ul>
 <h2 id="links">links</h2>
 <p><em>development version:</em></p>
 <ul>
-<li>Live: <a href="https://cubetronic.github.io">https://cubetronic.github.io</a></li>
-<li>Code: <a href="https://github.com/cubetronic/cubetronic.github.io">https://github.com/cubetronic/cubetronic.github.io</a></li>
+<li>live: <a href="https://cubetronic.github.io">https://cubetronic.github.io</a></li>
+<li>code: <a href="https://github.com/cubetronic/cubetronic.github.io">https://github.com/cubetronic/cubetronic.github.io</a></li>
 </ul>
 <p><em>stable version:</em></p>
 <ul>
-<li>Live: <a href="https://rocketprogram.github.io">https://rocketprogram.github.io</a></li>
-<li>Code: <a href="https://github.com/rocketprogram/rocketprogram.github.io">https://github.com/rocketprogram/rocketprogram.github.io</a></li>
+<li>live: <a href="https://rocketprogram.github.io">https://rocketprogram.github.io</a></li>
+<li>code: <a href="https://github.com/rocketprogram/rocketprogram.github.io">https://github.com/rocketprogram/rocketprogram.github.io</a></li>
 </ul>
 <hr>
 <ul>
@@ -304,11 +288,11 @@
 <td>orbital velocity kilometers per second*</td>
 </tr>
 <tr>
-<td>Apo</td>
+<td>Ap</td>
 <td>apoapsis distance from center of mass</td>
 </tr>
 <tr>
-<td>Peri</td>
+<td>Pe</td>
 <td>periapsis distance from center of mass</td>
 </tr>
 </tbody>
@@ -328,7 +312,7 @@
 <td>altitude from MSL (mean sea level) at your location</td>
 </tr>
 <tr>
-<td>vs</td>
+<td>vels</td>
 <td>surface velocity kilometers per second*</td>
 </tr>
 <tr>
@@ -348,18 +332,18 @@
 <td>longitude</td>
 </tr>
 <tr>
-<td>Apos</td>
+<td>ApEq</td>
 <td>surface apoapsis altitude from MSL at Equator</td>
 </tr>
 <tr>
-<td>Peris</td>
+<td>PeEq</td>
 <td>surface periapsis altitude from MSL at Equator</td>
 </tr>
 </tbody>
 </table>
 <p>* the kms listed with gps info is surface speed. this is the ECEF (earth-centered earth-fixed) frame, and it DOES consider the spin of the planet/moon/etc.</p>
 <p>MSL: Mean Sea Level</p>
-<h3 id="reference-plane-for-objects-orbiting-the-sun">Reference Plane for objects orbiting the sun</h3>
+<h3 id="reference-plane-for-objects-orbiting-the-sun">reference plane for objects orbiting the sun</h3>
 <p>this setting allows you to change the data output on the screen for the object you are currently viewing.</p>
 <ul>
 <li><p>the ecliptic plane is the de facto standard in space literature unless specified.</p>
@@ -373,25 +357,25 @@
 <li><p>the ICRF frame is fixed to the stars, and is based on the earth&#39;s equator. this is not usually used in reference to objects orbiting the sun.</p>
 </li>
 </ul>
-<h3 id="axes">Axes</h3>
-<p>For Spacecraft:</p>
+<h3 id="axes">axes</h3>
+<p>for spacecraft:</p>
 <ul>
-<li>Red points in the Forward +X direction (-X is Aft), the axis of roll.</li>
-<li>Blue points Nadir +Z (and -Z is Zenith), the axis of yaw.</li>
-<li>Green points Starboard +Y (and -Y is Port), the axis of pitch.</li>
+<li>red points in the Forward +X direction (-X is Aft), the axis of roll.</li>
+<li>blue points Nadir +Z (and -Z is Zenith), the axis of yaw.</li>
+<li>green points Starboard +Y (and -Y is Port), the axis of pitch.</li>
 </ul>
-<p>For Natural Bodies:</p>
+<p>for natural bodies:</p>
 <ul>
-<li>shows ICRF axes (long): Blue is +Z and points roughly to the North star (Polaris). Red is +X and points to the Vernal Point (the imaginary line drawn from Earth to the Sun at the moment of the Spring Equinox). Green is +Y and points to 90° Right Ascension. These axes are used for reference. They are fixed to the stars.</li>
-<li>and ECEF axes (short): Blue is +Z goes through the positive pole (usually called north, more on that later). Red is +X and goes through the Prime Meridian, and is the center point for most maps. Green is +Y and goes through 90° East.</li>
+<li>shows ICRF axes (long): blue is +Z and points roughly to the north star (Polaris). red is +X and points to the Vernal Point (the imaginary line drawn from Earth to the Sun at the moment of the Spring Equinox). green is +Y and points to 90° Right Ascension. these axes are used for reference. they are fixed to the stars.</li>
+<li>and ECEF axes (short): blue is +Z goes through the positive pole (usually called north, more on that later). red is +X and goes through the Prime Meridian, and is the center point for most maps. green is +Y and goes through 90° East.</li>
 </ul>
-<p>The IAU convention states that the &quot;north&quot; pole of a planet or moon or object is whichever pole is located on the same side of the solar system&#39;s invariable plane as earth&#39;s north pole. This usually means that its north pole is its positive pole, but not for 299, 799, and 999, for example.</p>
-<p>However, this program does not follow that convention, because it is arbitrary and breaks other definitions like the definitions of east and west.</p>
-<p>Therefore, instead, this program considers a planet, moon, or object&#39;s &quot;north&quot; pole to be its positive pole, which is defined by its rotation. If standing on a planet facing east, the positive pole will be to the left. This is the convention used for exoplanets, and thus is a uniform standard that has no exceptions, and thus is easier to rely upon and use for navigation. It also does not require redefining east and west. For example, in this program, when launching, pointing east will <em>always</em> be an easier orbit to acheive because it will always be a prograde orbit.</p>
-<p>Note that which way the sun rises and sets is another matter. Usually, if a planet&#39;s &quot;north&quot; pole is its positive pole, the sun should rise in the east. Yet some planets rotate so slowly that the sunrise and sunset may also be a matter of not just the planet&#39;s own rotation, but also its revolution around the sun. For example, 199 has an other-worldly sunrise sunset pattern.</p>
-<h3 id="graphics">Graphics</h3>
-<p>In reality, the sun is just pure white. It only appears orange when viewing it with special equipment. Therefore, in this program the sun is pure white, unless specifically viewing it.
-The sun does not rotate like planets. Its equator rotates more rapidly than its poles, which is not simulated here, but the general rotation speed is simulated.</p>
+<p>the IAU convention states that the &quot;north&quot; pole of a planet or moon or object is whichever pole is located on the same side of the solar system&#39;s invariable plane as earth&#39;s north pole. this usually means that its north pole is its positive pole, but not for 299, 799, and 999, for example.</p>
+<p>however, this program does not follow that convention, because it is arbitrary and breaks other definitions like the definitions of east and west.</p>
+<p>therefore, instead, this program considers a planet, moon, or object&#39;s &quot;north&quot; pole to be its positive pole, which is defined by its rotation. if standing on a planet facing east, the positive pole will be to the left. this is the convention used for exoplanets, and thus is a uniform standard that has no exceptions, and thus is easier to rely upon and use for navigation. it also does not require redefining east and west. for example, in this program, when launching, pointing east will <em>always</em> be an easier orbit to acheive because it will always be a prograde orbit.</p>
+<p>note that which way the sun rises and sets is another matter. usually, if a planet&#39;s &quot;north&quot; pole is its positive pole, the sun should rise in the east. yet some planets rotate so slowly that the sunrise and sunset may also be a matter of not just the planet&#39;s own rotation, but also its revolution around the sun. for example, 199 has an other-worldly sunrise sunset pattern.</p>
+<h3 id="graphics">graphics</h3>
+<p>in reality, the sun is just pure white. it only appears orange when viewing it with special equipment. therefore, in this program the sun is pure white, unless specifically viewing it.
+the sun does not rotate like planets. its equator rotates more rapidly than its poles, which is not simulated here, but the general rotation speed is simulated.</p>
 <h3 id="navigation-tips">navigation tips</h3>
 <ul>
 <li><p>if you feel <em>upside down</em>, you can spin the view. tap (or click) and hold and make a circular motion. go clockwise or counter-clockwise to rotate the view. astronauts are always faced with the challenge of determining which way is <em>up</em>. if the ISS (International Space Station) had an axes helper, it would show red forward, roughly east, and blue pointing down towards earth, and green to the right, starboard, which is roughly south because it heads east.</p>
@@ -405,7 +389,7 @@ The sun does not rotate like planets. Its equator rotates more rapidly than its 
 <li><p>hyperbolic trajectories function accurately, however, helper lines are currently NOT rendered. in previous versions that are not online, code was written to visualize <em>any</em> projected trajectory, even lissajous orbits. unfortunately, that code was very processor-intensive, so i have left it out of this version until i get around to it. therefore, transitioning between orbiting one thing and another thing can be very disorienting. use the nav-ball, orbital elements, and gps info to guide you. good luck! </p>
 </li>
 </ul>
-<h2 id="what-is-simulated">what is simulated</h2>
+<h3 id="what-is-simulated">what is simulated</h3>
 <ul>
 <li><p>it uses n-body physics. this means that every celestial object is having a gravitational effect on every other celestial object. this means that strange orbit types such as lagrangian and horseshoe orbits are possible. even the mass of a spacecraft in this program is calculated to affect the movement of distant planets... yet the numerical precision limits simulating that phenomenon here. still, a spacecraft may have a measurable effect on a very lightweight object nearby.</p>
 </li>
@@ -427,31 +411,31 @@ The sun does not rotate like planets. Its equator rotates more rapidly than its 
 </li>
 <li><p>surface speed is accurate, even with oblate sphereoid bodies.</p>
 </li>
-<li><p>atmosphere of earth and aerodynamic drag, up to 202,000 km altitude. that&#39;s more than half-way to the moon. so even gps and geostationary satellites experience aerodynamic drag.</p>
+<li><p>atmosphere of earth and aerodynamic drag, up to 202,000 km altitude. that&#39;s more than half-way to the moon. even gps and geostationary satellites experience aerodynamic drag.</p>
+</li>
+<li><p>atmosphere for other planets. the atmosphere for foreign planets is crudely simulated without considering temperature. and as for the gas giants, scientifically speaking, 1 bar of pressure is considered the surface of the gas giants, both for altitude measurements and planet radius measurements. however, 1 bar of pressure is by no means an actual surface. the galilean probe went 132km below the 1 bar pressure altitude before it lost contact. this simulation currently uses the 1 bar convention for radius and it is simulated as a hard surface, even though it definitely is not.</p>
+</li>
+<li><p>tidal locking is pseudo-simulated with a custom formula. libration in this program may be more than in real life. in real life, the moon has about a 7° maximum horizontal aka longitudinal libration.</p>
 </li>
 </ul>
-<h2 id="what-is-not-simulated">what is not simulated</h2>
+<h3 id="what-is-not-simulated">what is not simulated</h3>
 <ul>
 <li><p>the actual rotation of the spacecraft is more or less lost during and after multiplying the time. this is actually due to the fact that keeping proper rotation over time requires a complex formula that has not yet been built into this simulation. </p>
-</li>
-<li><p>atmosphere for other planets and moons</p>
 </li>
 <li><p>the rings of the 6th planet appear unrealistic in a way: they do not receive the shade of the planet, nor do they cast shade. the three.js JavaScript library does not have a good out-of-the-box solution for this. i have experimented with different possible solutions, but they all look worse than just not simulating shade. eclipse shade is also not simulated.</p>
 </li>
 <li><p>relativity and/or the speed of gravity are not currently simulated. upon developing this simulation, i did some research on special and general relativity. from what i understand, NASA&#39;s Horizons data is unfortunately muddied with counter-corrections for relativity. it&#39;s complicated, and i don&#39;t remember all the details right now, but basically, i believe it may be possible for me to produce an extremely accurate simulation - better than perhaps most simulations, by using a proper implementation of Gerber&#39;s equation regarding the effect of gravity travelling at the speed of light. this should accurately simulate the anomaly of the precession of the first planet. as far as fifth planet flyby anomalies, that is currently an observed phenomenon that puzzles scientists.</p>
 </li>
-<li><p>tidal forces, such as water and land tidal forces, are not simulated.</p>
+<li><p>tidal forces other than tidal locking, such as water and land tidal forces, are not simulated.</p>
 </li>
 <li><p>solar forces such as electromagnetic storms and heat radiation forces are not simulated.</p>
 </li>
-<li><p>tidally locked moons do not gyrate properly. they are simply flagged as &#39;tidally locked&#39; in the code, and behave accordingly.</p>
-</li>
 <li><p>surface terrain such as mountains and valleys are not simulated.</p>
 </li>
-<li><p>401 gps surface and graphics are different (beyond normal issue of limited segments) due to non-&#39;oblate-spheroid&#39; shape: radiusWest squishes it along another axis, and there is no gps formula here for that. 401 (and 402) are actually better depicted as complicated 3d models anyway.</p>
+<li><p>moons 401 and 402 gps surface and graphics are different beyond normal issue of limited segments due to non-&#39;oblate-spheroid&#39; shape: they have different dimensions on all three axes, and there is no gps formula here for that. 401 (and 402) are actually better depicted as complicated 3d models, but that is currently out of scope for this project.</p>
 </li>
 </ul>
-<h2 id="design-choices">design choices</h2>
+<h3 id="design-choices">design choices</h3>
 <ul>
 <li><p>functional programming. wherever possible and practical, <em>pure</em> (independent)  functions are written and utilized. this keeps the working pieces of the program separate, and therefore makes the program more reliable and more extensible. it is my goal to make it so that advanced users and programmers can easily understand and use the code.</p>
 </li>
@@ -467,9 +451,11 @@ The sun does not rotate like planets. Its equator rotates more rapidly than its 
 </li>
 <li><p>the underlying physics engine is called orbMech, which was written so that the code can be used elsewhere. it converts from keplerian orbital elements to cartesian state vectors, and of course also from cartesian state vectors to keplerian orbital elements. if i find the time, perhaps i will make part of this program dedicated to being a conversion calculator.</p>
 </li>
-<li><p>as a side effect of the way this program was developed, it is possible to bore through planets. this program could also be called &quot;boring program&quot;.</p>
+<li><p>one very unique feature of this program is that it is possible to bore through planets and moons. this program could also be called &quot;boring program&quot;.</p>
 </li>
 </ul>
+
+
 
 				</div><!-- end readme -->
 			</div><!-- end contents -->
