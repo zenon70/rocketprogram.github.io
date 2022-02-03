@@ -664,7 +664,8 @@ function addFalcon() {
 		if (body.rocketCount === 1) deployLocation = "kourou";
 		else if (body.rocketCount === 2) deployLocation = "boca";
 		else if (body.rocketCount === 3) deployLocation = "kennedy";
-		else if (body.rocketCount === 4) deployLocation = "baikonur";
+		else if (body.rocketCount === 4) deployLocation = "mahia";
+		else if (body.rocketCount === 5) deployLocation = "baikonur";
 		else deployLocation = "random";
 	}
 
@@ -689,6 +690,13 @@ function addFalcon() {
 		body[i].gps = {
 			lat: 28.60838889 * Math.PI / 180,
 			lon: -80.60444444 * Math.PI / 180,
+			alt: 0
+		};
+	} else if (deployLocation === "mahia") {
+		// Rocket Lab LC1, Māhia, New Zealand
+		body[i].gps = {
+			lat: -39.261500 * Math.PI / 180,
+			lon: 177.864876 * Math.PI / 180,
 			alt: 0
 		};
 	} else if (deployLocation === "baikonur") {
