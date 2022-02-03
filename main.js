@@ -1356,11 +1356,12 @@ function viewPrevious() {
 ////////////////////////////////////////////////////////////////////////////////
 // add rocket, stage separation, fairing separation, recycle
 
-// save requests to process when ready. limit 1 during pause.
 //let deployLocation = "random";
+let deployLocation = "tour";
+// save requests to process when ready. limit 1 during pause.
 let addFalconReq = false;
 function deploy() {
-	//deployLocation = document.getElementById("deployLocation").value;
+	deployLocation = document.getElementById("deployLocation").value;
 	addFalconReq = true;
 }
 

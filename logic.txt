@@ -12,13 +12,13 @@ firefox mobile: stop scrolling when using vertical slider
 // dev2
 save/load
 
-// dev3
 launch from gps location or orbit, anywhere
-  need to avoid overlap
+  should avoid overlap
+  can't launch from 90, see orbital mechanics issue
 
 // dev4
 tidal locking
-301, 401, and 402 now locked facing parent, which is better, but not realistic.
+301, 401, and 402 now dynamically oscillating
 with the moon's angularVelocity changing wildly to face earth, how does that
 affect spaceflight and landing?
 use a-b point masses to represent tidal bulge, receive nbody velocity changes
@@ -28,7 +28,9 @@ camera improvements
 
 
 
-ORBITAL MECHANICS
+ORBITAL MECHANICS issue:
+  #1 ECCENTRICITY too high at poles
+  #2 issue with 0 or ~0 circular orbits
   glitchy when using custom kepler elements with 0 e, 0 i, 0 lan, 0 w, 0 M
   needs testing
   0 eccentricity definitely has issues
@@ -40,6 +42,8 @@ ORBITAL MECHANICS
   0 M ok
   UPDATE: e 0 still not perfect, but way better. i 0 behavior unchanged
   still need real solution to e === 0
+  launch from 89.9 lat glitchy, so i limited it to 89.5
+
 
 
 # ON DECK
@@ -58,7 +62,7 @@ gui
   desktop orbital verbose data goes outside tinted background
   hud fuel overlaps on smartphone in widescreen if not fullscreened
 
-hyperbolic to not hyperbolic, back and forth, slows performance
+hyperbolic to not hyperbolic, back and forth, "slows performance"?
   needs duplication
   couldn't duplicate
 

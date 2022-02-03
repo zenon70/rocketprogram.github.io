@@ -14,6 +14,34 @@ function getEcc(ap, pe, msl) {
 	return 1 - 2 / ((ap + msl)/(pe + msl) + 1);
 }
 
+// textbook custom atan2 procedure: must return between 0 and 2 * Math.PI
+function atan2_in_range(y, x) {
+	let t = 0;
+	if (x === 0) {
+		if (y === 0) {
+			t = 0;
+		} else if (y > 0) {
+			t = Math.PI / 2;
+		} else {
+			t = Math.PI * 1.5;
+		}
+	} else if (x > 0) {
+		if (y >= 0) {
+			t = Math.atan(y/x);
+		} else {
+			t = Math.atan(y/x) + 2 * Math.PI;
+		}
+	} else if (x < 0) {
+		if (y === 0) {
+			t = Math.PI;
+		} else {
+			t = Math.atan(y/x) + Math.PI;
+		}
+	}
+	return t;
+}
+
+
 // convert Cartesian State Vectors to Keplerian Orbital Elements
 function toKepler(cartes, mu) {
 	let {x, y, z, vx, vy, vz} = cartes;
@@ -39,6 +67,7 @@ function toKepler(cartes, mu) {
 	let i = Math.acos(hz/h);
 	if (isNaN(i)) {
 		i = 0;
+		console.log("Math.acos(" + hz + "/" + h + ") is NaN");
 	}
 
 	// define node line, calculate magnitude
@@ -82,32 +111,7 @@ function toKepler(cartes, mu) {
 	//let eTest2 = Math.sqrt(1 - (h*h / mu) / aAlternative);
 	// sample output: 0.1712123462844524
 
-	// textbook custom atan2 procedure: must return between 0 and 2 * Math.PI
-	function atan2_in_range(y, x) {
-		let t = 0;
-		if (x === 0) {
-			if (y === 0) {
-				t = 0;
-			} else if (y > 0) {
-				t = Math.PI / 2;
-			} else {
-				t = Math.PI * 1.5;
-			}
-		} else if (x > 0) {
-			if (y >= 0) {
-				t = Math.atan(y/x);
-			} else {
-				t = Math.atan(y/x) + 2 * Math.PI;
-			}
-		} else if (x < 0) {
-			if (y === 0) {
-				t = Math.PI;
-			} else {
-				t = Math.atan(y/x) + Math.PI;
-			}
-		}
-		return t;
-	}
+
 
 	// argument of periapsis/pericenter/perigee/perihelion, etc. (lowercase omega)
 	let w = 0;

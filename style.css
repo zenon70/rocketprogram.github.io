@@ -228,16 +228,33 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 }
 
 select {
+	margin: 2%;
+	min-height: 30px;
+	vertical-align: middle;
 	color: #dddddd;
+	padding: 1.2em 3em 1.3em 1.5em;
+/*
+	transition: border-color 0.2s;
+	border: 5px solid #777777;
+	border-radius: 5px;
+*/
 }
 
 
-input {
+input[type="number"] {
+	margin: 2%;
+	padding: 2%;
+	min-height: 30px;
+	vertical-align: middle;
+	color: #dddddd;
+	accent-color: gray;
+}
+
+input[type="checkbox"], input[type="radio"] {
 	margin: 2%;
 	padding: 2%;
 	width: 30px;
 	height: 30px;
-	padding: 2%;
 	background:rgba(0, 0, 0, 0);
 	vertical-align: middle;
 	accent-color: gray;
@@ -292,7 +309,7 @@ a:active {
 }
 
 pre, span, em, ul, li, p, table, thead, tr, th, tbody, td, warn,
-div, input, label, sub {
+div, label, sub {
 	background:rgba(0, 0, 0, 0);
 }
 

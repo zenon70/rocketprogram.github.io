@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v151</pre>
+		<pre id="version">v152</pre>
 		<pre class="hud" id="hudDateOrbit">Loading...</pre>
 		<pre class="hud" id="hudGpsInfo"></pre>
 		<p class="hud rocketPanel" id="hudFuel">0</p>
@@ -65,15 +65,28 @@
 				<div class="subtext">Refuel available when empty</div>
 				<h3>Multiple Rockets</h3>
 
-<!-- dev3
+
+				<label for="deployLocation">Deploy Location</label>
+				<br>
 				<select id="deployLocation">
+					<option value="tour">Automatic Tour</option>
 					<option value="kourou">Kourou, French Guiana</option>
 					<option value="boca">Boca Chica, Texas</option>
 					<option value="kennedy">LC-39A, Kennedy Space Center, Florida</option>
 					<option value="baikonur">Baikonur Cosmodrome, Kazakhstan</option>
-					<option value="random">random</option>
+					<option value="random">Random GPS Location</option>
+					<option value="custom">Custom (User Defined)</option>
 				</select>
--->
+				<br>
+
+
+				<input type="number" id="customLat" name="latitude" min="-90" max="90">
+				<label for="customLat">Latitude (-90 to 90)</label>
+				<br>
+				<input type="number" id="customLon" name="longitude" min="-180" max="180">
+				<label for="customLon">Longitude (-180 to 180)</label>
+				<br>
+
 
 				<button class="inMenuButton" onclick="deploy()">deploy</button>
 				<button id="recycle" class="inMenuButton rocketPanel" onclick="recycle()">recycle</button>
