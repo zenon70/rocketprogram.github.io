@@ -419,7 +419,7 @@ body[i].mesh.attach(poleArrow);
 
 
 
-
+/*
 // create prime meridian arrow (scales WITH parent body)
 body[i].primeArrow = new THREE.ArrowHelper(
 	new THREE.Vector3(1, 0, 0),
@@ -436,7 +436,7 @@ body[i].primeArrow = new THREE.ArrowHelper(
 	0x00ffff);
 body[i].mesh.add(body[i].primeArrow);
 body[i].primeArrow.visible = true;
-
+*/
 
 /*
 // create prime meridian arrow ---- the hard way

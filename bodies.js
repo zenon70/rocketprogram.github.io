@@ -135,7 +135,7 @@ earth = body.push({
 	declination: 90,
 	primeMeridian: 190.147,
 
-	surfaceAirDensity: 1.225,
+	surfaceAirDensity: 1.217,
 	scaleHeight: 8500,
 
 	segments: 64,
@@ -244,7 +244,7 @@ body.push({
 	primeMeridian: 38.90,
 
 	surfaceAirDensity: 0.19,
-	scaleHeight: 59.5,
+	scaleHeight: 59500,
 
 	map: "graphics/planet6_2k.jpg",
 	ringsMap: "graphics/planet6rings_1k.png",
@@ -283,7 +283,7 @@ body.push(
 	primeMeridian: 203.81,
 
 	surfaceAirDensity: 0.42,
-	scaleHeight: 27.7,
+	scaleHeight: 27700,
 
 	map: "graphics/planet7_1k.jpg",
 	ringsMap: "graphics/planet7rings_512.png",
@@ -320,7 +320,7 @@ body.push({
 	primeMeridian: 253.18,
 
 	surfaceAirDensity: 0.45,
-	scaleHeight: 19.7,
+	scaleHeight: 19700,
 
 	map: "graphics/planet8_2k.jpg",
 	color: 0x364fa7
@@ -354,6 +354,9 @@ body.push({
 	declination: -6.163,
 	// 0 longitude on the map is the left edge, so add 180
 	primeMeridian: 237.305 + 180,
+
+	surfaceAirDensity: 0.000079174,
+	scaleHeight: 50000,
 
 	map: "graphics/planet9_2k.jpg",
 	color: 0x967a63
@@ -421,7 +424,8 @@ moon401 = body.push({
 	rightAscension: 317.68,
 	declination: 52.90,
 	primeMeridian: 35.06,
-
+	
+	segments: 32,
 	map: "graphics/moon401_720x360.jpg",
 	color: 0x9a8d84
 }) - 1;
@@ -450,7 +454,8 @@ moon402 = body.push({
 	rightAscension: 316.65,
 	declination: 53.52,
 	primeMeridian: 79.41,
-
+	
+	segments: 32,
 	map: "graphics/moon402_720x360.jpg",
 	color: 0xb0aa9f
 }) - 1;
@@ -491,7 +496,7 @@ for (let i = body.length - 1; i > -1; i--) {
 
 
 	if (body[i].segments === undefined) {
-		body[i].segments = 32;
+		body[i].segments = 64;
 	}
 
 /*

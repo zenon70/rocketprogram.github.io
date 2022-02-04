@@ -822,7 +822,7 @@ console.log(body[i].testKepler);
 
 				// experimental tidal locking formula
 				// add velocity to correct angle, minus damping
-				//body[i].angularVelocity += angle/1e10 - oscillationVelocity/1e8;
+				body[i].angularVelocity += angle/1e10 - oscillationVelocity/1e8;
 
 				body[i].lonLibrationAngle = angle;
 
@@ -1082,19 +1082,24 @@ function setPlane(value) {
 	}
 }
 
+// save DOM variables for efficiency
+const hudDateOrbit = document.getElementById("hudDateOrbit");
+const hudGpsInfo = document.getElementById("hudGpsInfo");
+const hudView = document.getElementById("hudView");
+
 let verbose = false;
 document.querySelector("#toggleHud").checked = false;
 function toggleHud() {
 	if (verbose === false) {
-		document.getElementById("hudDateOrbit").style.height = "142px";
-		document.getElementById("hudGpsInfo").style.height = "120px";
-		document.getElementById("hudDateOrbit").style.visibility = "visible";
-		document.getElementById("hudGpsInfo").style.visibility = "visible";
+		hudDateOrbit.style.height = "142px";
+		hudGpsInfo.style.height = "142px";
+		hudDateOrbit.style.visibility = "visible";
+		hudGpsInfo.style.visibility = "visible";
 		verbose = true;
 		displayText();
 	} else {
-		document.getElementById("hudDateOrbit").style.height = "36px";
-		document.getElementById("hudGpsInfo").style.height = "24px";
+		hudDateOrbit.style.height = "36px";
+		hudGpsInfo.style.height = "36px";
 		verbose = false;
 		displayText();
 	}
@@ -1102,15 +1107,15 @@ function toggleHud() {
 
 function simpleHud() {
 	if (body[view].type !== "Artificial") {
-		document.getElementById("hudDateOrbit").style.visibility = "hidden";
-		document.getElementById("hudGpsInfo").style.visibility = "hidden";
+		hudDateOrbit.style.visibility = "hidden";
+		hudGpsInfo.style.visibility = "hidden";
 		return;
 	}
-	document.getElementById("hudDateOrbit").style.visibility = "visible";
-	document.getElementById("hudGpsInfo").style.visibility = "visible";
+	hudDateOrbit.style.visibility = "visible";
+	hudGpsInfo.style.visibility = "visible";
 	let vFocus = body[view].focus;
 	// show mission time
-	document.getElementById("hudDateOrbit").innerHTML =
+	hudDateOrbit.innerHTML =
 	"T+ " + secondsToYears(body[view].missionTime) +
 	"<br>Apoapsis  " + ((body[view].kepler.apoapsis -
 		body[vFocus].radiusEquator)
@@ -1118,16 +1123,14 @@ function simpleHud() {
 	"<br>Periapsis " + ((body[view].kepler.periapsis -
 		body[vFocus].radiusEquator) / 1000).toFixed(3) + " km";
 
-	document.getElementById("hudGpsInfo").innerHTML =
+	hudGpsInfo.innerHTML =
 		"Altitude " + (body[view].gps.alt / 1000).toFixed(1) + " km" +
 		"<br>Speed    " + (Math.hypot(body[view].ecef.vx, body[view].ecef.vy,
-			body[view].ecef.vz) * 3.6).toFixed(0) + " km/h";
+			body[view].ecef.vz) * 3.6).toFixed(0) + " km/h" +
+		"<br>Fuel     " + body[view].fuelMass.toFixed(0) + " kg";
 }
 
 
-const hudDateOrbit = document.getElementById("hudDateOrbit");
-const hudGpsInfo = document.getElementById("hudGpsInfo");
-const hudView = document.getElementById("hudView");
 function displayText() {
 
 	if (verbose === false) {
@@ -1138,7 +1141,6 @@ function displayText() {
 	let vFocus = body[view].focus;
 
 	if (view === mostMassiveBody) {
-		//document.getElementById("hudDateOrbit").innerHTML =
 		hudDateOrbit.innerHTML =
 			body.date.toISOString() +
 			"<br>r " +
@@ -1198,9 +1200,9 @@ function displayText() {
 
 	if (body[view].type === "Artificial") {
 		hudGpsInfo.innerHTML =
-			"Alt " + (body[view].gps.alt / 1000).toFixed(6) + " km" +
+			"Alt " + (body[view].gps.alt / 1000).toFixed(9) + " km" +
 			"<br>vel<sub>s</sub> " + (Math.hypot(body[view].ecef.vx, body[view].ecef.vy,
-				body[view].ecef.vz) * 3.6).toFixed(0) + " km/h" +
+				body[view].ecef.vz) * 3.6).toFixed(6) + " km/h" +
 			"<br>drag " + body[view].drag.toExponential(2) + " m/s²" +
 			"<br>Mass " + body[view].mass.toExponential(3) + " kg" +
 			"<br>Lat " + (body[view].gps.lat * 180 / Math.PI).toFixed(6) + "°" +
@@ -1209,7 +1211,8 @@ function displayText() {
 				body[vFocus].radiusEquator)
 				/ 1000).toFixed(3) + " km" +
 			"<br>Pe<sub>Eq</sub> " + ((body[view].kepler.periapsis -
-				body[vFocus].radiusEquator) / 1000).toFixed(3) + " km";
+				body[vFocus].radiusEquator) / 1000).toFixed(3) + " km" +
+			"<br>Fuel " + body[view].fuelMass.toFixed(3) + " kg";
 		if (body[view].s1refuelCount) {
 			hudGpsInfo.innerHTML +=
 				"<br>s1 refueled: " + body[view].s1refuelCount;
@@ -1219,21 +1222,38 @@ function displayText() {
 				"<br>refueled: " + body[view].refuelCount;
 		}
 		hudGpsInfo.innerHTML +=
-			//"<br>surface vx: " + body[view].ecefLastVX +
-			//"<br>surface vy: " + body[view].ecefLastVY +
-			//"<br>surface vz: " + body[view].ecefLastVZ +
-			"<br>vel<sub>s</sub> of landing " +
+			"<br>last vel<sub>s</sub> above surface<br>" +
 			(Math.hypot(body[view].ecefLastVX, body[view].ecefLastVY,
-				body[view].ecefLastVZ) * 3.6).toFixed(1);
+				body[view].ecefLastVZ) * 3.6)/*.toFixed(1)*/;
 	} else {
 		hudGpsInfo.innerHTML =
-			"Mass " + body[view].mass.toExponential(3) + " kg" +
-			"<br>EqRad " + (body[view].radiusEquator / 1000).toFixed(0) + " km" +
-			"<br>PoRad " + (body[view].radiusPole / 1000).toFixed(0) + " km" +
-			"<br>Real Sidereal " + body[view].sidereal.toFixed(2) + " hr" +
-			"<br>Lon.Libration " + body[view].lonLibrationAngle * 180/Math.PI + "°" +
-			"<br>Sim. Sidereal " + (1/((body[view].angularVelocity/Math.PI)/2))/3600 
-				+ " hr";
+			"GM " + body[view].gm.toExponential(6) + " kg" +
+			"<br>Mass " + body[view].mass.toExponential(6) + " kg" +
+			"<br>Radius<sub>Equator</sub> " +
+			(body[view].radiusEquator / 1000).toFixed(0) + " km" +
+			"<br>Radius<sub>Polar</sub> " +
+			(body[view].radiusPole / 1000).toFixed(0) + " km" +
+			"<br>Right Asc.  " +
+			(body[view].rightAscension * 180 / Math.PI).toFixed(2) + "°" +
+			"<br>Declination " +
+			(body[view].declination * 180 / Math.PI).toFixed(2) + "°" +
+			"<br>Real Sidereal " + body[view].sidereal.toFixed(2) + " hr";
+
+		if (body[view].surfaceAirDensity > 0) {
+			hudGpsInfo.innerHTML +=
+				"<br>Air Density at Surface" +
+				"<br>" + body[view].surfaceAirDensity.toFixed(6) + " kg/m³" +
+				"<br>Atmosphere Scale Height" +
+				"<br>" + (body[view].scaleHeight / 1000).toFixed(6) + " km";
+		}
+
+		if (body[view].tidallyLocked === true) {
+			hudGpsInfo.innerHTML +=
+				"<br>Sim. Sidereal " +
+				((1/((body[view].angularVelocity/Math.PI)/2))/3600).toFixed(2) + " hr" +
+				"<br>Lon.Libration " + (body[view].lonLibrationAngle *
+				180/Math.PI).toFixed(3) + "°";
+		}
 	}
 
 	// update in case object is now orbiting something else
