@@ -15,7 +15,6 @@
 
 this program simulates rocket launches, orbits, and interplanetary spaceflight.
 
-*the file orbMech.js can be used to convert between Keplerian Orbital Elements and Cartesian State Vectors*
 
 ## main features ##
 - n-body physics integrated with keplerian physics: lagrange points, lissajous orbits, horseshoe orbits, etc.. more accurate and stable than simplectic euler n-body physics
@@ -57,35 +56,39 @@ this program simulates rocket launches, orbits, and interplanetary spaceflight.
 symbol|meaning
 ------|-------
 period| orbital period, one year is 365.2422 days
-a     | semi-major axis
-e     | eccentricity
-i     | inclination
-Ω     | longitude of the ascending node
-ω     | argument of periapsis
-M     | mean anomaly
+a     | semi-major axis: when positive, half the long length of an ellipse
+e     | eccentricity: 0 = circle, 0-1 = ellipse, 1 = parabola, +1 = hyperbola
+i     | inclination: 0 = equatorial, 90 = polar orbit, 180 = retrograde orbit
+Ω     | longitude of the ascending node: degrees from the vernal point
+ω     | argument of periapsis: degrees from Ω to lowest orbital altitude
+M     | mean anomaly: time-weighted degrees from ω to current location
 vo    | orbital velocity kilometers per second*
-Ap    | apoapsis distance from center of mass
-Pe    | periapsis distance from center of mass
+Ap    | apoapsis: furthest distance from center of mass
+Pe    | periapsis: closest distance from center of mass
 
-\* the kms listed with orbital info is orbital speed. this is the ECI (earth centered inertial) frame, which means it does NOT consider the spin of the planet/moon/etc.
+\* the kms listed with orbital info is orbital speed, which is measured in the inertial frame, which is a frame of reference that does not move with the spin of the planet/moon/etc., but instead is purely relative to the speed around the planet/moon/etc. this is how orbital objects such as satellites measure speed.
 
 
 **surface info**
 
 abbv |meaning
 -----|-------
-Alt  | altitude from MSL (mean sea level) at your location
+GM   | gravity × mass, AKA the gravitational parameter "μ"
+Alt  | altitude from MSL (mean sea level) at your exact location
 vels | surface velocity kilometers per second*
-drag | newtons of force
-mass | total mass of object
-Lat  | latitude
-Lon  | longitude
+drag | aerodynamic drag based on drag coefficient and area, in newtons of force
+mass | total mass of object with fuel
+Lat  | latitude: distance from 90° north to -90° south
+Lon  | longitude: distance from 180° east to -180° west
 ApEq | surface apoapsis altitude from MSL at Equator
 PeEq | surface periapsis altitude from MSL at Equator
 
-\* the kms listed with gps info is surface speed. this is the ECEF (earth-centered earth-fixed) frame, and it DOES consider the spin of the planet/moon/etc.
+\* the kms listed with gps info is surface speed, which is measured in the fixed frame, which means that the measurements are fixed relative to the surface (and atmosphere) of a planet/moon/etc. this is how automobiles measure speed, as well as rockets when they are launching and landing.
 
 MSL: Mean Sea Level
+Right Asc. is Right Ascension
+Sim. Sidereal is the current simulated sidereal rate
+Lon.Libration only measures longitudinal libration
 
 ### reference plane for objects orbiting the sun
 this setting allows you to change the data output on the screen for the object you are currently viewing.

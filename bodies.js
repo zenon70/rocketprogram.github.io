@@ -562,7 +562,7 @@ VX=0, VY=0, VZ=0;
 function addFalcon() {
 	body.rocketCount++;
 	const i = body.push({
-		name: "f9" + "#" + String(body.rocketCount),
+		name: "f9s1" + "#" + String(body.rocketCount),
 		focus: earth,
 		mass: 549054,
 		fuelMass: 411000,
@@ -610,7 +610,7 @@ function addFalcon() {
 			color: 0xe5e7e7,
 
 			fairingN: {
-				name: "fairingPZ" + "#" + String(body.rocketCount),
+				name: "f9fn" + "#" + String(body.rocketCount),
 				focus: earth,
 				mass: 100,
 				fuelMass: 0,
@@ -634,7 +634,7 @@ function addFalcon() {
 			},
 
 			fairingZ: {
-				name: "fairingMZ" + "#" + String(body.rocketCount),
+				name: "f9fz" + "#" + String(body.rocketCount),
 				focus: earth,
 				mass: 100,
 				fuelMass: 0,

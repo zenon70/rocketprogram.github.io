@@ -22,7 +22,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 	color: #dddddd;
 	background:rgba(0, 0, 0, .5);
 	height: 24px;
-	width: 37px;
+	width: 42px;
 	bottom: 175px;
 	font-family: monospace;
 	padding: 2px;
@@ -43,21 +43,24 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 
 #hudThrottle {
 	left: 1px;
+	text-align: center;
 }
 #hudStep {
-	left: 61px;
+	left: 59px;
+	text-align: center;
 }
 #hudView {
-	left: 121px;
+	left: 118px;
+	text-align: center;
 }
 
 
 #hudYaw {
-	right: 121px;
+	right: 118px;
 	text-align: center;
 }
 #hudPitch {
-	right: 61px;
+	right: 59px;
 	text-align: center;
 }
 #hudRoll {

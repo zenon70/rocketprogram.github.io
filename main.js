@@ -857,14 +857,9 @@ console.log(body[i].testKepler);
 					body[focus].e2);
 				body[i].gps = ecefToGps(body[i].ecef, body[focus].radiusEquator,
 					body[focus].e2);
-				// save last flight velocity before touchdown
-				if (body[i].gps.alt > 0) {
-					body[i].ecefLastVX = body[i].ecef.vx;
-					body[i].ecefLastVY = body[i].ecef.vy;
-					body[i].ecefLastVZ = body[i].ecef.vz;
-				}
+
+				// obstruction of ground eliminates velocity
 				if (body[i].gps.alt < 0) {
-					// obstruction of ground eliminates velocity
 					body[i].ecef.vx = 0;
 					body[i].ecef.vy = 0;
 					body[i].ecef.vz = 0;
@@ -1219,10 +1214,6 @@ function displayText() {
 			hudGpsInfo.innerHTML +=
 				"<br>refueled: " + body[view].refuelCount;
 		}
-		hudGpsInfo.innerHTML +=
-			"<br>last vel<sub>s</sub> above surface<br>" +
-			(Math.hypot(body[view].ecefLastVX, body[view].ecefLastVY,
-				body[view].ecefLastVZ) * 3.6)/*.toFixed(1)*/;
 	} else {
 		hudGpsInfo.innerHTML =
 			"GM " + body[view].gm.toExponential(6) + " kg" +

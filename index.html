@@ -8,7 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 	</head>
 	<body>
-		<pre id="version">v157</pre>
+		<pre id="version">v158</pre>
 		<pre class="hud" id="hudDateOrbit">Loading...</pre>
 		<pre class="hud" id="hudGpsInfo"></pre>
 		<p class="hud rocketPanel" id="hudThrottle">0%<br>off</p>
@@ -207,9 +207,9 @@
 
 
 
+
 <h1 id="this-is-a-rocket-program">this is a rocket program</h1>
 <p>this program simulates rocket launches, orbits, and interplanetary spaceflight.</p>
-<p><em>the file orbMech.js can be used to convert between Keplerian Orbital Elements and Cartesian State Vectors</em></p>
 <h2 id="main-features">main features</h2>
 <ul>
 <li><p>n-body physics integrated with keplerian physics: lagrange points, lissajous orbits, horseshoe orbits, etc.. more accurate and stable than simplectic euler n-body physics</p>
@@ -263,27 +263,27 @@
 </tr>
 <tr>
 <td>a</td>
-<td>semi-major axis</td>
+<td>semi-major axis: when positive, half the long length of an ellipse</td>
 </tr>
 <tr>
 <td>e</td>
-<td>eccentricity</td>
+<td>eccentricity: 0 = circle, 0-1 = ellipse, 1 = parabola, +1 = hyperbola</td>
 </tr>
 <tr>
 <td>i</td>
-<td>inclination</td>
+<td>inclination: 0 = equatorial, 90 = polar orbit, 180 = retrograde orbit</td>
 </tr>
 <tr>
 <td>Ω</td>
-<td>longitude of the ascending node</td>
+<td>longitude of the ascending node: degrees from the vernal point</td>
 </tr>
 <tr>
 <td>ω</td>
-<td>argument of periapsis</td>
+<td>argument of periapsis: degrees from Ω to lowest orbital altitude</td>
 </tr>
 <tr>
 <td>M</td>
-<td>mean anomaly</td>
+<td>mean anomaly: time-weighted degrees from ω to current location</td>
 </tr>
 <tr>
 <td>vo</td>
@@ -291,15 +291,15 @@
 </tr>
 <tr>
 <td>Ap</td>
-<td>apoapsis distance from center of mass</td>
+<td>apoapsis: furthest distance from center of mass</td>
 </tr>
 <tr>
 <td>Pe</td>
-<td>periapsis distance from center of mass</td>
+<td>periapsis: closest distance from center of mass</td>
 </tr>
 </tbody>
 </table>
-<p>* the kms listed with orbital info is orbital speed. this is the ECI (earth centered inertial) frame, which means it does NOT consider the spin of the planet/moon/etc.</p>
+<p>* the kms listed with orbital info is orbital speed, which is measured in the inertial frame, which is a frame of reference that does not move with the spin of the planet/moon/etc., but instead is purely relative to the speed around the planet/moon/etc. this is how orbital objects such as satellites measure speed.</p>
 <p><strong>surface info</strong></p>
 <table>
 <thead>
@@ -310,8 +310,12 @@
 </thead>
 <tbody>
 <tr>
+<td>GM</td>
+<td>gravity × mass, AKA the gravitational parameter &quot;μ&quot;</td>
+</tr>
+<tr>
 <td>Alt</td>
-<td>altitude from MSL (mean sea level) at your location</td>
+<td>altitude from MSL (mean sea level) at your exact location</td>
 </tr>
 <tr>
 <td>vels</td>
@@ -319,19 +323,19 @@
 </tr>
 <tr>
 <td>drag</td>
-<td>newtons of force</td>
+<td>aerodynamic drag based on drag coefficient and area, in newtons of force</td>
 </tr>
 <tr>
 <td>mass</td>
-<td>total mass of object</td>
+<td>total mass of object with fuel</td>
 </tr>
 <tr>
 <td>Lat</td>
-<td>latitude</td>
+<td>latitude: distance from 90° north to -90° south</td>
 </tr>
 <tr>
 <td>Lon</td>
-<td>longitude</td>
+<td>longitude: distance from 180° east to -180° west</td>
 </tr>
 <tr>
 <td>ApEq</td>
@@ -343,8 +347,11 @@
 </tr>
 </tbody>
 </table>
-<p>* the kms listed with gps info is surface speed. this is the ECEF (earth-centered earth-fixed) frame, and it DOES consider the spin of the planet/moon/etc.</p>
-<p>MSL: Mean Sea Level</p>
+<p>* the kms listed with gps info is surface speed, which is measured in the fixed frame, which means that the measurements are fixed relative to the surface (and atmosphere) of a planet/moon/etc. this is how automobiles measure speed, as well as rockets when they are launching and landing.</p>
+<p>MSL: Mean Sea Level
+Right Asc. is Right Ascension
+Sim. Sidereal is the current simulated sidereal rate
+Lon.Libration only measures longitudinal libration</p>
 <h3 id="reference-plane-for-objects-orbiting-the-sun">reference plane for objects orbiting the sun</h3>
 <p>this setting allows you to change the data output on the screen for the object you are currently viewing.</p>
 <ul>
@@ -456,7 +463,7 @@ the sun does not rotate like planets. its equator rotates more rapidly than its 
 <li><p>one very unique feature of this program is that it is possible to bore through planets and moons. this program could also be called &quot;boring program&quot;.</p>
 </li>
 </ul>
-
+ 
 
 
 				</div><!-- end readme -->
