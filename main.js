@@ -656,11 +656,11 @@ body[i].testCartesEci = {
 */
 		// use the updated vectors and mu to get keplerian elements
 		//body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
-		if (body[i].type === "Artificial") {
-			body[i].gm = body[i].mass * GRAVITY;
-		}
-		body[i].mu = body[focus].gm + body[i].gm;
-		body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
+		//if (body[i].type === "Artificial") {
+		//	body[i].gm = body[i].mass * GRAVITY;
+		//}
+		//body[i].mu = body[focus].gm;// + body[i].gm;
+		body[i].kepler = toKepler(body[i].cartesEci, body[focus].gm);
 /*
 body[i].testKepler = {
 	a: body[i].kepler.a,
@@ -680,7 +680,7 @@ console.log(body[i].testKepler);
 			// increment position (this code IS compatible with hyperbolic)
 			// add to mean anomaly (rene schwarz method). units in seconds
 			body[i].kepler.meanAnom += timestep *
-				Math.sqrt(body[i].mu / Math.abs(body[i].kepler.a)**3);
+				Math.sqrt(body[focus].gm / Math.abs(body[i].kepler.a)**3);
 			//body[i].kepler.eAnom = null;
 			//body[i].kepler.truAnom = null;
 
@@ -693,15 +693,26 @@ console.log(body[i].testKepler);
 			if (body[i].kepler.periapsis - body[focus].radiusPole > 0
 				//&& body[i].kepler.e < 1
 				) {
-				body[i].nodal = nodalPrecession(body[i].kepler, body[i].mu,
+				body[i].nodal = nodalPrecession(body[i].kepler, body[focus].gm,
 					body[focus].J2, body[focus].radiusEquator);
 				body[i].kepler.lan += body[i].nodal.lanRate * timestep;
 				body[i].kepler.w += body[i].nodal.wRate * timestep;
 			}
 		}
 
+/*
+		// calculate circularVelocity
+		//...
+
+		// catch near zero velocity, use nbody position instead
+		if (body[i].kepler.e > 0.99999 && body[i].kepler.v < circularVelocity) {
+			nBodyPosition(i);
+		}
+*/
+
+
 		// use the new keplerian elements to get new vectors
-		body[i].cartesEci = toCartes(body[i].kepler, body[i].mu);
+		body[i].cartesEci = toCartes(body[i].kepler, body[focus].gm);
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -719,11 +730,11 @@ console.log(body[i].testKepler);
 
 		// get new kepler from cartes
 		//body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
-		if (body[i].type === "Artificial") {
-			body[i].gm = body[i].mass * GRAVITY;
-		}
-		body[i].mu = body[focus].gm + body[i].gm;
-		body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
+		//if (body[i].type === "Artificial") {
+		//	body[i].gm = body[i].mass * GRAVITY;
+		//}
+		//body[i].mu = body[focus].gm + body[i].gm;
+		body[i].kepler = toKepler(body[i].cartesEci, body[focus].gm);
 //	}
 //}
 */
@@ -813,14 +824,16 @@ console.log(body[i].testKepler);
 				let angle = Math.atan2(det, dot);
 
 
-				// experimental tidal locking formula
 				if (body[i].lonLibrationAngle === undefined) {
 					body[i].lonLibrationAngle = angle;
 					//body[i].angleMax = 0;
 				}
 				const oscillationVelocity = body[i].lonLibrationAngle - angle;
+
+				// experimental tidal locking formula
 				// add velocity to correct angle, minus damping
-				body[i].angularVelocity += angle/1e10 - oscillationVelocity/1e8;
+				//body[i].angularVelocity += angle/1e10 - oscillationVelocity/1e8;
+
 				body[i].lonLibrationAngle = angle;
 
 /*
@@ -994,7 +1007,8 @@ console.log(body[i].testKepler);
 function drawEllipse(draw, shade, scale) {
 
 	// just get i, lan, and w from icrf. a and e are the same as eci.
-	let kepi = toKepi(body[draw].cartes, body[draw].mu);
+	const focus = body[draw].focus;
+	let kepi = toKepi(body[draw].cartes, body[focus].gm);
 
 	// use absolute for safety in case of hyperbola
 	const a = Math.abs(body[draw].kepler.a) * scale;
@@ -1041,14 +1055,11 @@ function drawEllipse(draw, shade, scale) {
 	body[draw].ellipse.rotateY(-w);
 	body[draw].ellipse.rotateX(Math.PI / 2);
 
-	const focus = body[draw].focus;
-
 	// dev5
 	//body[draw].ellipse.position.copy(body[focus].mesh.position);
 	body[draw].ellipse.position.x = body[focus].x * scale;
 	body[draw].ellipse.position.y = body[focus].y * scale;
 	body[draw].ellipse.position.z = body[focus].z * scale;
-
 }
 
 
@@ -1123,6 +1134,10 @@ function simpleHud() {
 			body[view].ecef.vz) * 3.6).toFixed(0) + " km/h";
 }
 
+
+const hudDateOrbit = document.getElementById("hudDateOrbit");
+const hudGpsInfo = document.getElementById("hudGpsInfo");
+const hudView = document.getElementById("hudView");
 function displayText() {
 
 	if (verbose === false) {
@@ -1133,7 +1148,8 @@ function displayText() {
 	let vFocus = body[view].focus;
 
 	if (view === mostMassiveBody) {
-		document.getElementById("hudDateOrbit").innerHTML =
+		//document.getElementById("hudDateOrbit").innerHTML =
+		hudDateOrbit.innerHTML =
 			body.date.toISOString() +
 			"<br>r " +
 			(Math.hypot(body[view].x, body[view].y, body[view].z) / 1000).
@@ -1157,28 +1173,28 @@ function displayText() {
 					4.71238898038469,
 				// DEC 90 - 23.43929 = 66.56071, * Math.PI / 180 = 1.161703541965115
 					1.161703541965115);
-				keplerShow = toKepler(cartesAltPlane, body[view].mu);
+				keplerShow = toKepler(cartesAltPlane, body[vFocus].gm);
 			} else if (reportPlane === "icrf") {
 				// currently in icrf frame
-				keplerShow = toKepler(body[view].cartes, body[view].mu);
+				keplerShow = toKepler(body[view].cartes, body[vFocus].gm);
 			} else if (reportPlane === "galactic") {
 				const cartesAltPlane = icrfToEci(body[view].cartes,
 					0.38147085502186906, // 21.85667 deg
 					0.4735078260660616); // 27.13 deg
-				keplerShow = toKepler(cartesAltPlane, body[view].mu);
+				keplerShow = toKepler(cartesAltPlane, body[vFocus].gm);
 			} else { // invariable
 				const cartesAltPlane = icrfToEci(body[view].cartes,
 					4.779584156586472, // 273.85 deg
 					1.1691960659110012); // 66.99 deg
-				keplerShow = toKepler(cartesAltPlane, body[view].mu);
+				keplerShow = toKepler(cartesAltPlane, body[vFocus].gm);
 			}
 		} else {
 			keplerShow = body[view].kepler;
 		}
-		document.getElementById("hudDateOrbit").innerHTML =
+		hudDateOrbit.innerHTML =
 			body.date.toISOString() +
 			"<br>period " + secondsToYears(
-				2*Math.PI / Math.sqrt(body[view].mu) * keplerShow.a**(3/2)) +
+				2*Math.PI / Math.sqrt(body[vFocus].gm) * keplerShow.a**(3/2)) +
 			"<br>a " + (keplerShow.a / 1000)/*.toFixed(3)*/ + " km" +
 			"<br>e " + (keplerShow.e)/*.toFixed(9)*/ +
 			"<br>i " + (keplerShow.i * 180 / Math.PI)/*.toFixed(7)*/ + "°" +
@@ -1191,7 +1207,7 @@ function displayText() {
 	}
 
 	if (body[view].type === "Artificial") {
-		document.getElementById("hudGpsInfo").innerHTML =
+		hudGpsInfo.innerHTML =
 			"Alt " + (body[view].gps.alt / 1000).toFixed(6) + " km" +
 			"<br>vel<sub>s</sub> " + (Math.hypot(body[view].ecef.vx, body[view].ecef.vy,
 				body[view].ecef.vz) * 3.6).toFixed(0) + " km/h" +
@@ -1205,14 +1221,14 @@ function displayText() {
 			"<br>Pe<sub>Eq</sub> " + ((body[view].kepler.periapsis -
 				body[vFocus].radiusEquator) / 1000).toFixed(3) + " km";
 		if (body[view].s1refuelCount) {
-			document.getElementById("hudGpsInfo").innerHTML +=
+			hudGpsInfo.innerHTML +=
 				"<br>s1 refueled: " + body[view].s1refuelCount;
 		}
 		if (body[view].refuelCount) {
-			document.getElementById("hudGpsInfo").innerHTML +=
+			hudGpsInfo.innerHTML +=
 				"<br>refueled: " + body[view].refuelCount;
 		}
-		document.getElementById("hudGpsInfo").innerHTML +=
+		hudGpsInfo.innerHTML +=
 			//"<br>surface vx: " + body[view].ecefLastVX +
 			//"<br>surface vy: " + body[view].ecefLastVY +
 			//"<br>surface vz: " + body[view].ecefLastVZ +
@@ -1220,7 +1236,7 @@ function displayText() {
 			(Math.hypot(body[view].ecefLastVX, body[view].ecefLastVY,
 				body[view].ecefLastVZ) * 3.6).toFixed(1);
 	} else {
-		document.getElementById("hudGpsInfo").innerHTML =
+		hudGpsInfo.innerHTML =
 			"Mass " + body[view].mass.toExponential(3) + " kg" +
 			"<br>EqRad " + (body[view].radiusEquator / 1000).toFixed(0) + " km" +
 			"<br>PoRad " + (body[view].radiusPole / 1000).toFixed(0) + " km" +
@@ -1232,10 +1248,10 @@ function displayText() {
 
 	// update in case object is now orbiting something else
 	if (view !== 0) {
-		document.getElementById("hudView").innerHTML = body[view].name + "<br>@ " +
+		hudView.innerHTML = body[view].name + "<br>@ " +
 			body[body[view].focus].name;
 	} else {
-		document.getElementById("hudView").innerHTML = body[view].name + "<br>@ " +
+		hudView.innerHTML = body[view].name + "<br>@ " +
 			"mlky";
 	}
 }
@@ -1371,11 +1387,11 @@ function prepStats(i) {
 	body[i].cartesEci = icrfToEci(body[i].cartes, body[focus].rightAscension,
 		body[focus].declination);
 	//body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
-	if (body[i].type === "Artificial") {
-		body[i].gm = body[i].mass * GRAVITY;
-	}
-	body[i].mu = body[focus].gm + body[i].gm;
-	body[i].kepler = toKepler(body[i].cartesEci, body[i].mu);
+	//if (body[i].type === "Artificial") {
+	//	body[i].gm = body[i].mass * GRAVITY;
+	//}
+	//body[i].mu = body[focus].gm;// + body[i].gm;
+	body[i].kepler = toKepler(body[i].cartesEci, body[focus].gm);
 	body[i].ecef = eciToEcef(body[i].cartesEci,
 		body[focus].spun,
 		body[focus].angularVelocity,
