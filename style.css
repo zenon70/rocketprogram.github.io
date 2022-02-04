@@ -41,11 +41,6 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 	height: 36px;
 }
 
-#hudFuel {
-	left: 1px;
-	bottom: 205px;
-	width: 42px;
-}
 #hudThrottle {
 	left: 1px;
 }

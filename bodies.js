@@ -839,7 +839,5 @@ function addFalcon() {
 		body[focus].declination);
 */
 
-	document.getElementById("hudFuel").innerHTML =
-		body[i].fuelMass.toFixed(0) + "<br>kg fuel";
 	return i;
 } // end addFalcon()

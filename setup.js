@@ -623,8 +623,6 @@ function viewFinalize() {
 		}
 	} else {
 		scene2.visible = true;
-		document.getElementById("hudFuel").innerHTML =
-			body[view].fuelMass.toFixed(0) + "<br>kg fuel";
 		document.getElementById("hudPitch").innerHTML =
 			Math.round(body[view].xSpin * 10) + "<br>pitch";
 		document.getElementById("hudYaw").innerHTML =

@@ -427,12 +427,12 @@ function rocketControl() {
 					thrustAccel * timestep;
 				body[i].vz += body[i].pointingV3.z * body[i].throttle / 100 *
 					thrustAccel * timestep;
-
+/*
 				if (i === view) {
 					document.getElementById("hudFuel").innerHTML =
 						body[i].fuelMass.toFixed(0) + "<br>kg fuel";
 				}
-
+*/
 				body[i].onSurface = false;
 
 				// dev5
@@ -478,8 +478,6 @@ function refuel() {
 			body[view].refuelCount = 1;
 		}
 	}
-	document.getElementById("hudFuel").innerHTML =
-		body[view].fuelMass.toFixed(0) + "<br>kg fuel";
 }
 
 
