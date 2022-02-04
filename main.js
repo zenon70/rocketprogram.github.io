@@ -655,11 +655,6 @@ body[i].testCartesEci = {
 }
 */
 		// use the updated vectors and mu to get keplerian elements
-		//body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
-		//if (body[i].type === "Artificial") {
-		//	body[i].gm = body[i].mass * GRAVITY;
-		//}
-		//body[i].mu = body[focus].gm;// + body[i].gm;
 		body[i].kepler = toKepler(body[i].cartesEci, body[focus].gm);
 /*
 body[i].testKepler = {
@@ -729,11 +724,6 @@ console.log(body[i].testKepler);
 			body[focus].declination);
 
 		// get new kepler from cartes
-		//body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
-		//if (body[i].type === "Artificial") {
-		//	body[i].gm = body[i].mass * GRAVITY;
-		//}
-		//body[i].mu = body[focus].gm + body[i].gm;
 		body[i].kepler = toKepler(body[i].cartesEci, body[focus].gm);
 //	}
 //}
@@ -1386,11 +1376,6 @@ function prepStats(i) {
 	let focus = body[i].focus;
 	body[i].cartesEci = icrfToEci(body[i].cartes, body[focus].rightAscension,
 		body[focus].declination);
-	//body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
-	//if (body[i].type === "Artificial") {
-	//	body[i].gm = body[i].mass * GRAVITY;
-	//}
-	//body[i].mu = body[focus].gm;// + body[i].gm;
 	body[i].kepler = toKepler(body[i].cartesEci, body[focus].gm);
 	body[i].ecef = eciToEcef(body[i].cartesEci,
 		body[focus].spun,

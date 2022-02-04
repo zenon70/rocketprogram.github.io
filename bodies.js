@@ -499,7 +499,6 @@ for (let i = body.length - 1; i > -1; i--) {
 	if (i === 0) body[0].radiusSoi = Infinity;
 	else {
 		let focus = body[i].focus;
-		//body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
 		body[i].kepler = toKepler(body[i].cartes, body[focus].gm);
 		// assumes a is positive with e < 1 (not hyperbolic)
 		body[i].radiusSoi = body[i].kepler.a *
@@ -762,7 +761,6 @@ function addFalcon() {
 	body[i].cartesEci = ecefToEci(body[i].ecef, body[focus].spun,
 		body[focus].angularVelocity, body[focus].radiusEquator, body[focus].e2);
 
-	//body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
 	body[i].kepler = toKepler(body[i].cartesEci, body[focus].gm);
 
 	// not necessary for earth, but should be standard practice
@@ -825,7 +823,6 @@ function addFalcon() {
 		meanAnom: 0 * Math.PI / 180
 	}
 
-	//body[i].mu = GRAVITY * (body[focus].mass + body[i].mass);
 	body[i].cartesEci = toCartes(body[i].kepler, body[focus].gm);
 	body[i].ecef = eciToEcef(body[i].cartesEci,
 		body[focus].spun,
