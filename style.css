@@ -128,11 +128,8 @@ body {
 	position: fixed;
 	margin: 0;
 	padding: 0;
-/*
-	left: 50%;
+	left: 200px;
 	transform: translateX(-50%);
-*/
-	left: 181px;
 
 	bottom: 41px;
 	height: 200px;
@@ -141,8 +138,9 @@ body {
 	-webkit-appearance: slider-vertical;
 	-ms-writing-mode: bt-lr;
 	height: 100%;
-	accent-color: #777;
+	accent-color: #999;
 }
+
 
 
 #up {
@@ -315,10 +313,6 @@ a:active {
 	color: skyblue;
 }
 
-pre, span, em, ul, li, p, table, thead, tr, th, tbody, td, warn,
-div, label, sub {
-	background: #0000;
-}
 
 ul, p {
 	margin: 1%;

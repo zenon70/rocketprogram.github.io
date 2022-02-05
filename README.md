@@ -84,9 +84,9 @@ PeEq | surface periapsis altitude from MSL at Equator
 
 \* the kms listed with gps info is surface speed, which is measured in the fixed frame, which means that the measurements are fixed relative to the surface (and atmosphere) of a planet/moon/etc. this is how automobiles measure speed, as well as rockets when they are launching and landing.
 
-MSL: Mean Sea Level
-Right Asc. is Right Ascension
-Sim. Sidereal is the current simulated sidereal rate
+MSL: Mean Sea Level  
+Right Asc. is Right Ascension  
+Sim. Sidereal is the current simulated sidereal rate  
 Lon.Libration only measures longitudinal libration
 
 ## reference plane for objects orbiting the sun
