@@ -90,8 +90,8 @@ function faster() {
 	showStep();
 }
 function slower() {
-	if (timestep > .000625) timestep /= 2;
-	if (timestep < .000625) timestep = .000625;
+	if (timestep > 0.000625) timestep /= 2;
+	if (timestep < 0.000625) timestep = 0.000625;
 	showStep();
 }
 
@@ -185,7 +185,7 @@ document.getElementById("throttleAdjustSlider").oninput = function() {
 	//document.getElementById("starlightOutput").innerHTML = this.value * 20 + "%";
 	body[view].throttle = this.value;
 	throttleShow();
-}
+};
 
 
 
@@ -224,7 +224,7 @@ const keyState = {
 	KeyV: null,
 	KeyT: null,
 	KeyG: null
-}
+};
 
 // initialize last effective date of keypresses for repeat delay
 const keyDelay = {
@@ -241,7 +241,7 @@ const keyDelay = {
 	KeyV: 0,
 	KeyT: 0,
 	KeyG: 0
-}
+};
 
 let repeatDelay = 150;
 

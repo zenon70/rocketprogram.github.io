@@ -11,12 +11,11 @@
 |_|             |___/
 ```
 
-# this is a rocket program
 
 this program simulates rocket launches, orbits, and interplanetary spaceflight.
 
 
-## main features ##
+## main features
 - n-body physics integrated with keplerian physics: lagrange points, lissajous orbits, horseshoe orbits, etc.. more accurate and stable than simplectic euler n-body physics
 
 - oblate spheroids and nodal precession! acheive special sun-synchronous orbits, etc.
@@ -34,7 +33,7 @@ this program simulates rocket launches, orbits, and interplanetary spaceflight.
 - IAU (International Astronomical Union) data for space object axial tilt. accurate right ascension, declination, and object rotation in time
 
 
-## links ##
+## links
 *development version:*
 - live: https://cubetronic.github.io
 - code: https://github.com/cubetronic/cubetronic.github.io
@@ -57,10 +56,10 @@ symbol|meaning
 ------|-------
 period| orbital period, one year is 365.2422 days
 a     | semi-major axis: when positive, half the long length of an ellipse
-e     | eccentricity: 0 = circle, 0-1 = ellipse, 1 = parabola, +1 = hyperbola
-i     | inclination: 0 = equatorial, 90 = polar orbit, 180 = retrograde orbit
-Ω     | longitude of the ascending node: degrees from the vernal point
-ω     | argument of periapsis: degrees from Ω to lowest orbital altitude
+e     | eccentricity: 0=circle, 0-1=ellipse, 1=parabola, >1=hyperbola
+i     | inclination: 0=equatorial, 90=polar, 180=retrograde
+Ω     | longitude of the ascending node: uppercase omega: degrees from the vernal point, which is the imaginary line drawn from earth to the sun at the moment of the spring equinox. if you have a Ω of 0, then in springtime your spacecraft will be between the earth and sun when it crosses the equator from south to north. 
+ω     | argument of periapsis: lowercase omega: degrees from Ω to lowest orbital altitude
 M     | mean anomaly: time-weighted degrees from ω to current location
 vo    | orbital velocity kilometers per second*
 Ap    | apoapsis: furthest distance from center of mass
@@ -73,8 +72,8 @@ Pe    | periapsis: closest distance from center of mass
 
 abbv |meaning
 -----|-------
-GM   | gravity × mass, AKA the gravitational parameter "μ"
-Alt  | altitude from MSL (mean sea level) at your exact location
+GM   | gravity × mass: the gravitational parameter "μ" (pronounced "moo")
+Alt  | altitude from MSL at your exact location
 vels | surface velocity kilometers per second*
 drag | aerodynamic drag based on drag coefficient and area, in newtons of force
 mass | total mass of object with fuel
@@ -90,7 +89,7 @@ Right Asc. is Right Ascension
 Sim. Sidereal is the current simulated sidereal rate
 Lon.Libration only measures longitudinal libration
 
-### reference plane for objects orbiting the sun
+## reference plane for objects orbiting the sun
 this setting allows you to change the data output on the screen for the object you are currently viewing.
 - the ecliptic plane is the de facto standard in space literature unless specified.
 
@@ -102,7 +101,7 @@ this setting allows you to change the data output on the screen for the object y
 
 - the ICRF frame is fixed to the stars, and is based on the earth's equator. this is not usually used in reference to objects orbiting the sun.
 
-### axes
+## axes
 for spacecraft:
 - red points in the Forward +X direction (-X is Aft), the axis of roll.
 - blue points Nadir +Z (and -Z is Zenith), the axis of yaw.
@@ -120,12 +119,15 @@ therefore, instead, this program considers a planet, moon, or object's "north" p
 
 note that which way the sun rises and sets is another matter. usually, if a planet's "north" pole is its positive pole, the sun should rise in the east. yet some planets rotate so slowly that the sunrise and sunset may also be a matter of not just the planet's own rotation, but also its revolution around the sun. for example, 199 has an other-worldly sunrise sunset pattern.
 
-### graphics
+## graphics
 
 in reality, the sun is just pure white. it only appears orange when viewing it with special equipment. therefore, in this program the sun is pure white, unless specifically viewing it.
 the sun does not rotate like planets. its equator rotates more rapidly than its poles, which is not simulated here, but the general rotation speed is simulated.
 
-### navigation tips
+## navigation tips
+
+
+- hyperbolic trajectories (apoapsis of infinity) function accurately, however, helper lines are currently NOT rendered. in this situation, *orbital velocity* ("vo" in verbose) is very useful. if your reduce your orbital velocity, you will acheive an orbit around something.
 
 - if you feel *upside down*, you can spin the view. tap (or click) and hold and make a circular motion. go clockwise or counter-clockwise to rotate the view. astronauts are always faced with the challenge of determining which way is _up_. if the ISS (International Space Station) had an axes helper, it would show red forward, roughly east, and blue pointing down towards earth, and green to the right, starboard, which is roughly south because it heads east.
 
@@ -135,10 +137,8 @@ the sun does not rotate like planets. its equator rotates more rapidly than its 
 
 - to test the **nodal precession** effect, get an orbit that has a low periapsis (i.e. 200km-2000km), then switch to earth view, and crank up the time multiplier. you should notice that the orbit does not stay fixed with respect to the stars. this effect is weaker when orbiting the moon because the moon is not as oblate as earth. The 6th planet is very oblate.
 
-- hyperbolic trajectories function accurately, however, helper lines are currently NOT rendered. in previous versions that are not online, code was written to visualize *any* projected trajectory, even lissajous orbits. unfortunately, that code was very processor-intensive, so i have left it out of this version until i get around to it. therefore, transitioning between orbiting one thing and another thing can be very disorienting. use the nav-ball, orbital elements, and gps info to guide you. good luck! 
 
-
-### what is simulated
+## what is simulated
 
 - it uses n-body physics. this means that every celestial object is having a gravitational effect on every other celestial object. this means that strange orbit types such as lagrangian and horseshoe orbits are possible. even the mass of a spacecraft in this program is calculated to affect the movement of distant planets... yet the numerical precision limits simulating that phenomenon here. still, a spacecraft may have a measurable effect on a very lightweight object nearby.
 
@@ -166,13 +166,13 @@ the sun does not rotate like planets. its equator rotates more rapidly than its 
 
 - tidal locking is pseudo-simulated with a custom formula. libration in this program may be more than in real life. in real life, the moon has about a 7° maximum horizontal aka longitudinal libration.
 
-### what is not simulated
+## what is not simulated
 
 - the actual rotation of the spacecraft is more or less lost during and after multiplying the time. this is actually due to the fact that keeping proper rotation over time requires a complex formula that has not yet been built into this simulation. 
 
 - the rings of the 6th planet appear unrealistic in a way: they do not receive the shade of the planet, nor do they cast shade. the three.js JavaScript library does not have a good out-of-the-box solution for this. i have experimented with different possible solutions, but they all look worse than just not simulating shade. eclipse shade is also not simulated.
 
-- relativity and/or the speed of gravity are not currently simulated. upon developing this simulation, i did some research on special and general relativity. from what i understand, NASA's Horizons data is unfortunately muddied with counter-corrections for relativity. it's complicated, and i don't remember all the details right now, but basically, i believe it may be possible for me to produce an extremely accurate simulation - better than perhaps most simulations, by using a proper implementation of Gerber's equation regarding the effect of gravity travelling at the speed of light. this should accurately simulate the anomaly of the precession of the first planet. as far as fifth planet flyby anomalies, that is currently an observed phenomenon that puzzles scientists.
+- the speed of gravity is currently not simulated. therefore gravitational effects are immediate (infinite speed), whereas in reality gravitational effects take time to reach the destination they influence. the realistic speed of gravity is around the speed of light.
 
 - tidal forces other than tidal locking, such as water and land tidal forces, are not simulated.
 
@@ -182,7 +182,7 @@ the sun does not rotate like planets. its equator rotates more rapidly than its 
 
 - moons 401 and 402 gps surface and graphics are different beyond normal issue of limited segments due to non-'oblate-spheroid' shape: they have different dimensions on all three axes, and there is no gps formula here for that. 401 (and 402) are actually better depicted as complicated 3d models, but that is currently out of scope for this project.
 
-### design choices
+## design choices
 
 - functional programming. wherever possible and practical, *pure* (independent)  functions are written and utilized. this keeps the working pieces of the program separate, and therefore makes the program more reliable and more extensible. it is my goal to make it so that advanced users and programmers can easily understand and use the code.
 
@@ -190,12 +190,12 @@ the sun does not rotate like planets. its equator rotates more rapidly than its 
 
 - icrf orientation. the x, y, and z used in the program refer to icrf (international celestial reference frame) orientation. this makes it so the threejs built-in skybox can be used for the stars, as it doesn't have to be rotated. this is the most efficient way to go, and probably makes the most sense.
 
-- the surfaces of planets are used as textures instead of with clouds, if i could find surface textures for the object. for example, the 2nd planet surface texture is used. this will aid in attempting to land in the correct location.
+- the surfaces of planets are used as textures instead of with clouds, if surface textures for the object were avaiable. for example, the 2nd planet surface texture is used. this will aid in attempting to land in the correct location.
 
-- hyperbolic trajectories escaping the solar system are caclulated to an extent, and then fail when the transendental equation becomes processor-intensive. in other words, it is limited on purpose. it is possible to remove that limit, or, if travelling away from the sun to great distances is your goal, then i would just switch from an asymptotic trajectory to a linear trajectory or something like that.
+- hyperbolic trajectories escaping the solar system are caclulated to an extent, and then fail when the transendental equation becomes processor-intensive. in other words, it is limited on purpose. it is possible to remove that limit in the code in the orbMech file. if travelling away from the sun to great distances is your goal, then i recommend switching from using keplerian elements to only using cartesian state vectors.
 
-- this program is designed to allow addition of an unlimited number of celesital objects. the project goal is to include all planets, known moons, dwarf planets, and a good number of asteroids. the program is designed to allow for dynamic transitions where asteroids and moons can be gracefully ejected and become the child of a new planet or celestial object, should the opportunity arise - just like how the rocket can transfer.
+- this program is designed to allow addition of other celesital objects such as moons, comets, and asteroids.
 
-- the underlying physics engine is called orbMech, which was written so that the code can be used elsewhere. it converts from keplerian orbital elements to cartesian state vectors, and of course also from cartesian state vectors to keplerian orbital elements. if i find the time, perhaps i will make part of this program dedicated to being a conversion calculator.
+- the underlying orbital mechanics physics are in the orbMech Javascript file, which was written so that the code can be used elsewhere. it can convert keplerian orbital elements to cartesian state vectors, and cartesian state vectors to keplerian orbital elements.
 
 - one very unique feature of this program is that it is possible to bore through planets and moons. this program could also be called "boring program".
