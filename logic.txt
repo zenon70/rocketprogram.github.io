@@ -3,7 +3,7 @@
 # IN-PROGRESS
 -------------
 
-gps of pluto needs checking due to 180 deg map rotation
+gps of planet 999 needs checking due to 180 deg map rotation
   should doublecheck 299 and 799 as well...
 
 // dev9

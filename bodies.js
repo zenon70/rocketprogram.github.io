@@ -401,7 +401,6 @@ moon = body.push({
 }) - 1;
 
 // 401
-// mass from https://web.archive.org/web/20131019162634/http://solarsystem.nasa.gov/planets/profile.cfm?Object=Mar_Phobos&Display=Facts
 
 // 2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
  X =-1.989463946057447E+03, Y =-8.743034419032687E+03, Z =-3.181949969502783E+03
@@ -431,7 +430,6 @@ moon401 = body.push({
 }) - 1;
 
 // 402
-// mass from https://web.archive.org/web/20131019172735/http://solarsystem.nasa.gov/planets/profile.cfm?Object=Mar_Deimos&Display=Facts
 
 // 2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
  X = 1.036430106515217E+04, Y =-1.574833981312149E+04, Z =-1.394599172365574E+04
