@@ -252,6 +252,7 @@ input[type="number"] {
 	color: #ddd;
 	background: #0007;
 	accent-color: #777;
+	font-family: monospace;
 }
 
 input[type="checkbox"], input[type="radio"] {

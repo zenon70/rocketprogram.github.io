@@ -1,6 +1,6 @@
 "use strict";
-// revision 15
-// getDirections() depends on three.js
+// revision 16
+// getDirections() depends on THREE.js
 //   ECI<->ECEF depends on getDirections
 
 
@@ -37,38 +37,49 @@ rotateOnWorldAxis(z, ra)
 // transform vectors from icrf to local body frame (all z-up)
 function icrfToEci(icrf, ra, dec) {
 	let {x, y, z, vx, vy, vz} = icrf;
+	let angle = -dec + Math.PI / 2;
 
 	// rotate on z axis, -ra
 	let x2 = x * Math.cos(-ra) - y * Math.sin(-ra);
 	let vx2 = vx * Math.cos(-ra) - vy * Math.sin(-ra);
+/*
 	let y2 = y * Math.cos(-ra) + x * Math.sin(-ra);
 	let vy2 = vy * Math.cos(-ra) + vx * Math.sin(-ra);
 
-	// rotate on y axis (dec - Math.PI / 2) must swap signs
-	let angle = -dec + Math.PI / 2;
+	// rotate on y axis by angle (dec - Math.PI / 2) must swap signs
 	let x3 = x2 * Math.cos(angle) - z * Math.sin(angle);
 	let vx3 = vx2 * Math.cos(angle) - vz * Math.sin(angle);
 	let z2 = z * Math.cos(angle) + x2 * Math.sin(angle);
 	let vz2 = vz * Math.cos(angle) + vx2 * Math.sin(angle);
 
 	x = x3;
-	vx = vx3;
 	y = y2;
-	vy = vy2;
 	z = z2;
+	vx = vx3;
+	vy = vy2;
 	vz = vz2;
-
 	return {x, y, z, vx, vy, vz};
+*/
+	// optimized
+	return {
+		x: x2 * Math.cos(angle) - z * Math.sin(angle),
+		y: y * Math.cos(-ra) + x * Math.sin(-ra),
+		z: z * Math.cos(angle) + x2 * Math.sin(angle),
+		vx: vx2 * Math.cos(angle) - vz * Math.sin(angle),
+		vy: vy * Math.cos(-ra) + vx * Math.sin(-ra),
+		vz: vz * Math.cos(angle) + vx2 * Math.sin(angle)
+	}
 }
 
 // transform vectors from local body frame to icrf (all z-up)
 function eciToIcrf(eci, ra, dec) {
 	let {x, y, z, vx, vy, vz} = eci;
-
-	// rotate on y axis (Math.PI / 2 - dec) must swap signs
 	let angle = -Math.PI / 2 + dec;
+
+	// rotate on y axis by angle (Math.PI / 2 - dec) must swap signs
 	let x2 = x * Math.cos(angle) - z * Math.sin(angle);
 	let vx2 = vx * Math.cos(angle) - vz * Math.sin(angle);
+/*
 	let z2 = z * Math.cos(angle) + x * Math.sin(angle);
 	let vz2 = vz * Math.cos(angle) + vx * Math.sin(angle);
 
@@ -79,20 +90,29 @@ function eciToIcrf(eci, ra, dec) {
 	let vy2 = vy * Math.cos(ra) + vx2 * Math.sin(ra);
 
 	x = x3;
-	vx = vx3;
 	y = y2;
-	vy = vy2;
 	z = z2;
+	vx = vx3;
+	vy = vy2;
 	vz = vz2;
-
 	return {x, y, z, vx, vy, vz};
+*/
+	// optimized
+	return {
+		x: x2 * Math.cos(ra) - y * Math.sin(ra),
+		y: y * Math.cos(ra) + x2 * Math.sin(ra),
+		z: z * Math.cos(angle) + x * Math.sin(angle),
+		vx: vx2 * Math.cos(ra) - vy * Math.sin(ra),
+		vy: vy * Math.cos(ra) + vx2 * Math.sin(ra),
+		vz: vz * Math.cos(angle) + vx * Math.sin(angle)
+	}
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Convert Earth-Centered-Earth-Fixed (ECEF) to Lat, Lon, Altitude
 // Input is x, y, z in meters
-// Returned array contains lat and lon in radians, and altitude in meters
+// Returned object contains lat and lon in radians, and altitude in meters
 function ecefToGps(ecef, radiusEquator, e2) {
 	let {x, y, z} = ecef;
 
@@ -184,7 +204,7 @@ const localPosition = new THREE.Vector3();
 let upAxisV3 = new THREE.Vector3();
 let eastAxisV3 = new THREE.Vector3();
 let northAxisV3 = new THREE.Vector3();
-let navAxesFailsafe = false;
+//let navAxesFailsafe = false;
 // passing a quaternion argument is OPTIONAL, and changes y-up/z-up
 function getDirections(x, y, z, quaternion) {
 
@@ -201,11 +221,13 @@ function getDirections(x, y, z, quaternion) {
 	// edge case safety: if the rocket has journeyed to the centre of the earth
 	if (upAxisV3.x === 0 && upAxisV3.y === 0 && upAxisV3.z === 0) {
 		upAxisV3.z = Number.EPSILON;
-		navAxesFailsafe = true;
+		//navAxesFailsafe = true;
 	}
+/*
 	else {
 		navAxesFailsafe = false;
 	}
+*/
 
 	////////// EAST: CREATE A UNIT VECTOR
 	// z is up, but sphere textures load y-up by default
@@ -225,11 +247,13 @@ function getDirections(x, y, z, quaternion) {
 	// edge case safety: if exactly above the north or south pole.
 	if (eastAxisV3.x === 0 && eastAxisV3.y === 0 && eastAxisV3.z === 0) {
 		eastAxisV3.x = Number.EPSILON;
-		navAxesFailsafe = true;
+		//navAxesFailsafe = true;
 	}
+/*
 	else {
 		navAxesFailsafe = false;
 	}
+*/
 
 	////////// NORTH: CREATE A UNIT VECTOR
 	northAxisV3 = upAxisV3.clone().cross(eastAxisV3);
