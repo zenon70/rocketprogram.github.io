@@ -456,6 +456,43 @@ moon402 = body.push({
 }) - 1;
 
 
+
+//2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
+X = 3.997142363295730E+05, Y = 1.143582337934756E+05, Z = 6.120266694087301E+04;
+VX=-5.397081715786772E+00, VY= 1.496898532269375E+01, VZ= 7.040742588937143E+00;
+
+
+body.push({
+	name: "501",
+	focus: planet5,
+	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
+		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
+
+	gm: 5959.9155e9,
+	mass: 89.32e21,
+	J2: 101.35e-6, // guestimating half 301
+	radiusEquator: 1821.6e3, // guestimate from wiki difference
+	radiusPole: 1821.49e3, // horizons
+	sidereal: 1.77 * 24,
+	tidallyLocked: true,
+
+	rightAscension: 268.05,
+	declination: 64.50,
+	primeMeridian: 200.39,
+
+	surfaceAirDensity: 1.225 * 4.44e-9, // based on pressure
+	scaleHeight: 8500 * 0.286, // guestimate earth/earthRadiusDiff
+
+	//segments: 32,
+	map: "graphics/moon501_1024.jpg",
+	color: 0xac9e62
+});
+
+
+
+
+
+
 // 503
 /*
 // local body equator.. wrong!
