@@ -859,6 +859,8 @@ console.log(body[i].testKepler);
 					body[focus].e2);
 
 				// obstruction of ground eliminates velocity
+				// offset due to origin currently being in the center of stage 1
+				//if (body[i].gps.alt < 20) {
 				if (body[i].gps.alt < 0) {
 					body[i].ecef.vx = 0;
 					body[i].ecef.vy = 0;
@@ -1228,13 +1230,6 @@ function displayText() {
 			(body[view].declination * 180 / Math.PI).toFixed(2) + "°" +
 			"<br>Real Sidereal " + body[view].sidereal.toFixed(2) + " hr";
 
-		if (body[view].surfaceAirDensity > 0) {
-			hudGpsInfo.innerHTML +=
-				"<br>Air Density at Surface" +
-				"<br>" + body[view].surfaceAirDensity.toFixed(6) + " kg/m³" +
-				"<br>Atmosphere Scale Height" +
-				"<br>" + (body[view].scaleHeight / 1000).toFixed(6) + " km";
-		}
 
 		if (body[view].tidallyLocked === true) {
 			hudGpsInfo.innerHTML +=
@@ -1242,6 +1237,14 @@ function displayText() {
 				((1/((body[view].angularVelocity/Math.PI)/2))/3600).toFixed(2) + " hr" +
 				"<br>Lon.Libration " + (body[view].lonLibrationAngle *
 				180/Math.PI).toFixed(3) + "°";
+		}
+
+		if (body[view].surfaceAirDensity > 0) {
+			hudGpsInfo.innerHTML +=
+				"<br>Atm.Dense " +
+				body[view].surfaceAirDensity.toExponential(2) + " kg/m³" +
+				"<br>Atm.Scale " +
+				(body[view].scaleHeight / 1000).toFixed(1) + " km";
 		}
 	}
 

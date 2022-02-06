@@ -60,13 +60,12 @@ ORBITAL MECHANICS issue:
 --------
 
 
-slider over yaw button in chrome
+launch from 0 lat, 0 lon is below surface due to origin of rocket
 
 
 gui
   hud numbers wrapping, and going outside of tinted background
   desktop orbital verbose data goes outside tinted background
-  hud fuel overlaps on smartphone in widescreen if not fullscreened
 
 hyperbolic to not hyperbolic, back and forth, "slows performance"?
   needs duplication
@@ -157,8 +156,10 @@ orbits toggles (all 3) can be toggled off when paused BUT not back on...
 livestream crashes on 2gb phone, need super low-res startup, set hi-res maps
   running 9 planets and 3 moons and a sun and rocket.. is slow.. especially
   with orbit lines... so efficiency needs to be improved.
-  
-  
+
+
+- gps data for other rockets may be unnecessary unless current view object
+
 - loading all planets & moons with textures at the same time
 - high res textures
 - polygon count
@@ -166,7 +167,6 @@ livestream crashes on 2gb phone, need super low-res startup, set hi-res maps
 - orbit lines
     recalculating some elements (i, lan, w) and redrawing on every frame
     ellipse with 500 points
-- gps data for other rockets may be unnecessary unless current view object
 
 
 - loading the whole threejs instead of just modules

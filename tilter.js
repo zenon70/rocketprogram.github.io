@@ -1,8 +1,13 @@
 "use strict";
-// revision 16
-// getDirections() depends on THREE.js
-//   ECI<->ECEF depends on getDirections
-
+/**
+ * revision 16
+ * getDirections() depends on THREE.js:
+ * THREE.Vector3()
+ * .normalize()
+ * .applyQuaternion()
+ * .cross()
+ * ECI<->ECEF depends on getDirections
+*/
 
 ////////////////////////////////////////////////////////////////////////////////
 // tilting (rotate/transform) between icrf and body frame (eci)
