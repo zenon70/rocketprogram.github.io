@@ -24,8 +24,11 @@ body.date = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
 
 body.rocketCount = 0;
 
+// jpl: jet propulsion laboratories via horizons web interface
+// iau: international astronomical union 2009 report
+// gsfc: goddard space flight center via nasa fact sheet
+// all values of ra, dec, w(primeMeridian) from iau 2009 report
 // mass in kg, distance in m, sidereal in hours, axial tilt in degrees
-// ra, dec, w: iau 2009 for j2000
 
 // sun ssb kms icrf frame
 // 2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB
@@ -78,9 +81,8 @@ body.push({
 	mass: 3.302E+23, // jpl
 	J2: 50.3e-6,
 
-	radiusMean: 2440e3, // jpl
-	radiusEquator: 2439.7e+3,
-	flattening: 0,
+	//radiusMean: 2440e3, // jpl
+	radiusMean: 2439.7e+3, // iau
 
 	sidereal: 58.6463 * 24, // jpl
 	rightAscension: 281.0097,
@@ -104,19 +106,19 @@ body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
-	gm: 3.24858592e14,
-	mass: 48.685e+23,
+	gm: 324858.592e9, // jpl
+	mass: 48.685e+23, // jpl
 	J2: 4.458E-6,
-	radiusEquator: 6051800,
-	flattening: 0,
+
+	radiusMean: 6051.8e3, // iau
 	sidereal: 5832.443616,
 
 	rightAscension: 92.76,
 	declination: -67.16,
 	primeMeridian: 160.20 + 180, // iau defines neg as north. adding 180
 
-	surfaceAirDensity: 65,
-	scaleHeight: 15900,
+	surfaceAirDensity: 65, // gsfc
+	scaleHeight: 15900, // gsfc
 
 	map: "graphics/planet2_2k.jpg",
 	color: 0xe4bd7f
@@ -139,6 +141,8 @@ earth = body.push({
 	gm: 3.98600435436e14,
 	mass: 5.9723e+24,
 	J2: 1.08263e-3,
+
+	radiusMean: 6371.0084e3, // iau
 	radiusEquator: 6378137,
 	flattening: 0.0033528106647,
 	sidereal: 23.9344695944,
@@ -171,6 +175,8 @@ planet4 = body.push({
 	gm: 4.2828375214e13,
 	mass: 6.4171e+23,
 	J2: 1960.45E-6,
+
+	radiusMean: 3389.5e3, // iau
 	radiusEquator: 3396200,
 	flattening: 1/169.779,
 	sidereal: 24.622962,
@@ -208,6 +214,8 @@ let planet5 = body.push({
 	gm: 1.26686531900e17,
 	mass: 1898.13e+24,
 	J2: 14736E-6,
+
+	radiusMean: 69911e3, // iau
 	radiusEquator: 71492000, // [1 bar level]
 	flattening: 0.06487,
 	sidereal: 0.41353831018518519,
@@ -246,6 +254,8 @@ let planet6 = body.push({
 	gm: 3.7931206234e16,
 	mass: 5.6834e+26,
 	J2: 16298E-6,
+
+	radiusMean: 58232e3, // iau
 	radiusEquator: 60268000, // [1 bar level]
 	flattening: 0.09796,
 	sidereal: 10.656222222222222,
@@ -285,6 +295,8 @@ let planet7 = body.push(
 	gm: 5.793951256e15,
 	mass: 86.813e+24,
 	J2: 3343.43E-6,
+
+	radiusMean: 25362e3, // iau
 	radiusEquator: 25559000, // [1 bar level]
 	flattening: 0.02293,
 	sidereal: 17.24, // [hours] positive pole is below ICRF equator
@@ -322,6 +334,8 @@ let planet8 = body.push({
 	gm: 6.83509997e15,
 	mass: 102.413e+24,
 	J2: 3411E-6,
+
+	radiusMean: 24622e3, // iau
 	radiusEquator: 24764000, // [1 bar level]
 	flattening: 0.0171,
 	sidereal: 16.11,
@@ -356,9 +370,10 @@ let planet9 = body.push({
 
 	gm: 8.6996e11,
 	mass: 1.307e+22,
-	//J2: 0.000047386359048791577, // rough est. based on lunar j2/sidereal ratio
-	radiusEquator: 1188000,
-	flattening: 0,
+
+	radiusMean: 1195e3, // iau
+	//radiusEquator: 1188000,
+
 	sidereal: 153.29335198,
 
 	rightAscension: 132.993,
@@ -396,8 +411,11 @@ moon = body.push({
 	gm: 4.902800066e12,
 	mass: 7.349e+22,
 	J2: 202.7e-6,
+
+	radiusMean: 1737.4e3, // iau
 	radiusEquator: 1738100,
 	flattening: 0.0012,
+
 	sidereal: 655.728,
 	tidallyLocked: true,
 
@@ -423,10 +441,12 @@ moon401 = body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
-	gm: 7.0765e5, // after 2013 flyby. published 2021-12-15 matsumoto
+	gm: 7.0765e5, // matsumoto: after 2013 flyby. published 2021-12-15
 	mass: 1.0603e16, // matsumoto
-	radiusEquator: 13.1e3,
-	radiusPole: 9.3e3,
+
+	radiusMean: 11.08, // iau
+	radiusEquator: 13.0e3, // iau
+	radiusPole: 9.1e3, // iau
 	radiusWest: 11.1e3,
 	sidereal: 0.319 * 24,
 	tidallyLocked: true,
@@ -453,8 +473,10 @@ moon402 = body.push({
 
 	gm: 96200, // viking 2
 	mass: 1476188406600740,
-	radiusEquator: 7.5e3,
-	radiusPole: 5.2e3,
+
+	radiusMean: 6.2e3, // iau
+	radiusEquator: 7.8e3, // iau
+	radiusPole: 5.1e3, // iau
 	radiusWest: 6.1e3,
 	sidereal: 1.263 * 24,
 	tidallyLocked: true,
@@ -483,9 +505,10 @@ body.push({
 
 	gm: 5959.9155e9,
 	mass: 89.32e21,
-	//J2: 101.35e-6, // guestimating half 301
-	radiusEquator: 1821.49e3, // jpl
-	//radiusEquator: 1821.6e3, // guestimate from wiki difference
+
+	radiusMean: 1821.49e3, // jpl & iau
+	radiusEquator: 1829.4e3, // iau
+	radiusPole: 1815.7e3, // iau
 	sidereal: 1.77 * 24,
 	tidallyLocked: true,
 
@@ -493,10 +516,6 @@ body.push({
 	declination: 64.50,
 	primeMeridian: 200.39,
 
-	//surfaceAirDensity: 1.225 * 4.44e-9, // based on pressure
-	//scaleHeight: 8500 * 0.286, // guestimate earth/earthRadiusDiff
-
-	//segments: 32,
 	map: "graphics/moon501_1024.jpg",
 	color: 0xac9e62
 });
@@ -514,9 +533,11 @@ body.push({
 
 	gm:  3202.7121e9,
 	mass: 48e21,
-	J2: 91.215e-6, // guestimate 90% of 501
-	radiusEquator: 1560.8e3, // jpl
-	//radiusPole: 1560.5e3, // jpl low margin of error
+
+	radiusMean: 1560.8e3, // jpl & iau
+	radiusEquator: 1562.6e3, // iau
+	radiusPole: 1559.5e3, // iau
+
 	sidereal: 3.55 * 24,
 	tidallyLocked: true,
 
@@ -524,10 +545,6 @@ body.push({
 	declination: 64.51,
 	primeMeridian: 36.022,
 
-	//surfaceAirDensity: 1.225e-12, // based on pressure
-	//scaleHeight: 8500 * 0.134, // guestimate based on surface gravity
-
-	//segments: 32,
 	map: "graphics/moon502_1440.jpg",
 	color: 0xcec5ab
 });
@@ -548,10 +565,8 @@ body.push({
 
 	gm: 9887.8328e9,
 	mass: 1.4819e23,
-	//J2: 202.7e-7, // guestimating 10x less than 301
-	radiusEquator: 2631.2e3, // nasa radius
-	//radiusEquator: 2634.1e3, // wikipedia mean radius
-	//radiusPole: 2631.2e3, // nasa radius
+
+	radiusMean: 2631.2e3, // iau
 	sidereal: 7.155 * 24,
 	tidallyLocked: true,
 
@@ -559,11 +574,8 @@ body.push({
 	declination: 64.57,
 	primeMeridian: 44.064,
 
-	// thin oxygen atmosphere, unknown values, copy 999
-	//surfaceAirDensity: 0.00079174, // guestimate 10 times 999 based on mass
-	//scaleHeight: 50000,
+	// thin oxygen atmosphere
 
-	//segments: 32,
 	map: "graphics/moon503_1800.jpg",
 	color: 0x867a6b
 });
@@ -581,9 +593,9 @@ body.push({
 
 	gm: 7179.2834e9,
 	mass: 107.6e21,
-	//J2: 101.35e-7, // guestimate half of 504 based on sidereal
-	radiusEquator: 2410.3e3, // mean radius from horizons
-	//radiusPole: 2403e3, // guestimate from margin of error (2nd nasa article)
+
+	radiusMean: 2410.3e3, // iau & jpl
+
 	sidereal: 16.691 * 24,
 	tidallyLocked: true,
 
@@ -591,10 +603,6 @@ body.push({
 	declination: 64.83,
 	primeMeridian: 259.51,
 
-	//surfaceAirDensity: 1.225 * 7.4e-12, // guestimate based on pressure
-	//scaleHeight: 850, // no idea, guestimate 10x less than earth's
-
-	//segments: 32,
 	map: "graphics/moon504_1024.jpg",
 	color: 0x7c6e57
 });
@@ -612,10 +620,13 @@ body.push({
 
 	gm: 8978.14e9,
 	mass: 134.5e21,
-	//J2: 405.4e-6, // guestimating 2x 301 based on orbital period
-	radiusEquator: 2575.5e3, // nasa mean radius
-	//radiusPole: 2574.73e3, // wikipedia radius
-	sidereal: 15.945421 * 24, // guestimate tidally locked
+
+	radiusMean: 2574.73e3, // iau
+	radiusEquator: 2575.15e3, // iau subplanet
+	radiusPole: 2574.47e3, // iau
+	//radiusMean: 2575.5e3, // nasa mean radius
+
+	sidereal: 15.945421 * 24, // jpl orbital period. britannica confirms synchr.
 	tidallyLocked: true,
 
 	rightAscension: 39.4827,
@@ -645,21 +656,16 @@ body.push({
 
 	gm: 1428.495e9,
 	mass: 21.39e21,
-	//J2: 202.7e-7, // guestimating 10x less than 301
-	radiusMean: 1352.6e3, // jpl mean
-	radiusEquator: 1352.6e3, // jpl mean
-	//radiusPole: 1350.2e3, // guestimate 1352.6 - 2.4 sigma
-	sidereal: -5.876854 * 24,
+
+	radiusMean: 1352.6e3, // jpl & iau mean
+
+	sidereal: -5.876854 * 24, // NEGATIVE VALUE!!! WEST IS EASY LAUNCH DIR.
 	tidallyLocked: true,
 
 	rightAscension: 299.36,
 	declination: 41.17,
 	primeMeridian: 296.53,
 
-	//surfaceAirDensity: 1.225 * 1.63e-5, // guestimate based on air pressure
-	//scaleHeight: 500, // wild guestimate from no data
-
-	//segments: 32,
 	map: "graphics/moon801_1024.jpg",
 	color: 0xaba9ae
 });
@@ -688,7 +694,7 @@ body.push({
 	surfaceAirDensity: 000,
 	scaleHeight: 000,
 
-	//segments: 32,
+
 	map: "graphics/moon000_1024.jpg",
 	color: 0x000000
 });
@@ -708,6 +714,10 @@ for (let i = body.length - 1; i > -1; i--) {
 	body[i].primeMeridian *= Math.PI / 180;
 
 	body[i].angularVelocity = 1/(body[i].sidereal * 3600) * 2 * Math.PI;
+
+	if (body[i].radiusEquator === undefined) {
+		body[i].radiusEquator = body[i].radiusMean;
+	}
 
 	if (body[i].flattening === undefined) {
 		if (body[i].radiusPole !== undefined) {

@@ -117,6 +117,9 @@ however, this program does not follow that convention, because it is arbitrary a
 
 therefore, instead, this program considers a planet, moon, or object's "north" pole to be its positive pole, which is defined by its rotation. if standing on a planet facing east, the positive pole will be to the left. this is the convention used for exoplanets, and thus is a uniform standard that has no exceptions, and thus is easier to rely upon and use for navigation. it also does not require redefining east and west. for example, in this program, when launching, pointing east will _always_ be an easier orbit to acheive because it will always be a prograde orbit.
 
+UPDATE:  
+moon 801 has just been added and its orientation is strange and currently has a westerly rotation, so launching west from 801 is easier right now, until perhaps i flip the polar convention to match the convention of this program.
+
 note that which way the sun rises and sets is another matter. usually, if a planet's "north" pole is its positive pole, the sun should rise in the east. yet some planets rotate so slowly that the sunrise and sunset may also be a matter of not just the planet's own rotation, but also its revolution around the sun. for example, 199 has an other-worldly sunrise sunset pattern.
 
 ## graphics

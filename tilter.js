@@ -489,7 +489,7 @@ function dragEquation(airDensity, velocity, mass, dragCoefficient, dragArea) {
 		(dragCoefficient * dragArea/mass)) / 2;
 }
 
-
+/*
 function getScaleHeight(tempKelvin, mass, meanRadius, GRAVITY) {
 	//const k = 1.38e-23; // boltz constant
 	// m is mean molecular mass
@@ -511,7 +511,7 @@ function getScaleHeight(tempKelvin, mass, meanRadius, GRAVITY) {
 
 	return pre * 34.96335813841613;
 }
-
+*/
 
 // https://www.spaceacademy.net.au/watch/debris/atmosmod.htm
 // https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
