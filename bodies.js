@@ -456,7 +456,7 @@ moon402 = body.push({
 }) - 1;
 
 
-
+// 501
 //2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
 X = 3.997142363295730E+05, Y = 1.143582337934756E+05, Z = 6.120266694087301E+04;
 VX=-5.397081715786772E+00, VY= 1.496898532269375E+01, VZ= 7.040742588937143E+00;
@@ -488,9 +488,36 @@ body.push({
 	color: 0xac9e62
 });
 
+// 502
+//2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
+X =-5.612444737473305E+05, Y =-3.194938652420691E+05, Z =-1.580864244536325E+05;
+VX= 7.462294847234357E+00, VY=-1.063755742098116E+01, VZ=-4.848776619880565E+00;
 
+body.push({
+	name: "502",
+	focus: planet5,
+	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
+		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
+	gm:  3202.7121e9,
+	mass: 48e21,
+	J2: 91.215e-6, // guestimate 90% of 501
+	radiusEquator: 1560.8e3, // horizons
+	radiusPole: 1560.5e3, // horizons low margin of error
+	sidereal: 3.55 * 24,
+	tidallyLocked: true,
 
+	rightAscension: 268.08,
+	declination: 64.51,
+	primeMeridian: 36.022,
+
+	surfaceAirDensity: 1.225e-12, // based on pressure
+	scaleHeight: 8500 * 0.134, // guestimate based on surface gravity
+
+	//segments: 32,
+	map: "graphics/moon502_1440.jpg",
+	color: 0xcec5ab
+});
 
 
 // 503
