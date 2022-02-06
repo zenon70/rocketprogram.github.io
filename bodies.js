@@ -25,8 +25,9 @@ body.date = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
 body.rocketCount = 0;
 
 // mass in kg, distance in m, sidereal in hours, axial tilt in degrees
+// ra, dec, w: iau 2009 for j2000
 
-// sun ssb kms frame
+// sun ssb kms icrf frame
 // 2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB
 X =-1.067598502264559E+06, Y =-3.959890535950128E+05, Z =-1.380711260212289E+05;
 VX= 9.312570119052345E-03, VY=-1.170150735349599E-02, VZ=-5.251247980405208E-03;
@@ -37,13 +38,16 @@ sun = body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
-	gm: 1.3271244004193938e20, // horizons ephemeris. updated 2018-08-15
-	mass: 1988500e+24,
+	gm: 132712440041.93938e9, // jpl 2018-08-15
+	mass: 1988500e+24, // jpl
 	J2: -6.13e-7,
-	radiusEquator: 696000000,
-	flattening: 0.00005,
-	sidereal: 609.12,
 
+	radiusMean: 695700e3, // jpl volumetric
+	radiusPhoto: 696500e3, // jpl photosphere
+	radiusEquator: 696000e3, // iau
+	flattening: 0.00005, // jpl
+
+	sidereal: 25.38 * 24, // jpl
 	rightAscension: 286.13,
 	declination: 63.87,
 	primeMeridian: 84.176,
@@ -65,16 +69,20 @@ body.push({
 	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
 		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
 
-	gm: 2.203186855e13,
-	mass: 3.302E+23,
+	gm: 22031.86855e9, // jpl
+	mass: 3.302E+23, // jpl
 	J2: 50.3e-6,
+
+	radiusMean: 2440e3, // jpl
 	radiusEquator: 2439.7e+3,
 	flattening: 0,
-	sidereal: 1407.5112,
 
+	sidereal: 58.6463 * 24, // jpl
 	rightAscension: 281.0097,
 	declination: 61.4143,
 	primeMeridian: 329.5469,
+
+	meanTempK: 440, // jpl
 
 	map: "graphics/planet1_2k.jpg",
 	color: 0x848383
