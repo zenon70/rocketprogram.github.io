@@ -496,6 +496,67 @@ body.push({
 	color: 0x867a6b
 });
 
+//2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
+X = 3.250797306331359E+05, Y = 1.673657388398113E+06, Z = 7.961980648559552E+05;
+VX=-8.072972273722810E+00, VY= 1.381786782005837E+00, VZ= 5.353865241984859E-01;
+
+
+body.push({
+	name: "504",
+	focus: planet5,
+	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
+		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
+
+	gm: 7179.2834e9,
+	mass: 107.6e21,
+	J2: 101.35e-7, // guestimate half of 504 based on sidereal
+	radiusEquator: 2410.3e3, // mean radius from horizons
+	radiusPole: 2403e3, // guestimate from margin of error (from 2nd nasa article)
+	sidereal: 16.691 * 24,
+	tidallyLocked: true,
+
+	rightAscension: 268.72,
+	declination: 64.83,
+	primeMeridian: 259.51,
+
+	surfaceAirDensity: 1.225 * 7.4e-12, // guestimate based on pressure
+	scaleHeight: 850, // no idea, guestimate 10x less than earth's
+
+	//segments: 32,
+	map: "graphics/moon504_1024.jpg",
+	color: 0x7c6e57
+});
+
+
+// moon template
+/*
+body.push({
+	name: "000",
+	focus: planet000,
+	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
+		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
+
+	gm: 000e9,
+	mass: 000,
+	J2: 000,
+	radiusEquator: 000,
+	radiusPole: 000,
+	sidereal: 000 * 24,
+	tidallyLocked: true,
+
+	rightAscension: 000,
+	declination: 000,
+	primeMeridian: 000,
+	surfaceAirDensity: 000,
+	scaleHeight: 000,
+
+	//segments: 32,
+	map: "graphics/moon000_1024.jpg",
+	color: 0x000000
+});
+*/
+
+
 
 
 //2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
