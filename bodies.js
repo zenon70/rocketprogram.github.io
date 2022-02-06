@@ -52,6 +52,11 @@ sun = body.push({
 	declination: 63.87,
 	primeMeridian: 84.176,
 
+	surfacePressure: 0.868, // nasafact top of photosphere mb
+	surfaceTempK: 4400, // nasafact top of photosphere
+	meanTempK: 5772, // jpl effective temp
+	baseTempK: 6600, // nasafact bottom of photosphere
+
 	map: "graphics/sun_1k.jpg",
 	color: 0xffffff,
 	emissive: 0xffffff
@@ -351,7 +356,7 @@ let planet9 = body.push({
 
 	gm: 8.6996e11,
 	mass: 1.307e+22,
-	J2: 0.000047386359048791577, // rough est. based on lunar j2/sidereal ratio
+	//J2: 0.000047386359048791577, // rough est. based on lunar j2/sidereal ratio
 	radiusEquator: 1188000,
 	flattening: 0,
 	sidereal: 153.29335198,
@@ -393,7 +398,7 @@ moon = body.push({
 	J2: 202.7e-6,
 	radiusEquator: 1738100,
 	flattening: 0.0012,
-	sidereal: 655.728, // real data: 655.728
+	sidereal: 655.728,
 	tidallyLocked: true,
 
 	rightAscension: 269.9949,
@@ -478,9 +483,9 @@ body.push({
 
 	gm: 5959.9155e9,
 	mass: 89.32e21,
-	J2: 101.35e-6, // guestimating half 301
-	radiusEquator: 1821.6e3, // guestimate from wiki difference
-	radiusPole: 1821.49e3, // horizons
+	//J2: 101.35e-6, // guestimating half 301
+	radiusEquator: 1821.49e3, // jpl
+	//radiusEquator: 1821.6e3, // guestimate from wiki difference
 	sidereal: 1.77 * 24,
 	tidallyLocked: true,
 
@@ -488,8 +493,8 @@ body.push({
 	declination: 64.50,
 	primeMeridian: 200.39,
 
-	surfaceAirDensity: 1.225 * 4.44e-9, // based on pressure
-	scaleHeight: 8500 * 0.286, // guestimate earth/earthRadiusDiff
+	//surfaceAirDensity: 1.225 * 4.44e-9, // based on pressure
+	//scaleHeight: 8500 * 0.286, // guestimate earth/earthRadiusDiff
 
 	//segments: 32,
 	map: "graphics/moon501_1024.jpg",
@@ -510,8 +515,8 @@ body.push({
 	gm:  3202.7121e9,
 	mass: 48e21,
 	J2: 91.215e-6, // guestimate 90% of 501
-	radiusEquator: 1560.8e3, // horizons
-	radiusPole: 1560.5e3, // horizons low margin of error
+	radiusEquator: 1560.8e3, // jpl
+	//radiusPole: 1560.5e3, // jpl low margin of error
 	sidereal: 3.55 * 24,
 	tidallyLocked: true,
 
@@ -519,8 +524,8 @@ body.push({
 	declination: 64.51,
 	primeMeridian: 36.022,
 
-	surfaceAirDensity: 1.225e-12, // based on pressure
-	scaleHeight: 8500 * 0.134, // guestimate based on surface gravity
+	//surfaceAirDensity: 1.225e-12, // based on pressure
+	//scaleHeight: 8500 * 0.134, // guestimate based on surface gravity
 
 	//segments: 32,
 	map: "graphics/moon502_1440.jpg",
@@ -543,9 +548,10 @@ body.push({
 
 	gm: 9887.8328e9,
 	mass: 1.4819e23,
-	J2: 202.7e-7, // guestimating 10x less than 301
-	radiusEquator: 2634.1e3, // wikipedia mean radius
-	radiusPole: 2631.2e3, // nasa radius
+	//J2: 202.7e-7, // guestimating 10x less than 301
+	radiusEquator: 2631.2e3, // nasa radius
+	//radiusEquator: 2634.1e3, // wikipedia mean radius
+	//radiusPole: 2631.2e3, // nasa radius
 	sidereal: 7.155 * 24,
 	tidallyLocked: true,
 
@@ -554,8 +560,8 @@ body.push({
 	primeMeridian: 44.064,
 
 	// thin oxygen atmosphere, unknown values, copy 999
-	surfaceAirDensity: 0.00079174, // guestimate 10 times 999 based on mass
-	scaleHeight: 50000,
+	//surfaceAirDensity: 0.00079174, // guestimate 10 times 999 based on mass
+	//scaleHeight: 50000,
 
 	//segments: 32,
 	map: "graphics/moon503_1800.jpg",
@@ -575,9 +581,9 @@ body.push({
 
 	gm: 7179.2834e9,
 	mass: 107.6e21,
-	J2: 101.35e-7, // guestimate half of 504 based on sidereal
+	//J2: 101.35e-7, // guestimate half of 504 based on sidereal
 	radiusEquator: 2410.3e3, // mean radius from horizons
-	radiusPole: 2403e3, // guestimate from margin of error (from 2nd nasa article)
+	//radiusPole: 2403e3, // guestimate from margin of error (2nd nasa article)
 	sidereal: 16.691 * 24,
 	tidallyLocked: true,
 
@@ -585,8 +591,8 @@ body.push({
 	declination: 64.83,
 	primeMeridian: 259.51,
 
-	surfaceAirDensity: 1.225 * 7.4e-12, // guestimate based on pressure
-	scaleHeight: 850, // no idea, guestimate 10x less than earth's
+	//surfaceAirDensity: 1.225 * 7.4e-12, // guestimate based on pressure
+	//scaleHeight: 850, // no idea, guestimate 10x less than earth's
 
 	//segments: 32,
 	map: "graphics/moon504_1024.jpg",
@@ -606,9 +612,9 @@ body.push({
 
 	gm: 8978.14e9,
 	mass: 134.5e21,
-	J2: 405.4e-6, // guestimating 2x 301 based on orbital period
+	//J2: 405.4e-6, // guestimating 2x 301 based on orbital period
 	radiusEquator: 2575.5e3, // nasa mean radius
-	radiusPole: 2574.73e3, // wikipedia radius
+	//radiusPole: 2574.73e3, // wikipedia radius
 	sidereal: 15.945421 * 24, // guestimate tidally locked
 	tidallyLocked: true,
 
@@ -616,12 +622,12 @@ body.push({
 	declination: 83.4279,
 	primeMeridian: 186.5855,
 
-	surfaceAirDensity: 1.77625, // guestimate 1.45 times because 1.45 atm
-	scaleHeight: 21000,
+	surfaceAirDensity: 1.813, // wikipedia: est 1.48x earth due to 1.48x pressure
+	scaleHeight: 32500, // wikipedia 15-50km averaged
 
 	//segments: 32,
 	map: "graphics/moon606_1024.jpg",
-	//color: 0xc28226 // surface color uzed to colorize image
+	//color: 0xc28226 // surface color used to colorize image
 	color: 0xc5aa58 // atmosphere color
 }) - 1;
 
@@ -639,9 +645,10 @@ body.push({
 
 	gm: 1428.495e9,
 	mass: 21.39e21,
-	J2: 202.7e-7, // guestimating 10x less than 301
+	//J2: 202.7e-7, // guestimating 10x less than 301
+	radiusMean: 1352.6e3, // jpl mean
 	radiusEquator: 1352.6e3, // jpl mean
-	radiusPole: 1350.2e3, // guestimate 1352.6 - 2.4 sigma
+	//radiusPole: 1350.2e3, // guestimate 1352.6 - 2.4 sigma
 	sidereal: -5.876854 * 24,
 	tidallyLocked: true,
 
@@ -649,8 +656,8 @@ body.push({
 	declination: 41.17,
 	primeMeridian: 296.53,
 
-	surfaceAirDensity: 1.225 * 1.63e-5, // guestimate based on air pressure
-	scaleHeight: 500, // wild guestimate from no data
+	//surfaceAirDensity: 1.225 * 1.63e-5, // guestimate based on air pressure
+	//scaleHeight: 500, // wild guestimate from no data
 
 	//segments: 32,
 	map: "graphics/moon801_1024.jpg",
