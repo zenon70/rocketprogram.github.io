@@ -521,13 +521,7 @@ body.push({
 
 
 // 503
-/*
-// local body equator.. wrong!
-// 2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
-X =-8.000136895574973E+05, Y =-7.110090782943792E+05, Z = 2.007406695703336E+03;
-VX= 7.239924318581273E+00, VY=-8.122625759405912E+00, VZ=-3.361507999704383E-02;
-*/
-// local icrf frame.. correct!
+// 503 relative to 500@599 local, and icrf frame.. correct!
 //2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
 X =-8.213450948603005E+05, Y =-6.150856733875166E+05, Z =-3.043381213722880E+05;
 VX= 6.987637098645384E+00, VY=-7.557915765882209E+00, VZ=-3.527820805670810E+00;
@@ -592,6 +586,71 @@ body.push({
 });
 
 
+//2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
+X =-9.468029384488795E+05, Y = 8.240982253187533E+05, Z = 2.708223040694325E+04;
+VX=-3.561343519356833E+00, VY=-4.045247016129760E+00, VZ= 5.842850270130896E-01;
+
+body.push({
+	name: "606",
+	focus: planet6,
+	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
+		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
+
+	gm: 8978.14e9,
+	mass: 134.5e21,
+	J2: 405.4e-6, // guestimating 2x 301 based on orbital period
+	radiusEquator: 2575.5e3, // nasa mean radius
+	radiusPole: 2574.73e3, // wikipedia radius
+	sidereal: 15.945421 * 24, // guestimate tidally locked
+	tidallyLocked: true,
+
+	rightAscension: 39.4827,
+	declination: 83.4279,
+	primeMeridian: 186.5855,
+
+	surfaceAirDensity: 1.77625, // guestimate 1.45 times because 1.45 atm
+	scaleHeight: 21000,
+
+	//segments: 32,
+	map: "graphics/moon606_1024.jpg",
+	//color: 0xc28226 // surface color uzed to colorize image
+	color: 0xc5aa58 // atmosphere color
+}) - 1;
+
+
+// 801
+//2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
+X =-2.056859098669719E+05, Y = 1.000801046762462E+04, Z = 2.888777868159909E+05;
+VX= 2.990459061974825E+00, VY= 2.480478871793398E+00, VZ= 2.043322978505724E+00;
+
+body.push({
+	name: "801",
+	focus: planet8,
+	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
+		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
+
+	gm: 1428.495e9,
+	mass: 21.39e21,
+	J2: 202.7e-7, // guestimating 10x less than 301
+	radiusEquator: 1352.6e3, // jpl mean
+	radiusPole: 1350.2e3, // guestimate 1352.6 - 2.4 sigma
+	sidereal: -5.876854 * 24,
+	tidallyLocked: true,
+
+	rightAscension: 299.36,
+	declination: 41.17,
+	primeMeridian: 296.53,
+
+	surfaceAirDensity: 1.225 * 1.63e-5, // guestimate based on air pressure
+	scaleHeight: 500, // wild guestimate from no data
+
+	//segments: 32,
+	map: "graphics/moon801_1024.jpg",
+	color: 0xaba9ae
+});
+
+
+
 // moon template
 /*
 body.push({
@@ -619,41 +678,6 @@ body.push({
 	color: 0x000000
 });
 */
-
-
-
-
-//2451545.000000000 = A.D. 2000-Jan-01 12:00:00.0000 TDB 
-X =-9.468029384488795E+05, Y = 8.240982253187533E+05, Z = 2.708223040694325E+04;
-VX=-3.561343519356833E+00, VY=-4.045247016129760E+00, VZ= 5.842850270130896E-01;
-
-body.push({
-	name: "606",
-	focus: planet6,
-	cartes: {x: X * 1000, y: Y * 1000, z: Z * 1000,
-		vx: VX * 1000, vy: VY * 1000, vz: VZ * 1000},
-
-	gm: 8978.14e9,
-	mass: 134.5e21,
-	J2: 405.4e-6, // guestimating 2x 301 based on orbital period
-	radiusEquator: 2575.5e3, // nasa mean radius
-	radiusPole: 2574.73e3, // wikipedia radius
-	sidereal: 15.945421 * 24, // guestimate tidally locked
-	tidallyLocked: true,
-
-	rightAscension: 39.4827,
-	declination: 83.4279,
-	primeMeridian: 186.5855,
-
-	surfaceAirDensity: 1.77625, // guestimate 1.45 times because 1.45 atm
-	scaleHeight: 52147.23926380368, // guestimate 8500/0.163 earth/surfaceAreaDiff
-
-	//segments: 32,
-	map: "graphics/moon606_1024.jpg",
-	//color: 0xc28226 // surface color uzed to colorize image
-	color: 0xc5aa58 // atmosphere color
-}) - 1;
-
 
 
 // process natural celestial bodies

@@ -500,7 +500,7 @@ function refuel() {
 //let currentFocus = body[8].focus;
 //let debugLog = 0;
 
-const GRAVITY = 6.67408e-11; // mohr 2016
+const GRAVITY = 6.6743e-11; // codata 2018
 
 function nBodyVelocity(/*body, GRAVITY, timestep*/) {
 	for (let i = body.length - 1; i > -1; i--) {
@@ -1228,13 +1228,14 @@ function displayText() {
 			(body[view].rightAscension * 180 / Math.PI).toFixed(2) + "°" +
 			"<br>Declination " +
 			(body[view].declination * 180 / Math.PI).toFixed(2) + "°" +
-			"<br>Real Sidereal " + body[view].sidereal.toFixed(2) + " hr";
+			"<br>Real Sidereal " + Math.abs(body[view].sidereal).toFixed(2) + " hr";
 
 
 		if (body[view].tidallyLocked === true) {
 			hudGpsInfo.innerHTML +=
 				"<br>Sim. Sidereal " +
-				((1/((body[view].angularVelocity/Math.PI)/2))/3600).toFixed(2) + " hr" +
+				Math.abs((1/((body[view].angularVelocity/Math.PI)/2))/3600).toFixed(2) +
+				" hr" +
 				"<br>Lon.Libration " + (body[view].lonLibrationAngle *
 				180/Math.PI).toFixed(3) + "°";
 		}

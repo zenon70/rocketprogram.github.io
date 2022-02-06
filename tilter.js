@@ -489,23 +489,37 @@ function dragEquation(airDensity, velocity, mass, dragCoefficient, dragArea) {
 		(dragCoefficient * dragArea/mass)) / 2;
 }
 
+
+function getScaleHeight(tempKelvin, mass, meanRadius, GRAVITY) {
+	//const k = 1.38e-23; // boltz constant
+	// m is mean molecular mass
+	// H is scale height. nasa says 8.5km for earth
+	//const H = ( k * T ) / ( m * g );
+	//return (k * tempKelvin) / (meanMolecularMass * g);
+
+	if (GRAVITY === undefined) {
+		GRAVITY = 6.6743e-11; // 2018 codata
+	}
+	// molar gas constant from 2018 codata
+	const R = 8.31446261815324;
+
+	//const g = 9.80665; // for earth
+	const g = GRAVITY * (mass / (meanRadius * meanRadius));
+
+	// this gives 243.1116589644915 for earth, which is ~35x less... 
+	let pre = R * tempKelvin / g;
+
+	return pre * 34.96335813841613;
+}
+
+
 // https://www.spaceacademy.net.au/watch/debris/atmosmod.htm
 // https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
 function isothermalAirDensity(surfaceAirDensity, scaleHeight, altitude) {
 	// 1.225 is kg/m^3 air density at sea level of earth
 
-	//const k = 1.38e-23; // boltz
-	// T is temperature Kelvin
-	// m is mean molecular mass
-	//const g = 9.80665; // for earth
-	//const H = ( k * T ) / ( m * g );
-	// H is scale height. nasa says 8.5km for earth
-
-	return surfaceAirDensity * Math.exp( - altitude / scaleHeight);
-
-	// easily a function for any planet if 3 arguments are used
-
 	// way too weak for high LEO orbits
+	return surfaceAirDensity * Math.exp( - altitude / scaleHeight);
 }
 
 
