@@ -77,8 +77,8 @@ Alt  | altitude from MSL at your exact location
 vels | surface velocity kilometers per second*
 drag | aerodynamic drag based on drag coefficient and area, in newtons of force
 mass | total mass of object with fuel
-Lat  | latitude: distance from 90° north to -90° south
-Lon  | longitude: distance from 180° east to -180° west
+Lat  | latitude: position from 90° north to -90° south
+Lon  | longitude: position from 180° east to -180° west
 ApEq | surface apoapsis altitude from MSL at Equator
 PeEq | surface periapsis altitude from MSL at Equator
 
@@ -111,16 +111,13 @@ for natural bodies:
 - shows ICRF axes (long): blue is +Z and points roughly to the north star (Polaris). red is +X and points to the Vernal Point (the imaginary line drawn from Earth to the Sun at the moment of the Spring Equinox). green is +Y and points to 90° Right Ascension. these axes are used for reference. they are fixed to the stars.
 - and ECEF axes (short): blue is +Z goes through the positive pole (usually called north, more on that later). red is +X and goes through the Prime Meridian, and is the center point for most maps. green is +Y and goes through 90° East.
 
-the IAU convention states that the "north" pole of a planet or moon or object is whichever pole is located on the same side of the solar system's invariable plane as earth's north pole. this usually means that its north pole is its positive pole, but not for 299, 799, and 999, for example.
+this program considers a celestial object's "north" pole to be its positive pole, which is defined by its rotation. if standing on a planet facing east, the positive pole will be to the left. this is the convention used for exoplanets. it is easy to rely upon and use for navigation. it also does not require redefining east and west. for example, in this program, when launching, pointing east will _always_\* be an easier orbit to acheive because it will always be a prograde orbit.
 
-however, this program does not follow that convention, because it is arbitrary and breaks other definitions like the definitions of east and west.
-
-therefore, instead, this program considers a planet, moon, or object's "north" pole to be its positive pole, which is defined by its rotation. if standing on a planet facing east, the positive pole will be to the left. this is the convention used for exoplanets, and thus is a uniform standard that has no exceptions, and thus is easier to rely upon and use for navigation. it also does not require redefining east and west. for example, in this program, when launching, pointing east will _always_ be an easier orbit to acheive because it will always be a prograde orbit.
-
-UPDATE:  
-moon 801 has just been added and its orientation is strange and currently has a westerly rotation, so launching west from 801 is easier right now, until perhaps i flip the polar convention to match the convention of this program.
+\*UPDATE:  
+moon 801 has just been added and its orientation is strange and currently has a westerly rotation, so launching west from 801 is easier right now, until its axis is flipped so the polar convention matches the convention of this program.
 
 note that which way the sun rises and sets is another matter. usually, if a planet's "north" pole is its positive pole, the sun should rise in the east. yet some planets rotate so slowly that the sunrise and sunset may also be a matter of not just the planet's own rotation, but also its revolution around the sun. for example, 199 has an other-worldly sunrise sunset pattern.
+
 
 ## graphics
 
@@ -147,7 +144,7 @@ the sun does not rotate like planets. its equator rotates more rapidly than its 
 
 - it *also* solves the keplerian 2-body problem. it does this between each object and its orbital parent. this increases accuracy dramatically, and also allows for nodal precession. this is probably the trickiest and most unique and innovative aspect of this program. the reasons to implement this are two-fold. firstly, simple n-body physics formulas get very inaccurate the closer objects get to each other. this inaccuracy is avoided by making things that are closest use, instead, the keplerian 2-body formula. simple n-body physics is retained for all other bodies further away. secondly, nodal precession needs to be calculated. this depends on the axial tilt of a body. this is important at close distances, and there are known formulas for calculating nodal precession in conjunction with kepler's equations.
 
-- nodal precession is factored in based on J2 zonal harmonics. this means that the equatorial buldge of each oblate sphereoid (planet, moon, etc.) affects the movement of the orbiting body. nodal precession can be used to acheive the type of sun-sychronous orbit where a satellite is always in direct sunlight, never going into the shade behind the object it is orbiting.
+- nodal precession is factored in based on J2 zonal harmonics. this means that the equatorial buldge of each celestial body affects the movement of the orbiting body, whether that orbiting body is a rocket, a moon, or a planet. nodal precession can be used to acheive the type of sun-sychronous orbit where a satellite is always in direct sunlight, never going into the shade behind the object it is orbiting. accurate J2 data is used if available. for foreign moons, data is not available, and a general formula is used to derive J2.
 
 - the x-y-z axes colors for the rocket conform to space conventions.
 
@@ -165,7 +162,9 @@ the sun does not rotate like planets. its equator rotates more rapidly than its 
 
 - atmosphere of earth and aerodynamic drag, up to 202,000 km altitude. that's more than half-way to the moon. even gps and geostationary satellites experience aerodynamic drag.
 
-- atmosphere for other planets. the atmosphere for foreign planets is crudely simulated without considering temperature. and as for the gas giants, scientifically speaking, 1 bar of pressure is considered the surface of the gas giants, both for altitude measurements and planet radius measurements. however, 1 bar of pressure is by no means an actual surface. the galilean probe went 132km below the 1 bar pressure altitude before it lost contact. this simulation currently uses the 1 bar convention for radius and it is simulated as a hard surface, even though it definitely is not.
+- atmosphere for other planets. the atmosphere for all major foreign planets is crudely simulated without considering temperature or molecular composition. and as for the gas giants, scientifically speaking, 1 bar of pressure is considered the surface of the gas giants, both for altitude measurements and planet radius measurements. however, 1 bar of pressure is by no means an actual surface. the galilean probe went 132km below the 1 bar pressure altitude before it lost contact. this simulation currently uses the 1 bar convention for radius and it is simulated as a hard surface, even though it definitely is not.
+
+- the atmosphere of moon 606 is roughly simulated.
 
 - tidal locking is pseudo-simulated with a custom formula. libration in this program may be more than in real life. in real life, the moon has about a 7° maximum horizontal aka longitudinal libration.
 
@@ -185,6 +184,8 @@ the sun does not rotate like planets. its equator rotates more rapidly than its 
 
 - moons 401 and 402 gps surface and graphics are different beyond normal issue of limited segments due to non-'oblate-spheroid' shape: they have different dimensions on all three axes, and there is no gps formula here for that. 401 (and 402) are actually better depicted as complicated 3d models, but that is currently out of scope for this project.
 
+- if a moon has a thin atmosphere, it is not currently not simulated.
+
 ## design choices
 
 - functional programming. wherever possible and practical, *pure* (independent)  functions are written and utilized. this keeps the working pieces of the program separate, and therefore makes the program more reliable and more extensible. it is my goal to make it so that advanced users and programmers can easily understand and use the code.
@@ -194,6 +195,8 @@ the sun does not rotate like planets. its equator rotates more rapidly than its 
 - icrf orientation. the x, y, and z used in the program refer to icrf (international celestial reference frame) orientation. this makes it so the threejs built-in skybox can be used for the stars, as it doesn't have to be rotated. this is the most efficient way to go, and probably makes the most sense.
 
 - the surfaces of planets are used as textures instead of with clouds, if surface textures for the object were avaiable. for example, the 2nd planet surface texture is used. this will aid in attempting to land in the correct location.
+
+- the color of a celestial object's orbit line is based on true color data.
 
 - hyperbolic trajectories escaping the solar system are caclulated to an extent, and then fail when the transendental equation becomes processor-intensive. in other words, it is limited on purpose. it is possible to remove that limit in the code in the orbMech file. if travelling away from the sun to great distances is your goal, then i recommend switching from using keplerian elements to only using cartesian state vectors.
 
