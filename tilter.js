@@ -342,65 +342,6 @@ function ecefToEci(ecef, angle, angularVelocity, radiusEquator, e2) {
 }
 
 
-
-
-/*
-if possible
-use radiusEquator & flattening to get e2 and radiusPole
-not radiusEquator & radiusPole to get flattening and e2
-
-reason:
-
-NASA HORIZONS earth data:
-a = 6378.137 km
-b = 6356.752 km
-f = 1/298.257223563
-f = 0.0033528106647
-
-// extremely precise
-pole radius from eq radius & flattening
-diff = a * f = 21.3846857545176639
-b = a - diff = 6356.7523142454823361
-
-// inaccurate
-flattening from radii
-f = (a - b) / a
-f = 21.385 / a
-f = 0.0033528599338
-1 / f = 298.25284078200
-
-*/
-
-
-
-/*
-use sidereal to get angular velocity (rot. rate rad/s)
-not the other way around
-
-reason:
-
-NASA HORIZONS earth data:
-Mean sidereal day, hr    = 23.9344695944
-Rot. Rate (rad/s)        = 0.00007292115
-
-// accurate
-rotRate from siderealHr:
-23.9344695944 * 60 * 60 = 86,164.09053984 = x
-1/x * 2π = 0.0000729211585454
-
-// inaccurate
-siderealHr from rotRate:
-0.00007292115 / (2π) = 0.0000116057614784
-x = 86164.100637527 / 60 / 60 = 23.934472399313
-
-*/
-
-/*
-// fyi... the reverse conversion is:
-sidereal = (1/((angularVelocity/Math.PI)/2))/3600;
-*/
-
-
 // PURE FUNCTION
 // Formula accurate if (altitude < 86000)
 // but still provides value if (altitude < 178325)
@@ -467,8 +408,6 @@ function earthAirData(altitude) {
 
 
 
-
-
 // https://en.wikipedia.org/wiki/Drag_equation
 // No attempt to address sound barrier resistance
 //let drag_now = 0; // N
@@ -489,29 +428,6 @@ function dragEquation(airDensity, velocity, mass, dragCoefficient, dragArea) {
 		(dragCoefficient * dragArea/mass)) / 2;
 }
 
-/*
-function getScaleHeight(tempKelvin, mass, meanRadius, GRAVITY) {
-	//const k = 1.38e-23; // boltz constant
-	// m is mean molecular mass
-	// H is scale height. nasa says 8.5km for earth
-	//const H = ( k * T ) / ( m * g );
-	//return (k * tempKelvin) / (meanMolecularMass * g);
-
-	if (GRAVITY === undefined) {
-		GRAVITY = 6.6743e-11; // 2018 codata
-	}
-	// molar gas constant from 2018 codata
-	const R = 8.31446261815324;
-
-	//const g = 9.80665; // for earth
-	const g = GRAVITY * (mass / (meanRadius * meanRadius));
-
-	// this gives 243.1116589644915 for earth, which is ~35x less... 
-	let pre = R * tempKelvin / g;
-
-	return pre * 34.96335813841613;
-}
-*/
 
 // https://www.spaceacademy.net.au/watch/debris/atmosmod.htm
 // https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html

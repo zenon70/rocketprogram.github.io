@@ -3,6 +3,8 @@
 # IN-PROGRESS
 -------------
 
+801 spins west.. aka flip pole
+
 gps of planet 999 needs checking due to 180 deg map rotation
   should doublecheck 299 and 799 as well...
 
