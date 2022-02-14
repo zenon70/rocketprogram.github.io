@@ -111,7 +111,7 @@ body.push({
 	J2: 4.458E-6,
 
 	radiusMean: 6051.8e3, // iau
-	sidereal: 5832.443616,
+	sidereal: 243.018484 * 24, // jpl
 
 	rightAscension: 92.76,
 	declination: -67.16,
@@ -145,7 +145,7 @@ earth = body.push({
 	radiusMean: 6371.0084e3, // iau
 	radiusEquator: 6378137,
 	flattening: 0.0033528106647,
-	sidereal: 23.9344695944,
+	sidereal: 23.9344695944, // jpl
 
 	rightAscension: 0,
 	declination: 90,
@@ -179,7 +179,7 @@ planet4 = body.push({
 	radiusMean: 3389.5e3, // iau
 	radiusEquator: 3396200,
 	flattening: 1/169.779,
-	sidereal: 24.622962,
+	sidereal: 24.622962, // jpl
 
 	rightAscension: 317.68143,
 	declination: 52.88650,
@@ -218,7 +218,7 @@ let planet5 = body.push({
 	radiusMean: 69911e3, // iau
 	radiusEquator: 71492000, // [1 bar level]
 	flattening: 0.06487,
-	sidereal: 0.41353831018518519,
+	sidereal: 9.92491944, // jpl
 
 	rightAscension: 268.056595,
 	declination: 64.495393,
@@ -258,7 +258,7 @@ let planet6 = body.push({
 	radiusMean: 58232e3, // iau
 	radiusEquator: 60268000, // [1 bar level]
 	flattening: 0.09796,
-	sidereal: 10.656222222222222,
+	sidereal: 10.656222222222222, // jpl
 
 	rightAscension: 40.589,
 	declination: 83.537,
